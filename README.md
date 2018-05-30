@@ -4,7 +4,7 @@
 [![codecov badge][codecov_badge]][codecov_url]
 [![][docs-stable-img]](docs/DOCUMENTATION.md)
 
-<b> DifferentialMobilityAnalyzers.jl </b> is an implementation of the Julia DMA language (JDL) and tool for working with data from aerosol differential mobility analyzers.
+<b> DifferentialMobilityAnalyzers.jl </b> implements the Julia DMA language. It is a tool for working with data from aerosol differential mobility analyzers.
 
 ## Installation & Quickstart
 The package  <b> DifferentialMobiliyAnalyzers </b> can be installed from the Julia REPL prompt with
@@ -38,7 +38,7 @@ Quickstart: The JDL language is documented in a manuscript and 12 Supplementary 
 [Notebook S12. FORTRAN API]() <br>
 
 ## Contribute
-Contributions including notebooks for classroom instruction, homework assignments using JDL, addition of DMA configurations not considered here, new inversion schemes, and improved or new functionalities of the language efficiency or new features) are welcome.
+Contributions including notebooks for classroom instruction, homework assignments using JDL, addition of DMA configurations not considered here, new inversion schemes, and improved or new functionalities of the language are welcome.
 
 ## Citation
 This work was supported by the United States Department of Energy, Office of Science, Biological and Environment Research, Grant number DE-SC0018265. If you use <b> DifferentialMobilityAnalyzers.jl </b> in your research, please cite

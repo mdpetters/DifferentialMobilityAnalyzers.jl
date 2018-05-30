@@ -14,6 +14,7 @@ using Interpolations
 using SpecialFunctions
 using DataFrames
 using Calculus
+using Plots
 
 import
 	Base.*,                   # Import to extend operators
