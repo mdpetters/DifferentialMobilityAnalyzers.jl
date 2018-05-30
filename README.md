@@ -1,4 +1,9 @@
 ## Overview
+[![travis badge][travis_badge]][travis_url]
+[![appveyor badge][appveyor_badge]][appveyor_url]
+[![codecov badge][codecov_badge]][codecov_url]
+[![][docs-stable-img]](docs/DOCUMENTATION.md)
+
 <b> DifferentialMobilityAnalyzers.jl </b> is an implementation of the Julia DMA language (JDL) and tool for working with data from aerosol differential mobility analyzers.
 
 ## Installation & Quickstart
@@ -41,3 +46,13 @@ This work was supported by the United States Department of Energy, Office of Sci
 Petters, M.D. (2018) <i> A language to simplify computation of differential mobility analyzer response functions </i> submitted to Aerosol Science & Technology.
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+
+[travis_badge]: https://travis-ci.org/mdpetters/DifferentialMobilityAnalyzers.jl.svg?branch=master
+[travis_url]: https://travis-ci.org/mdpetters/DifferentialMobilityAnalyzers.jl
+
+[appveyor_badge]: https://ci.appveyor.com/api/projects/status/github/mdpetters/DifferentialMobilityAnalyzers.jl?svg=true&branch=master
+
+[appveyor_url]: https://ci.appveyor.com/project/mdpetters/differentialmobilityanalyzers-jl
+
+[codecov_badge]: http://codecov.io/github/mdpetters/DifferentialMobilityAnalyzers.jl/coverage.svg?branch=master
+[codecov_url]: http://codecov.io/github/mdpetters/DifferentialMobilityAnalyzers.jl?branch=master
