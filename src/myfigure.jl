@@ -14,4 +14,5 @@ function figure(f, s, w, h, fs)
 	font, lfont, ms = Plots.font(f, m*s),  Plots.font(f, (m-1)*s), 2*s
 	default(size = (w*72*s,h*72*s), xtickfont = font, ytickfont = font,
 		legendfont = lfont, guidefont = font, markersize = ms)
+	return 0
 end

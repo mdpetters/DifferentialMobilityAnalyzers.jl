@@ -50,13 +50,22 @@ a = 1.4
 𝕩 = a⋅𝕟
 @test round(𝕩.Dp[indmax(𝕩.N)]/𝕟.Dp[indmax(𝕟.N)],1) == a
 
+𝕟 = DMALognormalDistribution([[100, 100, 1.1]], δ);
+𝕩 = a⋅𝕟
+@test round(𝕩.Dp[indmax(𝕩.N)]/𝕟.Dp[indmax(𝕟.N)],1) == a
+
+
 𝕟 = lognormal([[100, 100, 1.1]]; d1 = 10.0, d2 = 1000.0, bins = 256);
 μ,σ = 80.0, 2000.0
 T = (1.0 + erf.((𝕟.Dp-μ)/(√2σ)))  # Simple error function with mean μ and std. dev σ
 𝕩 = T.⋅𝕟
 @test round(Int, sum(𝕩.N)) == 218
 
-𝕟₁ = lognormal([[120, 90, 1.10]]; d1 = 10.0, d2 = 1000.0, bins = 256);
+𝕟 = DMALognormalDistribution([[100, 100, 1.1]], δ);
+T = (1.0 + erf.((𝕟.Dp-μ)/(√2σ)))
+𝕩 = T.⋅𝕟
+@test round(Int, sum(𝕩.N)) == 209
+
 𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64);
 𝕩 = 𝕟₁+𝕟₂
 @test round(Int, sum(𝕩.N)) == 210

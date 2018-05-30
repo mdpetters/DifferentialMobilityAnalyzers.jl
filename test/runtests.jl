@@ -7,7 +7,9 @@ end
 
 tests = ["dmafunctions",
          "sizedistribution",
-         "inversion",
+         "inversion1",
+         "inversion2",
+         "inversion3",
          "coagulation",
          "miscellaneous"]
 
