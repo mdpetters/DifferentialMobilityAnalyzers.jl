@@ -6,7 +6,7 @@ The package  <b> DifferentialMobiliyAnalyzers </b> can be installed from the Jul
 ```julia
 julia> Pkg.add("DifferentialMobilityAnalyzers")
 ```
-This installs the package and any missing dependencies.
+This installs the package and any missing dependencies. (Patience required for fresh install).
 ```julia
 julia> using IJulia
 julia> notebook(detached = true)

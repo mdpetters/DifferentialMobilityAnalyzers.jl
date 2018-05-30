@@ -33,9 +33,9 @@ Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://juli
 #### (a) DifferentialMobilityAnalyzers.jl
 The package  <b> DifferentialMobiliyAnalyzer </b> can be installed from the Julia REPL prompt with
 ```julia
-julia> Pkg.clone("https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl")
+julia> Pkg.add("DifferentialMobilityAnalyzers")
 ```
-This installs the package and any missing dependencies. (Patience required for fresh install)
+This installs the package and any missing dependencies. (Patience required for fresh install).
 
 #### (c) Notebooks
 At Julia REPL prompt invoke the Jupyter Notebook server
@@ -46,7 +46,7 @@ julia> notebook(detached=true)
 This opens the Jupyter tree view in your default web browser.
 
 #### (d) Load Notebooks
-Copy the Jupyter notebooks in the <b> docs/ </b> folder to a location of your choice. Load a Notebook. The notebooks contain interactive figures in Javascript. Click on the "Not Trusted" button in the top right corner to enable the interactive graphics. Alternatively, execute all cells in notebook. Each code block can be executed independently with Shift-Enter.
+Create a copy of the <b> $HOME/.julia/v0.6/DifferentialMobilityAnalyzers/docs/ </b> folder at a location of your choice. ($HOME = "C:\Users\User Name\$" on Windows, "/home/user/" on Linux and MacOS. Load a Notebook. The notebooks contain interactive figures in Javascript. Click on the "Not Trusted" button in the top right corner to enable the interactive graphics. Alternatively, execute all cells in notebook. Each code block can be executed independently with Shift-Enter.
 
 ### Supplementary Notebooks
 The main documentation of the package is described in a submitted manuscript ([preprint](https://)). There are 12 Supplementary Notebooks. The links can be followed to view the Notebooks using the [online Jupyter NBViewer tool](https://nbviewer.jupyter.org/)
