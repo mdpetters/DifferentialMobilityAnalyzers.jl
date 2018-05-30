@@ -19,7 +19,7 @@ Detailed documentation: [![][docs-stable-img]](docs/DOCUMENTATION.md)
 Quickstart: The JDL language is documented in a manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer
 
 [Julia DMA Language (preprint)]()<br>
-[Notebook S1. Differential Mobility Analyzer]() <br>
+[Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 [Notebook S2. Fredholm Integral Equation]() <br>
 [Notebook S3. Size Distribution Arithmetic]() <br>
 [Notebook S4. Single Mobility Classification]() <br>
