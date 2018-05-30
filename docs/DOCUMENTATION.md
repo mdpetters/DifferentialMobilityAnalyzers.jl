@@ -33,9 +33,9 @@ Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://juli
 #### (a) DifferentialMobilityAnalyzers.jl
 The package  <b> DifferentialMobiliyAnalyzer </b> can be installed from the Julia REPL prompt with
 ```julia
-julia> Pkg.add("DifferentialMobilityAnalyzers")
+julia> Pkg.clone("https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl")
 ```
-This installs the package and any missing dependencies.
+This installs the package and any missing dependencies. (Patience required for fresh install)
 
 #### (c) Notebooks
 At Julia REPL prompt invoke the Jupyter Notebook server
