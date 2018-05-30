@@ -14,7 +14,9 @@ julia> notebook(detached = true)
 This starts the notebook server. Then load any of the notebooks in the docs/ folder.
 
 ## Documentation
-Detailed installation instructions and documentation is [here](docs/DOCUMENTATION.md). The JDL language is described in the manuscript and  12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer
+Detailed documentation: [![][docs-stable-img]](docs/DOCUMENTATION.md)
+
+Quickstart: The JDL language is documented in a manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer
 
 [Julia DMA Language (preprint)]()<br>
 [Notebook S1. Differential Mobility Analyzer]() <br>
@@ -37,3 +39,5 @@ Contributions including notebooks for classroom instruction, homework assignment
 This work was supported by the United States Department of Energy, Office of Science, Biological and Environment Research, Grant number DE-SC0018265. If you use <b> DifferentialMobilityAnalyzers.jl </b> in your research, please cite
 
 Petters, M.D. (2018) <i> A language to simplify computation of differential mobility analyzer response functions </i> submitted to Aerosol Science & Technology.
+
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
