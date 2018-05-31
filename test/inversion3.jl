@@ -5,7 +5,7 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 leff = 13.0
 m = 3
 Λ = DMAconfig(t,p,qsa,qsa/β,r₁,r₂,l,leff,:-,m)
-bins,z₁,z₂ = 128, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
+bins,z₁,z₂ = 32, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
 δ = setupDMA(Λ, z₁, z₂, bins);
 
 
@@ -25,4 +25,4 @@ end
 λ₁,λ₂ = 1e-3, 1e1
 
 rinv(𝕣.N, δ,λ₁=λ₁,λ₂=λ₂)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 894
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 905

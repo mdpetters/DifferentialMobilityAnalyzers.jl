@@ -5,7 +5,7 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 leff = 13.0
 m = 3
 Λ = DMAconfig(t,p,qsa,qsa/β,r₁,r₂,l,leff,:-,m)
-bins,z₁,z₂ = 128, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
+bins,z₁,z₂ = 32, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
 δ = setupDMA(Λ, z₁, z₂, bins);
 
 
@@ -27,4 +27,4 @@ setupRegularization(δ.𝐀,eye(bins),R,inv(δ.𝐒)*R)
 λopt = lcorner(λ₁,λ₂;n=10,r=3)
 N =  clean((reginv(λopt, r = :Nλ))[1])
 𝕟ᵢₙᵥ= SizeDistribution([],𝕟.De,𝕟.Dp,𝕟.ΔlnD,N./𝕟.ΔlnD,N,:regularized)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 894
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 905
