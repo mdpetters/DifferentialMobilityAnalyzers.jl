@@ -9,4 +9,6 @@ LambertW
 Interpolations
 LsqFit
 SpecialFunctions
+NetCDF
+Glob
 IJulia
