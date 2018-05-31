@@ -10,8 +10,7 @@ notifications:
 git:
   depth: 99999999
 
-install: trax`vis_wait 30 mvn install
-## uncomment the following lines to allow failures on nightly julia
+# uncomment the following lines to allow failures on nightly julia
 ## (tests will run but not make your overall status red)
 #matrix:
 #  allow_failures:
