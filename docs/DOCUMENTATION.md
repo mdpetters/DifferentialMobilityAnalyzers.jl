@@ -33,7 +33,7 @@ Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://juli
 #### (a) DifferentialMobilityAnalyzers.jl
 The package  <b> DifferentialMobiliyAnalyzer </b> can be installed from the Julia REPL prompt with
 ```julia
-julia> Pkg.add("DifferentialMobilityAnalyzers")
+julia> Pkg.clone("https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl.git")
 ```
 This installs the package and any missing dependencies. (Patience required for fresh install).
 
@@ -46,44 +46,44 @@ julia> notebook(detached=true)
 This opens the Jupyter tree view in your default web browser.
 
 #### (d) Load Notebooks
-Create a copy of the <b> $HOME/.julia/v0.6/DifferentialMobilityAnalyzers/docs/ </b> folder at a location of your choice. ($HOME = "C:\Users\User Name\$" on Windows, "/home/user/" on Linux and MacOS. Load a Notebook. The notebooks contain interactive figures in Javascript. Click on the "Not Trusted" button in the top right corner to enable the interactive graphics. Alternatively, execute all cells in notebook. Each code block can be executed independently with Shift-Enter.
+Create a copy of the <b> $HOME/.julia/v0.6/DifferentialMobilityAnalyzers/docs/ </b> folder at a location of your choice. ($HOME = "C:\Users\User Name\" on Windows, "/home/User Name/" on Linux and "/Users/User Name/" on MacOS. Alternatively download the zip of the repository and extract the doc/ folder. Navigate to the folder using the tree browser open. The notebooks contain interactive figures in Javascript. Click on the "Not Trusted" button in the top right corner to enable the interactive graphics. Alternatively, execute all cells in notebook. Each code block can be executed independently with Shift-Enter.
 
 ### Supplementary Notebooks
 The main documentation of the package is described in a submitted manuscript ([preprint](https://)). There are 12 Supplementary Notebooks. The links can be followed to view the Notebooks using the [online Jupyter NBViewer tool](https://nbviewer.jupyter.org/)
 
-[Notebook S1. Differential Mobility Analyzer]() <br>
+[Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 This notebook introduces the Differential Mobility Analyzer (DMA) and demonstrates basic functions embedded in the package <b> DifferentialMobilityAnalyzers.jl </b>. The notebook includes Figures of the schematic of the DMA, the size dependence of the Cunningham slip flow correction factor, particle diffusion coefficient, penetration efficiency through the DMA, and the fractional charging efficiency of the through the bipolar charger. It also includes examples of the normalized DMA transfer functions.
 
-[Notebook S2. Fredholm Integral Equation]() <br>
+[Notebook S2. Fredholm Integral Equation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S02.%20Fredholm%20Integral%20Equation.ipynb) <br>
 This notebook introduces the Fredholm integral equation and derives the discretized solution via the forward convolution matrix. The notebook demonstrates how the convolution matrix is computed for any set of transmission functions.
 
-[Notebook S3. Size Distribution Arithmetic]() <br>
+[Notebook S3. Size Distribution Arithmetic](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S03.%20Size%20Distribution%20Arithmetic.ipynb) <br>
 This notebook introduces the SizeDistribution type. Seven unique operations are defined and showcased: (a) Multiplication of scalar and size distribution,
 (b) Multiplication of vector and size distribution, (c) Multiplication of matrix and size distribution, (d) Multiplication of size distribution and size distribution, (e) Division of size distribution and size distribution (f) Dot product of scalar and size distribution, (g) Dot product of vector and size distribution, and (h) Addition of two size distributions.  
 
-[Notebook S4. Single Mobility Classification]() <br>
+[Notebook S4. Single Mobility Classification](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S04.%20Single%20Mobility%20Classification.ipynb) <br>
 This notebook demonstrates how to the software can be used to find the true size distribution of monodisperse mobility selected particles. It also demonstrates how to compute the selected number, surface area, and volume concentration.
 
-[Notebook S5. Size Distribution Inversion Using Regularization]() <br>
+[Notebook S5. Size Distribution Inversion Using Regularization](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S05.%20Size%20Distribution%20Inversion%20Using%20Regularization.ipynb) <br>
 This notebook demonstrates how to invert a size distribution from a measured noisy response function. Application of the convolution matrix together with a Twomey inverse and the L-curve algorithm are used to invert a synthetic dataset.
 
-[Notebook S6. Size Distribution Inversion of Ambient Data]() <br>
+[Notebook S6. Size Distribution Inversion of Ambient Data](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S06.%20Size%20Distribution%20Inversion%20of%20Ambient%20Data.ipynb) <br>
 This notebook applies the regularized inverse to a published dataset. Results are compared to the inversion output of the manufacturer supplied software and evaluates the degree of agreement between this package and the manufacturer software.
 
-[Notebook S7. Size resolved CCN measurements]() <br>
+[Notebook S7. Size resolved CCN measurements](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S07.%20Size%20resolved%20CCN%20measurements.ipynb) <br>
 This notebook demonstrates calculations related to the the configuration where a single differential mobility analyzer is used together with a condensation particle counter and cloud condensation nuclei counter. It is demonstrated how to express the response function in terms of the language and how to fit the response function to infer the cloud droplet activation diameter.
 
-[Notebook S8. Hygroscopicity Tandem DMA]() <br>
+[Notebook S8. Hygroscopicity Tandem DMA](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S08.%20Hygroscopicity%20Tandem%20DMA.ipynb) <br>
 This notebook demonstrates calculations related to the configuration where the first differential mobility is used as classifier. The output is conditioned in a humidifier and the resulting size distribution is measured using a second DMA in scanning mode together with a condensation particle counter (or other instrument) as detector. It is demonstrated how to the language can be used to express the response function of the second differential mobility analyzer used either with or without bipolar charger.
 
-[Notebook S9. Volatility Tandem DMA]() <br>
+[Notebook S9. Volatility Tandem DMA](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S09.%20Volatility%20Tandem%20DMA.ipynb) <br>
 This notebook demonstrates calculations related to the configuration where the first differential mobility is used as classifier. The output is conditioned in an evaporator or condenser and the resulting size distribution is measured using a second differential mobility analyzer in scanning mode together with a condensation particle counter (or other instrument) as detector. It is demonstrated how to the language can be used to express the response function of the second differential mobility analyzer used either with or without bipolar charger.
 
-[Notebook S10. Dimer Coagulation and Isolation]() <br>
+[Notebook S10. Dimer Coagulation and Isolation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S10.%20Dimer%20Coagulation%20and%20Isolation.ipynb) <br>
 This notebook demonstrates calculations related to the configuration where two DMAs are used to size select particles of opposite charge. The two populations are merged and allowed to coagulate. Coagulated dimers are isolated using an electrostatic filter. The dimers are charge neutralized and the size distribution is measured using a DMA operated in stepping or scanning mode. It is demonstrated how to the language can be used to express the response function of the third differential mobility analyzer.
 
-[Notebook S11. PartMC Simulations]() <br>
+[Notebook S11. PartMC Simulations](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S11.%20PartMC%20Simulations.ipynb) <br>
 This notebook presents an overview over coagulation theory. It is shown how to predict the coagulated distribution using Size Distribution Arithmetic (Notebook S3). The approach is compared to model predictions with the Particle-resolved Monte Carlo code for atmospheric aerosol simulation [(PartMC)](http://lagrange.mechse.illinois.edu/partmc/)
 
-[Notebook S12. FORTRAN API]() <br>
+[Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
 This notebook demonstrates how to construct a convolution matrix using a DMA transfer function defined in a FORTRAN routine. The notebook explains how to compile the routine to a shared library and setup the ccall to pass variables to and from the FORTRAN routine.
