@@ -28,14 +28,19 @@ The Julia language is undergoing rapid development and not yet stable. This mean
 ### 3. Installation & Getting Started
 To interactively use the Notebooks and/or use the software follow the steps below. Skip this step if you just want to view the Notebooks.
 
+
 #### (a) Julia
-Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://julialang.org/downloads/).
+Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://julialang.org/downloads/). This software will work with Julia v0.6.x. A few resources to getting started with Julia:
+
+[Julia Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)<br>
+[Julia Documenation](https://julialang.org/)<br>
+
 #### (a) DifferentialMobilityAnalyzers.jl
 The package  <b> DifferentialMobiliyAnalyzer </b> can be installed from the Julia REPL prompt with
 ```julia
 julia> Pkg.clone("https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl.git")
 ```
-This installs the package and any missing dependencies. (Patience required for fresh install).
+This installs the package and any missing dependencies. (Patience required for fresh install due to large number of dependencies, including the Jupyter environment).
 
 #### (c) Notebooks
 At Julia REPL prompt invoke the Jupyter Notebook server
@@ -46,7 +51,30 @@ julia> notebook(detached=true)
 This opens the Jupyter tree view in your default web browser.
 
 #### (d) Load Notebooks
-Create a copy of the <b> $HOME/.julia/v0.6/DifferentialMobilityAnalyzers/docs/ </b> folder at a location of your choice. ($HOME = "C:\Users\User Name\" on Windows, "/home/User Name/" on Linux and "/Users/User Name/" on MacOS. Alternatively download the zip of the repository and extract the doc/ folder. Navigate to the folder using the tree browser open. The notebooks contain interactive figures in Javascript. Click on the "Not Trusted" button in the top right corner to enable the interactive graphics. Alternatively, execute all cells in notebook. Each code block can be executed independently with Shift-Enter.
+Download a ZIP archive of DifferentialMobilityAnalyzers.jl
+![alt text](Figures/doc.png)
+
+Extract the doc folder for the archive to a folder of your choice
+![alt text](Figures/doc1.png)
+
+Use the Jupyter browser to navigate to the folder
+![alt text](Figures/doc2.png)
+
+Open a Notebook. In the to right corner it shows the Julia version. On the first load the butten to the left will state "Not Trusted". Click on the button to change to Trusted as shown. This enables the Javascript content.
+![alt text](Figures/doc3.png)
+
+Click on the first cell that contains code and hit Shift-Enter to execute the cell. Move on to next cell and repeat. A cell block can be executed twice in a row with altered numbers (e.g. change the axis limits). All cells can be executed in series using Kernel -> Restart & Run All.
+![alt text](Figures/doc4.png)
+
+Hovering over the figure will display the numbers of each series. Clicking on the legend (e.g. k = -1) will toggle the series. Executing cell 8 for a second time but changing xlim = (10,1000) to xlim = (10,200) will change the scaling of the xaxis. Clicking on the disk symbol will open the plot in the web-based Chart-Studio application for further editing.
+![alt text](Figures/doc5.png)<br>
+
+Jupyter Resources:
+
+[Project Jupyter](http://jupyter.org/)<br>
+[Jupyter Notebook Documentation](https://jupyter-notebook.readthedocs.io/en/stable/)<br>
+[Jupyter Shortcuts](https://www.cheatography.com/weidadeyue/cheat-sheets/jupyter-notebook/)<br>
+
 
 ### Supplementary Notebooks
 The main documentation of the package is described in a submitted manuscript ([preprint](https://)). There are 12 Supplementary Notebooks. The links can be followed to view the Notebooks using the [online Jupyter NBViewer tool](https://nbviewer.jupyter.org/)
