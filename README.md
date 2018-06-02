@@ -18,12 +18,9 @@ julia> notebook(detached = true)
 ```
 This starts the notebook server. Then load any of the notebooks in the docs/ folder.
 
-## Documentation
-Detailed documentation: [![][docs-stable-img]](docs/DOCUMENTATION.md)
+Quickstart: The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer
 
-Quickstart: The Julia DMA language is documented in a manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer
-
-[Julia DMA Language (preprint)]()<br>
+[The Julia DMA Language (preprint)](docs/Manuscript.pdf)<br>
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 [Notebook S2. Fredholm Integral Equation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S02.%20Fredholm%20Integral%20Equation.ipynb) <br>
 [Notebook S3. Size Distribution Arithmetic](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S03.%20Size%20Distribution%20Arithmetic.ipynb) <br>
@@ -36,6 +33,9 @@ Quickstart: The Julia DMA language is documented in a manuscript and 12 Suppleme
 [Notebook S10. Dimer Coagulation and Isolation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S10.%20Dimer%20Coagulation%20and%20Isolation.ipynb) <br>
 [Notebook S11. PartMC Simulations](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S11.%20PartMC%20Simulations.ipynb)<br>
 [Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
+
+## Documentation
+Detailed documentation (docs/DOCUMENTATION.md) -> [![][docs-stable-img]](docs/DOCUMENTATION.md)
 
 ## Contribute
 Contributions including notebooks for classroom instruction, homework assignments, interesting DMA configurations, new inversion schemes, and improved or new functionalities of the language are welcome.

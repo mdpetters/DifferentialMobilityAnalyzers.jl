@@ -1,17 +1,17 @@
 ## Documentation
 
 ### Overview
-The main documentation of the package is described in a manuscript submitted ([preprint](https://)) for [Open Access](https://en.wikipedia.org/wiki/Open_access) publication to the journal [Aerosol Science & Technology](https://www.tandfonline.com/action/journalInformation?journalCode=uast20). In addition, a series of [Jupyter](http://jupyter.org/) notebooks provides example usage and additional detailed documentation. The Jupyter notebooks also serve as formal supplement to the manuscript. This remainder of this document is structured as follows.
+The main documentation of the package is described in a manuscript submitted  for Open Access publication to the journal [Aerosol Science & Technology](https://www.tandfonline.com/action/journalInformation?journalCode=uast20). In addition, a series of [Jupyter](http://jupyter.org/) notebooks provides example usage and additional detailed documentation. The Jupyter notebooks also serve as formal supplement to the manuscript. This remainder of this document is structured as follows.
 
 1. Why Julia?
 2. Managing Expectations (for Newcomers to Julia)
 3. Installation & Getting Started
-4. Supplementary Notebooks
+4. Package Documentation
 
 ### 1. Why Julia?
-This software started as a MATLAB script to model the response function of a specific [instrument](https://www.tandfonline.com/doi/abs/10.1080/02786826.2016.1221050) developed and used in my laboratory. Over time the project morphed from a script performing a single task to a more formal language that could be used to express differential mobility analyzer response functions in a unified way. Implementation of this language required formalisms that MATLAB did not adequately support, including recursion over lambda expressions, support of the constructs map and mapreduce, full Unicode support within the actual code, and the ability to create and share code and visualizations that non-expert programmers can interact with in a meaningful way. I also wanted the entire software suite to be free software.
+This software started as a MATLAB script to model the DMA response function of a specific [instrument](https://www.tandfonline.com/doi/abs/10.1080/02786826.2016.1221050) developed and used in my laboratory. Over time the project morphed from a script performing a single task to a more formal language that could be used to express differential mobility analyzer response functions in a more general manner. Implementation of this language required formalisms that MATLAB did not support, including recursion over lambda expressions, support of the constructs map and mapreduce, full Unicode support within the actual code, and the ability to create and share code and visualizations that non-expert programmers can interact with in a meaningful way. I also wanted the entire software suite to be free software.
 
-[Julia](https://julialang.org/) is a relatively young programming language that is a promising to bridge general and scientific computing. The language bears some resemblance to MATLAB syntax. In many ways Julia code is intuitive and ideally suited for scientific programming. Julia is a dynamically-typed programming language that can rival C or FORTRAN execution speeds. It supports all of the above mentioned requirements to design the language. In addition, Julia has an excellent package managing system that allows straightforward installation of the new packages and it's dependencies, which is a great advantage to entrain new users to the language community.
+[Julia](https://julialang.org/) is a relatively young programming language that promises to bridge general and scientific computing. The language bears some resemblance to MATLAB syntax. In many ways Julia code is intuitive and ideally suited for scientific programming. Julia is a dynamically-typed programming language that can rival C or FORTRAN execution speeds. It supports all of the above mentioned requirements. In addition, Julia has an excellent package managing system that allows straightforward installation of the new packages and their dependencies.
 
 ### 2. Managing Expectations (for Newcomers to Julia)
 Although Julia is promising, the above advantages come at some cost.
@@ -25,17 +25,19 @@ Although Julia is dynamically-typed and in syntax apparently similar to MATLAB, 
 #### (c) Continuing Julia Development
 The Julia language is undergoing rapid development and not yet stable. This means that some language constructs can change from version to version. The current version of the Package is written in Julia 0.6 and will not run on older versions. Julia 1.0 is likely being released in 2018 after which language deprecations are expected to become less of a concern. I will maintain the DifferentialMobilityAnalyzers.jl package to remain compatible with future versions of the language. Users that simply apply the software to solve a problem will only be affected should they opt to upgrade to the newest Julia version in the future.
 
-### 3. Installation & Getting Started
-To interactively use the Notebooks and/or use the software follow the steps below. Skip this step if you just want to view the Notebooks.
+#### (d) Getting Help
+Julia and Julia packages are well-documented from a programmers perspective. However, the focus on being a more general programming language, the distributed nature of the packages and the relatively early stage of development may at times require some tenacity by the user. A few resources to getting started with Julia:
 
+[Julia Tutorials](https://julialang.org/learning/)<br>  
+[Julia Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)<br>
+
+### 3. Installation & Getting Started
+To interactively use the Notebooks and/or use the software follow the steps below. __If you just want to view the Notebooks go to Section 4.__
 
 #### (a) Julia
-Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://julialang.org/downloads/). This software will work with Julia v0.6.x. A few resources to getting started with Julia:
+This software will only work with Julia v0.6.x. The Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://julialang.org/downloads/).
 
-[Julia Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)<br>
-[Julia Documenation](https://julialang.org/)<br>
-
-#### (a) DifferentialMobilityAnalyzers.jl
+#### (b) DifferentialMobilityAnalyzers.jl
 The package  <b> DifferentialMobiliyAnalyzer </b> can be installed from the Julia REPL prompt with
 ```julia
 julia> Pkg.clone("https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl.git")
@@ -48,36 +50,36 @@ At the Julia REPL prompt invoke the Jupyter Notebook server
 julia> using IJulia
 julia> notebook(detached=true)
 ```
-This opens the Jupyter tree view in your default web browser.
-
-#### (d) Load Notebooks
-Download a ZIP archive of DifferentialMobilityAnalyzers.jl
-![alt text](Figures/doc.png)
-
-Extract the doc folder from the archive to a folder of your choice
-![alt text](Figures/doc1.png)
-
-Use the Jupyter browser to navigate to the folder
-![alt text](Figures/doc2.png)
-
-Open a Notebook. In the top right corner it shows the Julia version. On the first load the butten to the left will state "Not Trusted". Click on the button to change to Trusted as shown. This enables the Javascript content.
-![alt text](Figures/doc3.png)
-
-Click on the first cell that contains code and hit Shift-Enter to execute the cell. Move on to next cell and repeat. A cell block can be executed twice in a row with altered numbers (e.g. change the axis limits). All cells can be executed in series using Kernel -> Restart & Run All.
-![alt text](Figures/doc4.png)
-
-Hovering over the figure will display the numbers of each series. Clicking on the legend (e.g. k = -1) will toggle the series. Executing cell 8 for a second time but changing xlim = (10,1000) to xlim = (10,200) will change the scaling of the xaxis. Clicking on the disk symbol will open the plot in the web-based Chart-Studio application for further editing.
-![alt text](Figures/doc5.png)<br>
-
-Jupyter Resources:
+This opens the Jupyter tree view in your default web browser. Jupyter Resources: <br>
 
 [Project Jupyter](http://jupyter.org/)<br>
 [Jupyter Notebook Documentation](https://jupyter-notebook.readthedocs.io/en/stable/)<br>
 [Jupyter Shortcuts](https://www.cheatography.com/weidadeyue/cheat-sheets/jupyter-notebook/)<br>
 
+#### (d) Load Notebooks
+Download the ZIP archive of DifferentialMobilityAnalyzers.jl
+![alt text](Figures/doc.png)
 
-### Supplementary Notebooks
-The main documentation of the package is described in a submitted manuscript ([preprint](https://)). There are 12 Supplementary Notebooks. The links can be followed to view the Notebooks using the [online Jupyter NBViewer tool](https://nbviewer.jupyter.org/)
+Extract the docs/ folder from the archive to a folder of your choice
+![alt text](Figures/doc1.png)
+
+Use the Jupyter file browser to navigate to the folder
+![alt text](Figures/doc2.png)
+
+Open a Notebook. In the top right corner it shows the Julia version. On the first load the button to the left will state "Not Trusted". Click on the button to change to Trusted as shown. This enables the Javascript content.
+![alt text](Figures/doc3.png)
+
+Click on the first cell that contains code and hit Shift-Enter to execute the cell. The pending cell execution and processing is indicated by the changing of the cell number (number in brackets) to an asterisk. As indicated earlier, he first time a cell is executed it can be slow. Move on to next cell and repeat. A cell block can be executed twice in a row with altered numbers (e.g. change the axis limits). All cells can be executed in series using Kernel -> Restart & Run All.
+![alt text](Figures/doc4.png)
+
+Hovering over the figure will display the numbers of each of the series. Clicking on the legend (e.g. k = -1) will toggle the series. Executing cell [8] for a second time but changing xlim = (10,1000) to xlim = (10,200) will change the scaling of the xaxis. Clicking on the disk symbol will open the plot in the web-based Chart-Studio application for a gui view that allows editing the plot.
+![alt text](Figures/doc5.png)<br>
+
+### 4. Package Documentation
+The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer.
+
+[The Julia DMA Language (preprint)](docs/Manuscript.pdf)<br>
+Manuscript submitted to Aerosol Science & Technology.
 
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 This notebook introduces the Differential Mobility Analyzer (DMA) and demonstrates basic functions embedded in the package <b> DifferentialMobilityAnalyzers.jl </b>. The notebook includes Figures of the schematic of the DMA, the size dependence of the Cunningham slip flow correction factor, particle diffusion coefficient, penetration efficiency through the DMA, and the fractional charging efficiency of the bipolar charger. It also includes examples of the normalized DMA transfer functions.
