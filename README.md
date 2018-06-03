@@ -4,7 +4,10 @@
 [![codecov badge][codecov_badge]][codecov_url]
 [![][docs-stable-img]](docs/DOCUMENTATION.md)
 
-This package implements the Julia DMA language. The language is a tool to simplify interpretation of data from aerosol differential mobility analyzers.
+This package implements the Julia DMA language. The language is a tool to facilitate interpretation of data from aerosol differential mobility analyzers.
+
+## Documentation
+[Link to detailed documentation](docs/DOCUMENTATION.md)
 
 ## Installation & Quickstart
 The package  <b> DifferentialMobiliyAnalyzers </b> can be installed from the Julia REPL prompt with
@@ -33,9 +36,6 @@ Quickstart: The Julia DMA language is documented in a journal manuscript and 12 
 [Notebook S10. Dimer Coagulation and Isolation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S10.%20Dimer%20Coagulation%20and%20Isolation.ipynb) <br>
 [Notebook S11. PartMC Simulations](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S11.%20PartMC%20Simulations.ipynb)<br>
 [Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
-
-## Documentation
-[Link to detailed documentation](docs/DOCUMENTATION.md)
 
 ## Contribute
 Contributions including notebooks for classroom instruction, homework assignments, interesting DMA configurations, new inversion schemes, and improved or new functionalities of the language are welcome.
