@@ -26,10 +26,7 @@ Although Julia is dynamically-typed and in syntax apparently similar to MATLAB, 
 The Julia language is undergoing rapid development and not yet stable. This means that some language constructs can change from version to version. The current version of the Package is written in Julia 0.6 and will not run on older versions. Julia 1.0 is likely being released in 2018 after which language deprecations are expected to become less of a concern. I will maintain the DifferentialMobilityAnalyzers.jl package to remain compatible with future versions of the language. Users that simply apply the software to solve a problem will only be affected should they opt to upgrade to the newest Julia version in the future.
 
 #### (d) Getting Help
-Julia and Julia packages are well-documented from a programmers perspective. However, the focus on being a more general programming language, the distributed nature of the packages and the relatively early stage of development may at times require some tenacity by the user. A few resources to getting started with Julia:
-
-[Julia Tutorials](https://julialang.org/learning/)<br>  
-[Julia Wikibook](https://en.wikibooks.org/wiki/Introducing_Julia)<br>
+Julia and Julia packages are well-documented from a programmers perspective. However, the focus on being a more general programming language, the distributed nature of the packages and the relatively early stage of development may at times require some tenacity by the user. An excellent resource is the [Julia tutorial compilation](https://julialang.org/learning/). <br>
 
 ### 3. Installation & Getting Started
 To interactively use the Notebooks and/or use the software follow the steps below. __If you just want to view the Notebooks go to Section 4.__
@@ -60,17 +57,27 @@ This opens the Jupyter tree view in your default web browser. Jupyter Resources:
 Download the ZIP archive of DifferentialMobilityAnalyzers.jl
 ![alt text](Figures/doc.png)
 
-Extract the docs/ folder from the archive to a folder of your choice
-![alt text](Figures/doc1.png)
+---
+
+Extract the docs/ folder from the ZIP archive to a folder of your choice
+  ![alt text](Figures/doc1.png)
+
+---
 
 Use the Jupyter file browser to navigate to the folder
 ![alt text](Figures/doc2.png)
 
+---
+
 Open a Notebook. In the top right corner it shows the Julia version. On the first load the button to the left will state "Not Trusted". Click on the button to change to Trusted as shown. This enables the Javascript content.
 ![alt text](Figures/doc3.png)
 
+---
+
 Click on the first cell that contains code and hit Shift-Enter to execute the cell. The pending cell execution and processing is indicated by the changing of the cell number (number in brackets) to an asterisk. As indicated earlier, he first time a cell is executed it can be slow. Move on to next cell and repeat. A cell block can be executed twice in a row with altered numbers (e.g. change the axis limits). All cells can be executed in series using Kernel -> Restart & Run All.
 ![alt text](Figures/doc4.png)
+
+---
 
 Hovering over the figure will display the numbers of each of the series. Clicking on the legend (e.g. k = -1) will toggle the series. Executing cell [8] for a second time but changing xlim = (10,1000) to xlim = (10,200) will change the scaling of the xaxis. Clicking on the disk symbol will open the plot in the web-based Chart-Studio application for a gui view that allows editing the plot.
 ![alt text](Figures/doc5.png)<br>
@@ -78,7 +85,7 @@ Hovering over the figure will display the numbers of each of the series. Clickin
 ### 4. Package Documentation
 The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer.
 
-[The Julia DMA Language (preprint)](docs/Manuscript.pdf)<br>
+[The Julia DMA Language (preprint)](Manuscript.pdf)<br>
 Manuscript submitted to Aerosol Science & Technology.
 
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>

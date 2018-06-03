@@ -35,13 +35,13 @@ Quickstart: The Julia DMA language is documented in a journal manuscript and 12 
 [Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
 
 ## Documentation
-Detailed documentation (docs/DOCUMENTATION.md) -> [![][docs-stable-img]](docs/DOCUMENTATION.md)
+[Link to detailed documentation](docs/DOCUMENTATION.md)
 
 ## Contribute
 Contributions including notebooks for classroom instruction, homework assignments, interesting DMA configurations, new inversion schemes, and improved or new functionalities of the language are welcome.
 
 ## Citation
-This work was supported by the United States Department of Energy, Office of Science, Biological and Environment Research, Grant number DE-SC0018265. If you use <b> DifferentialMobilityAnalyzers.jl </b> in your research, please cite
+This work was supported by the United States Department of Energy, Office of Science, Biological and Environment Research, Grant number DE-SC0018265. If you use _DifferentialMobilityAnalyzers.jl_  in your research, please cite
 
 Petters, M.D. (2018) <i> A language to simplify computation of differential mobility analyzer response functions </i> submitted to Aerosol Science & Technology.
 
