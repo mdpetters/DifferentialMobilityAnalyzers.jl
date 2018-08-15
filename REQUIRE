@@ -1,5 +1,4 @@
 julia 0.6
-STInterpreter2 0.1.1 0.1.1+
 AbstractFFTs 0.3.2 0.3.2+
 AbstractTrees 0.1.0 0.1.0+
 Adapt 0.2.0 0.2.0+
