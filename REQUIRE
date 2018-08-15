@@ -58,6 +58,8 @@ StaticArrays 0.7.2 0.7.2+
 StatsBase 0.23.1 0.23.1+
 StatsFuns 0.6.1 0.6.1+
 StatsModels 0.2.6 0.2.6+
+Atom 0.6.14 0.6.14+
+CategoricalArrays 0.3.9 0.3.9+
 LsqFit 0.3.0 0.3.0+
 LambertW 0.2.0 0.2.0+
 NetCDF 0.6.0 0.6.0+
