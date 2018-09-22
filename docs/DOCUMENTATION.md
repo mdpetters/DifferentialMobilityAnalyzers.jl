@@ -85,7 +85,7 @@ Hovering over the figure will display the numbers of each of the series. Clickin
 ### 4. Package Documentation
 The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer.
 
-The Julia DMA Language: [Mansucript](Manuscript.pdf) and [Supporting Information](Supporting Information.pdf)
+The Julia DMA Language: [Manuscript](Manuscript.pdf) and [Supporting Information](Supporting%Information.pdf)
 <br>
 
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
@@ -125,5 +125,5 @@ This notebook presents an overview over coagulation theory. It is shown how to p
 [Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
 This notebook demonstrates how to construct a convolution matrix using a DMA transfer function defined in a FORTRAN routine. The notebook explains how to compile the routine to a shared library and setup ```ccall``` to pass variables to and from the FORTRAN routine.
 
-[Virtual Machine](https://doi.org/10.5281/zenodo.1432522)
-Download virtual machine containing a working version of the software. Further instructions are found in the [Supporting Information](Supporting Information.pdf)<br>
+[Virtual Machine](https://doi.org/10.5281/zenodo.1432522)<br>
+Download virtual machine containing a working version of the software. Further instructions are found in the [Supporting Information](Supporting%Information.pdf)<br>
