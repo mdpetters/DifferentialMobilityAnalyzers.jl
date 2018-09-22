@@ -29,7 +29,7 @@ The Julia language is undergoing rapid development and not yet stable. This mean
 Julia and Julia packages are well-documented from a programmers perspective. However, the focus on being a more general programming language, the distributed nature of the packages and the relatively early stage of development may at times require some tenacity by the user. An excellent resource is the [Julia tutorial compilation](https://julialang.org/learning/). <br>
 
 ### 3. Installation & Getting Started
-To interactively use the Notebooks and/or use the software follow the steps below. __If you just want to view the Notebooks go to Section 4.__
+To interactively use the Notebooks and/or use the software follow the steps below. __If you just want to view the Notebooks or use the virtual machine go to Section 4.__
 
 #### (a) Julia
 This software will only work with Julia v0.6.x. The Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://julialang.org/downloads/).
@@ -85,8 +85,8 @@ Hovering over the figure will display the numbers of each of the series. Clickin
 ### 4. Package Documentation
 The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer.
 
-[The Julia DMA Language (preprint)](Manuscript.pdf)<br>
-Manuscript.
+The Julia DMA Language: [Mansucript](Manuscript.pdf) and [Supporting Information](Supporting Information.pdf)
+<br>
 
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 This notebook introduces the Differential Mobility Analyzer (DMA) and demonstrates basic functions embedded in the package <b> DifferentialMobilityAnalyzers.jl </b>. The notebook includes Figures of the schematic of the DMA, the size dependence of the Cunningham slip flow correction factor, particle diffusion coefficient, penetration efficiency through the DMA, and the fractional charging efficiency of the bipolar charger. It also includes examples of the normalized DMA transfer functions.
@@ -124,3 +124,6 @@ This notebook presents an overview over coagulation theory. It is shown how to p
 
 [Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
 This notebook demonstrates how to construct a convolution matrix using a DMA transfer function defined in a FORTRAN routine. The notebook explains how to compile the routine to a shared library and setup ```ccall``` to pass variables to and from the FORTRAN routine.
+
+[Virtual Machine](https://doi.org/10.5281/zenodo.1432522)
+Download virtual machine containing a working version of the software. Further instructions are found in the [Supporting Information](Supporting Information.pdf)<br>
