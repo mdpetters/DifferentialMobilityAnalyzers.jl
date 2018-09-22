@@ -85,8 +85,7 @@ Hovering over the figure will display the numbers of each of the series. Clickin
 ### 4. Package Documentation
 The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer.
 
-The Julia DMA Language: [Manuscript](Manuscript.pdf) and [Supporting Information](Supporting%Information.pdf)
-<br>
+The Julia DMA Language: [Manuscript](Manuscript.pdf) and [Supporting Information](SI.pdf) <br>
 
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 This notebook introduces the Differential Mobility Analyzer (DMA) and demonstrates basic functions embedded in the package <b> DifferentialMobilityAnalyzers.jl </b>. The notebook includes Figures of the schematic of the DMA, the size dependence of the Cunningham slip flow correction factor, particle diffusion coefficient, penetration efficiency through the DMA, and the fractional charging efficiency of the bipolar charger. It also includes examples of the normalized DMA transfer functions.

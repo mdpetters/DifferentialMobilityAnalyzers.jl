@@ -24,7 +24,7 @@ This starts the notebook server. Then load any of the notebooks in the docs/ fol
 
 Quickstart: The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer. A virtual machine with a working copy of all software components can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.1432522). Instructions for setting up the machine are in the Supporting Information.
 
-The Julia DMA Language: [Manuscript](docs/Manuscript.pdf) and [Supporting Information](docs/Supporting%Information.pdf)<br>
+The Julia DMA Language: [Manuscript](docs/Manuscript.pdf) and [Supporting Information](docs/SI.pdf)<br>
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
 [Notebook S2. Fredholm Integral Equation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S02.%20Fredholm%20Integral%20Equation.ipynb) <br>
 [Notebook S3. Size Distribution Arithmetic](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S03.%20Size%20Distribution%20Arithmetic.ipynb) <br>
