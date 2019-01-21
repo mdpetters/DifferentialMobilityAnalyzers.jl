@@ -14,13 +14,16 @@ using Interpolations
 using SpecialFunctions
 using DataFrames
 using Calculus
-using Plots
+using LinearAlgebra
+using Random
 
 import
 	Base.*,                   # Import to extend operators
 	Base./,                   # Import to extend operators
-	Base.⋅,                   # Import to extend operators
-	Base.+                    # Import to extend operators
+	Base.+,                   # Import to extend operators
+	#Base.⋅,                   # Import to extend operators
+	LinearAlgebra.⋅
+
 
 export
 	DMAconfig,                    # Data type to hold DMA config
@@ -30,6 +33,7 @@ export
 	Ψ,                        # Data structure that contains regvars
 	setupDMA,                 # Function to initialize DMA
 	setupSMPS,                # Function to initialize SMPS
+    setupSMPSdata, # Function to initialize SMPS with data
 	setupRegularization,      # Function to initialize regularization
 	clean,                    # Function to remove negative numbers
 	Σ,                        # Function to sum functions
@@ -38,6 +42,7 @@ export
 	cc,                       # Function to compute slip-flow correction
 	dab,                      # Function to compute diffusion coefficient
 	vtoz,                     # Function to convert Voltage to Mobility
+	ztov,                     # Function to convert Mobility to Voltage
 	dtoz,                     # Function to convert Diameter to Mobility
 	ztod,                     # Function to convert Mobility to Diameter
 	lognormal,                # Function to compute lognormal size dist
@@ -67,6 +72,7 @@ struct DMAconfig
 	leff::Float64             # Effective length [m]
 	polarity::Symbol          # Power supply polarity [:+] or [:-]
 	m::Int8                   # Number of charges in charge correction [-]
+	DMAtype::Symbol           # Designate :radial, :cylindrical
 end
 
 # Data type to facility DMA caluclations

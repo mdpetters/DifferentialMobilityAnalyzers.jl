@@ -18,7 +18,7 @@ end
 # L1 and L2 norms to construct the L-curve. The type of return
 # value is optional, to facilitate definition of derivatives
 function reginv(λs;r = :L1)
-    Nλ = Array{Array{Float64}}(0)
+    Nλ = Array{Array{Float64}}(undef, 0)
     L1, L2 = Float64[], Float64[]
     for λ in λs
         Nx = inv(Ψ.𝐀'*Ψ.𝐀 + λ^2.0*Ψ.𝐈)*(Ψ.𝐀'*Ψ.B + λ^2.0*Ψ.X₀)
@@ -50,10 +50,10 @@ end
 
 # Compute the L-curve for n points between limits λ₁ and λ₂
 function lcurve(λ₁::Float64, λ₂::Float64; n::Int = 10)
-    λs = logspace(log10(λ₁), log10(λ₂), n)
+    λs = 10 .^ range(log10(λ₁), stop=log10(λ₂), length=n)
     L1, L2 = reginv(λs, r=:L1L2)
     κs = map(λ -> κ(λ), λs)
-    ii = indmax(κs)
+    ii = argmax(κs)
     if ii == length(κs)
         ii = ii-1
     elseif ii == 1
@@ -73,7 +73,8 @@ end
 
 # Warpper for the regularized inversion
 function rinv(R, δ;λ₁= 1e-2, λ₂=1e1)
-    setupRegularization(δ.𝐀,eye(length(R)),R,inv(δ.𝐒)*R) # setup the system
+    eyeM = Matrix{Float64}(I, length(R), length(R))
+    setupRegularization(δ.𝐀,eyeM,R,inv(δ.𝐒)*R) # setup the system
     λopt = lcorner(λ₁,λ₂;n=10,r=3)                  # compute the optimal λ
     N =  clean((reginv(λopt, r = :Nλ))[1])          # find the inverted size
     return SizeDistribution([],δ.De,δ.Dp,δ.ΔlnD,N./δ.ΔlnD,N,:regularized)
