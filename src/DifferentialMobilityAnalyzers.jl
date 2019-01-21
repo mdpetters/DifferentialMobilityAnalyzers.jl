@@ -17,6 +17,7 @@ using Calculus
 using LinearAlgebra
 using Random
 using Distributions
+using Plots
 
 import
 	Base.*,                   # Import to extend operators
