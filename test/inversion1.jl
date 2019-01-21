@@ -10,9 +10,9 @@ bins,z₁,z₂ = 128, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
 
 
 𝐀=(hcat(map(i->Σ(k->δ.Ω(Λ,δ.Z,i/k).*δ.Tc(k,δ.Dp).*δ.Tl(Λ,δ.Dp),Λ.m),δ.Z)...))'
-@test round.(sum(𝐀),2) == 77.38
+@test round.(sum(𝐀),digits=2) == 77.38
 @test 𝐀 == δ.𝐀
 
 T = (zˢ,k,Λ,δ) -> δ.Ω(Λ,δ.Z,zˢ/k).*δ.Tc(k,δ.Dp).*δ.Tl(Λ,δ.Dp)
 𝐀=(hcat(map(zˢ->Σ(k->T(zˢ,k,Λ,δ),Λ.m),δ.Z)...))'
-@test round.(sum(𝐀),2) == 77.38
+@test round.(sum(𝐀),digits=2) == 77.38

@@ -5,12 +5,12 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 leff = 13.0
 m = 3
 Λ = DMAconfig(t,p,qsa,qsa/β,r₁,r₂,l,leff,:-,m)
-bins,z₁,z₂ = 32, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
+bins,z₁,z₂ = 128, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
 δ = setupDMA(Λ, z₁, z₂, bins);
 
 
 𝕟 = DMALognormalDistribution([[400, 30, 1.2],[500, 110, 1.7]], δ)
-srand(703)
+Random.seed!(703)
 tscan = 120
 Qcpc = 16.66
 t = tscan./bins
@@ -22,9 +22,11 @@ for i = c
     f = rand(Poisson(i),1)
     push!(R,f[1]/(Qcpc*t))
 end
+
 λ₁,λ₂ = 1e-3, 1e1
-setupRegularization(δ.𝐀,eye(bins),R,inv(δ.𝐒)*R)
+eyeM = Matrix{Float64}(I, bins, bins)
+setupRegularization(δ.𝐀,eyeM,R,inv(δ.𝐒)*R)
 λopt = lcorner(λ₁,λ₂;n=10,r=3)
 N =  clean((reginv(λopt, r = :Nλ))[1])
 𝕟ᵢₙᵥ= SizeDistribution([],𝕟.De,𝕟.Dp,𝕟.ΔlnD,N./𝕟.ΔlnD,N,:regularized)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 905
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 894

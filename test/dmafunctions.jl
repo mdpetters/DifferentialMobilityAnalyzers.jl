@@ -18,27 +18,27 @@ z = vtoz(Λ,v)    # Get mobility
 z = vtoz(Λ,[v,v])
 @test round.(Int, ztod(Λ,1,z)) == [77, 77]
 
-@test round(cc(Λ, 100e-9),2) == 2.96  # Cunningham at 100 nm
-@test round(cc(Λ, 10e-9),2) == 23.27  # Cunningham at 10 nm
-@test round.(cc(Λ, [100.0,10.0].*1e-9),2) == [2.96, 23.27] # array working
-@test round.(δ.Tl(Λ,[10.0,30.0]),2) == [0.51, 0.86]
+@test round(cc(Λ, 100e-9),digits=2) == 2.96  # Cunningham at 100 nm
+@test round(cc(Λ, 10e-9),digits=2) == 23.27  # Cunningham at 10 nm
+@test round.(cc(Λ, [100.0,10.0].*1e-9),digits=2) == [2.96, 23.27] # array working
+@test round.(δ.Tl(Λ,[10.0,30.0]),digits=2) == [0.51, 0.86]
 
 Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n)
 δ = setupDMA(Λ, z1, z2, bins);
 charge = hcat(map(k->δ.Tc(k,δ.Dp), 1:6)...)
 charge[10,:]   # Test + carging at 618 n,
-@test round.(charge[10,:], 3) == [0.126, 0.085,0.048, 0.022, 0.008,0.003]
+@test round.(charge[10,:], digits=3) == [0.126, 0.085,0.048, 0.022, 0.008,0.003]
 
 Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:+,n)
 δ = setupDMA(Λ, z1, z2, bins);
 charge = hcat(map(k->δ.Tc(k,δ.Dp), 1:6)...)
 charge[10,:]   # Test - carging at 618 n,
-@test round.(charge[10,:], 3) == [0.164, 0.144,0.048, 0.022, 0.008,0.003]
+@test round.(charge[10,:], digits=3) == [0.164, 0.144,0.048, 0.022, 0.008,0.003]
 
 zˢ = dtoz(Λ, 200e-9)
-@test round(δ.Ω(Λ,zˢ,zˢ),2) == 0.97
+@test round(δ.Ω(Λ,zˢ,zˢ),digits=2) == 0.97
 zˢ = dtoz(Λ, 20e-9)
-@test round(δ.Ω(Λ,zˢ,zˢ),2) == 0.76
+@test round(δ.Ω(Λ,zˢ,zˢ),digits=2) == 0.76
 
 
 T,p = 293.15, 1e5
@@ -51,4 +51,4 @@ v1,v2 = 10,10000
 tscan, tc = 120,1
 z1,z2 = vtoz(Λ,v2), vtoz(Λ,v1)
 δ = setupSMPS(Λ, v1, v2, tscan, tc);
-@test round(sum(δ.𝐀),1) == 95.8
+@test round(sum(δ.𝐀),digits=1) == 95.8

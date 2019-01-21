@@ -10,12 +10,11 @@ tests = ["dmafunctions",
          "inversion1",
          "inversion2",
          "inversion3",
-         "coagulation",
-         "miscellaneous"]
+         "coagulation"]
 
 println("Running tests:")
 
-for t in tests
-    println(" * $(t)")
-    include("$(t).jl")
+for testfun in tests
+    println(" * $(testfun)")
+    include("$(testfun).jl")
 end
