@@ -4,8 +4,6 @@ Interpolations
 SpecialFunctions
 DataFrames
 Calculus
-LinearAlgebra
-Random
 Plots
 PlotlyJS
 Distributions
