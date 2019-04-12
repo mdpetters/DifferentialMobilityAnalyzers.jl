@@ -21,14 +21,14 @@ function loadtsidata()
         push!(header, readline(f))
     end
 
-    Dp, dNdlog10D = Float64[], Array{Array{Float64}}(0)
+    Dp, dNdlog10D = Float64[], Array{Float64}[]
     for i in 1:107
         l = readline(f)
         x = split(l)
-        push!(Dp,parse(x[1]))
+        push!(Dp,parse(Float64,x[1]))
         current = Float64[]
         for j = 2:length(x)
-            push!(current, parse(x[j]))
+            push!(current, parse(Float64,x[j]))
         end
         push!(dNdlog10D, current)
     end
@@ -48,17 +48,17 @@ function loadtsidata()
     Nt = Float64[]
 
     for j = 3:length(x)
-        push!(Nt, parse(x[j]))
+        push!(Nt, parse(Float64,x[j]))
     end
 
-    rawdp, rawc = Float64[], Array{Array{Float64}}(0)
+    rawdp, rawc = Float64[], Array{Float64}[]
     for i in 1:1200
         l = readline(f)
         x = split(l)
-        push!(rawdp,parse(x[2]))
+        push!(rawdp,parse(Float64,x[2]))
         current = Float64[]
         for j = 3:2:length(x)
-            push!(current, parse(x[j]))
+            push!(current, parse(Float64,x[j]))
         end
         push!(rawc, current)
     end
