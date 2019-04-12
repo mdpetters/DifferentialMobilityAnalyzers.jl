@@ -65,7 +65,7 @@ function loadtsidata()
     rawc = hcat(rawc...)'
     close(f)
 
-    𝕟 = Array{SizeDistribution}(0)
+    𝕟 = SizeDistribution[]
     for s = 1:length(dNdlog10D[1,:])
         dlog10D = log10.(de[2:end]./de[1:end-1])
         dlnD = log.(de[2:end]./de[1:end-1])
@@ -75,5 +75,5 @@ function loadtsidata()
                             reverse(dNdlnD),reverse(N),:TSI))
     end
 
-    return 𝕟, rawdp, rawc, Nt
+    𝕟, rawdp, rawc, Nt
 end
