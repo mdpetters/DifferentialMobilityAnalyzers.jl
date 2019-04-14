@@ -14,6 +14,7 @@ using
 	NetCDF,        # Needed for parsing PartMC output
 	StatsBase,     # Needed for histograms
 	Glob,          # Needed to parse folders
+	Printf,
 	DifferentialMobilityAnalyzers # Needed for aerosol size distributions
 
 struct InitialConditionTriangular
@@ -58,7 +59,7 @@ export
 	runSimulation               # Wrapper function
 
 
-searchdir(path,key) = filter(x->contains(x,key), readdir(path))
+searchdir(path,key) = filter(x->occursin(x,key), readdir(path))
 
 # This function generates the particle size distribution and writes the
 # partMC input file.
@@ -141,15 +142,15 @@ end
 
 function runSimulation(case::Any, c::Int, prefix::String;
 					   verbose = false, repeat = 1)
-	k12, ka = Array{Float64}(repeat,5), Array{Float64}(repeat,5)
+	k12, ka = Array{Float64}(undef,repeat,5), Array{Float64}(undef,repeat,5)
 	l = Simulation[]
 
 	# Copy all input files in new directory
 	x1, x2 = glob("*.dat"), glob("*.spec")
-	readstring(`mkdir -p $prefix$c/`)
-	readstring(`cp $x1 $prefix$c/`)
-	readstring(`cp $x2 $prefix$c/`)
-	readstring(`mkdir -p $prefix$c/out/`)
+	read(`mkdir -p $prefix$c/`, String)
+	read(`cp $x1 $prefix$c/`, String)
+	read(`cp $x2 $prefix$c/`, String)
+	read(`mkdir -p $prefix$c/out/`, String)
 
 	f = open("$prefix$c/yasp.spec");
 	lines = readlines(f)
@@ -178,13 +179,13 @@ function runSimulation(case::Any, c::Int, prefix::String;
 		if verbose == true
 			run(`partmc $prefix$c/yasp.spec`)
 		else
-			readstring(`partmc $prefix$c/yasp.spec`)
+			read(`partmc $prefix$c/yasp.spec`, String)
 		end
 
-		dir = searchdir(path, ".nc")
+		file = glob("*.nc",path)
 		r = PartMCOutput[]
 		for j = 2:6
-			push!(r, readPSD(case, path*dir[j],s1.De))
+			push!(r, readPSD(case, file[j],s1.De))
 			k12[i,j-1] = r[j-1].k12
 			ka[i,j-1] = r[j-1].ka
 		end
