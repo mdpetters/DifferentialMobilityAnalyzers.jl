@@ -3,7 +3,7 @@ qsa,β = 1.6666666e-5, 1/10
 r1,r2,l = 9.37e-3,1.961e-2,0.44369
 leff = 13.0
 n = 6.0
-Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n)
+Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n,:cylindrical)
 bins,z1,z2 = 128, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
 δ = setupDMA(Λ, z1, z2, bins);
 
@@ -23,13 +23,13 @@ z = vtoz(Λ,[v,v])
 @test round.(cc(Λ, [100.0,10.0].*1e-9),digits=2) == [2.96, 23.27] # array working
 @test round.(δ.Tl(Λ,[10.0,30.0]),digits=2) == [0.51, 0.86]
 
-Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n)
+Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n,:cylindrical)
 δ = setupDMA(Λ, z1, z2, bins);
 charge = hcat(map(k->δ.Tc(k,δ.Dp), 1:6)...)
 charge[10,:]   # Test + carging at 618 n,
 @test round.(charge[10,:], digits=3) == [0.126, 0.085,0.048, 0.022, 0.008,0.003]
 
-Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:+,n)
+Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:+,n,:cylindrical)
 δ = setupDMA(Λ, z1, z2, bins);
 charge = hcat(map(k->δ.Tc(k,δ.Dp), 1:6)...)
 charge[10,:]   # Test - carging at 618 n,
@@ -46,7 +46,7 @@ qsa,β = 1.6666666e-5, 1/4
 r1,r2,l = 9.37e-3,1.961e-2,0.44369
 leff = 13.0
 n = 6.0
-Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n)
+Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n,:cylindrical)
 v1,v2 = 10,10000
 tscan, tc = 120,1
 z1,z2 = vtoz(Λ,v2), vtoz(Λ,v1)

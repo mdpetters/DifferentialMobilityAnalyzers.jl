@@ -3,7 +3,7 @@ qsa,β = 1.6666666e-5, 1/10
 r1,r2,l = 9.37e-3,1.961e-2,0.44369
 leff = 13.0
 n = 6.0
-Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n)
+Λ = DMAconfig(T,p,qsa,qsa/β,r1,r2,l,leff,:-,n,:cylindrical)
 bins,z1,z2 = 128, dtoz(Λ,1000e-9), dtoz(Λ,10e-9)
 δ = setupDMA(Λ, z1, z2, bins);
 
