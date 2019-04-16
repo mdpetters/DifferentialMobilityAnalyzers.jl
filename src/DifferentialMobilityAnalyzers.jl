@@ -23,9 +23,7 @@ import
 	Base.*,                   # Import to extend operators
 	Base./,                   # Import to extend operators
 	Base.+,                   # Import to extend operators
-	#Base.⋅,                   # Import to extend operators
 	LinearAlgebra.⋅
-
 
 export
 	DMAconfig,                    # Data type to hold DMA config
@@ -58,7 +56,7 @@ export
     β12brown,                 # Brownian coagualation kernel
 	β12zebel,                 # Zebel charge enhancement
 	β12,                      # Brownian+Zebel coagulation kernel
-	figure
+	figure					  # Function to setup figures
 
 ### Data types
 
