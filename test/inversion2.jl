@@ -1,3 +1,5 @@
+using Random
+
 # Test inversion from Notebook 4
 t,p = 295.15, 1e5
 qsa,β = 1.66e-5, 1/5
