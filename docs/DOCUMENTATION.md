@@ -23,7 +23,9 @@ Julia uses a [Just in Time (JIT) compiler](https://en.wikipedia.org/wiki/Just-in
 Although Julia is dynamically-typed and in syntax apparently similar to MATLAB, the language is more abstract. For example, to optimize code types are specified explicitly. The [formal type system](https://docs.julialang.org/en/stable/manual/types/) may require a more in-depth engagement by the user with programming fundamentals relative to other common scientific programming languages such as IDL/GDL or MATLAB/GNU Octave.
 
 #### (c) Continuing Julia Development
-The Julia language is undergoing rapid development and not yet stable. This means that some language constructs can change from version to version. The current version of the Package is written in Julia 0.6 and will not run on older versions. Julia 1.0 is likely being released in 2018 after which language deprecations are expected to become less of a concern. I will maintain the DifferentialMobilityAnalyzers.jl package to remain compatible with future versions of the language. Users that simply apply the software to solve a problem will only be affected should they opt to upgrade to the newest Julia version in the future.
+The original package was developed at a time when the Julia language was undergoing rapid development and not yet stable. The original version of the Package was written in Julia 0.6 and will neither run on older nor newer versions. 
+
+The current version of the package is compatible with Julia 1.1 and it is recommended to use the current version of the package and Julia.
 
 #### (d) Getting Help
 Julia and Julia packages are well-documented from a programmers perspective. However, the focus on being a more general programming language, the distributed nature of the packages and the relatively early stage of development may at times require some tenacity by the user. An excellent resource is the [Julia tutorial compilation](https://julialang.org/learning/). <br>
@@ -35,9 +37,9 @@ To interactively use the Notebooks and/or use the software follow the steps belo
 This software will only work with Julia v0.6.x. The Julia binaries for Window, MacOS, or Linux can be downloaded [here](https://julialang.org/downloads/).
 
 #### (b) DifferentialMobilityAnalyzers.jl
-The package  <b> DifferentialMobiliyAnalyzer </b> can be installed from the Julia REPL prompt with
+The package  <b> DifferentialMobiliyAnalyzers </b> can be installed from the Julia package prompt with
 ```julia
-julia> Pkg.clone("https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl.git")
+pkg> add https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl.git
 ```
 This installs the package and any missing dependencies. (Patience required for fresh install due to large number of dependencies, including the Jupyter environment).
 
@@ -75,12 +77,7 @@ Open a Notebook. In the top right corner it shows the Julia version. On the firs
 ---
 
 Click on the first cell that contains code and hit Shift-Enter to execute the cell. The pending cell execution and processing is indicated by the changing of the cell number (number in brackets) to an asterisk. As indicated earlier, he first time a cell is executed it can be slow. Move on to next cell and repeat. A cell block can be executed twice in a row with altered numbers (e.g. change the axis limits). All cells can be executed in series using Kernel -> Restart & Run All.
-![alt text](Figures/doc4.png)
-
----
-
-Hovering over the figure will display the numbers of each of the series. Clicking on the legend (e.g. k = -1) will toggle the series. Executing cell [8] for a second time but changing xlim = (10,1000) to xlim = (10,200) will change the scaling of the xaxis. Clicking on the disk symbol will open the plot in the web-based Chart-Studio application for a gui view that allows editing the plot.
-![alt text](Figures/doc5.png)<br>
+![alt text](Figures/doc4.png) <br>
 
 ### 4. Package Documentation
 The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer.
@@ -125,4 +122,4 @@ This notebook presents an overview over coagulation theory. It is shown how to p
 This notebook demonstrates how to construct a convolution matrix using a DMA transfer function defined in a FORTRAN routine. The notebook explains how to compile the routine to a shared library and setup ```ccall``` to pass variables to and from the FORTRAN routine.
 
 [Virtual Machine](https://doi.org/10.5281/zenodo.1432522)<br>
-Download virtual machine containing a working version of the software. Further instructions are found in the [Supporting Information](Supporting%Information.pdf)<br>
+Download virtual machine containing a working version of the software (for Julia 0.6.4). Further instructions are found in the [Supporting Information](Supporting%Information.pdf)<br>
