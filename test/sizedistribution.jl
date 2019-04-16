@@ -1,4 +1,4 @@
-using SpecialFunctions
+using SpecialFunctions, LinearAlgebra
 
 T,p = 293.15, 1e5
 qsa,β = 1.6666666e-5, 1/10
