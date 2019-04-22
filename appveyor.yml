@@ -20,9 +20,9 @@ branches:
     - /release-.*/
 
 notifications:
-  - provider: "mdpetter@ncsu.edu"
+  - provider: Email
     on_build_success: false
-    on_build_failure: true
+    on_build_failure: false
     on_build_status_changed: false
 
 install:
