@@ -1,3 +1,6 @@
+name = "DifferentialMobilityAnalyzers"
+uuid = "050a7be8-18f9-52d6-bdba-0a194485d082"
+
 [deps]
 Calculus = "49dc2e85-a5d0-5ad3-a950-438e2897f1b9"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
