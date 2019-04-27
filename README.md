@@ -3,7 +3,7 @@
 [![appveyor badge][appveyor_badge]][appveyor_url]
 [![codecov badge][codecov_badge]][codecov_url]
 [![][docs-stable-img]](docs/DOCUMENTATION.md)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1432522.svg)](https://doi.org/10.5281/zenodo.1432522)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2652893.svg)](https://doi.org/10.5281/zenodo.2652893)
 
 This package implements the Julia DMA language. The language is a tool to facilitate interpretation of data from aerosol differential mobility analyzers.
 
@@ -25,7 +25,7 @@ julia> notebook(detached = true)
 ```
 This starts the notebook server. Then load any of the notebooks in the docs/ folder.
 
-Quickstart: The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer. A virtual machine with a working copy of all software components (for Julia 0.6.4) can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.1432522). Instructions for setting up the machine are in the Supporting Information.
+Quickstart: The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer. A virtual machine with a working copy of all software components (for Julia 0.6.4) can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.2652893). Instructions for setting up the machine are in the Supporting Information.
 
 The Julia DMA Language: [Manuscript](docs/Manuscript.pdf) and [Supporting Information](docs/SI.pdf)<br>
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
@@ -40,7 +40,7 @@ The Julia DMA Language: [Manuscript](docs/Manuscript.pdf) and [Supporting Inform
 [Notebook S10. Dimer Coagulation and Isolation](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S10.%20Dimer%20Coagulation%20and%20Isolation.ipynb) <br>
 [Notebook S11. PartMC Simulations](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S11.%20PartMC%20Simulations.ipynb)<br>
 [Notebook S12. FORTRAN API](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S12.%20FORTRAN%20API.ipynb) <br>
-[Link to Virtual Machine](https://doi.org/10.5281/zenodo.1432522)<br>
+[Link to Virtual Machine](https://doi.org/10.5281/zenodo.2652893)<br>
 
 ## Contribute
 Contributions including notebooks for classroom instruction, homework assignments, interesting DMA configurations, new inversion schemes, and improved or new functionalities of the language are welcome.
@@ -50,7 +50,7 @@ This work was supported by the United States Department of Energy, Office of Sci
 
 Petters, M.D. (2018) <i> A language to simplify computation of differential mobility analyzer response functions </i> Aerosol Science & Technology, 52 (12), 1437-1451, https://doi.org/10.1080/02786826.2018.1530724.
 
-Petters, M.D. (2018) <i> Virtual Machine containing Software for "A language to simplify computation of differential mobility analyzer response functions"</i>, [Software], Zenodo, http://doi.org/10.5281/zenodo.1432522.
+Petters, M.D. (2018) <i> Virtual Machine containing Software for "A language to simplify computation of differential mobility analyzer response functions"</i> (Version 2.0), [Software], Zenodo, https://doi.org/10.5281/zenodo.2652893.
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 
