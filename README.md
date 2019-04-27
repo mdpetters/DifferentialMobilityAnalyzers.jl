@@ -7,7 +7,7 @@
 
 This package implements the Julia DMA language. The language is a tool to facilitate interpretation of data from aerosol differential mobility analyzers.
 
-<b> Note that this package has been updated to be compatible with the Julia v1 series and later. To see the code directly associated with the paper (compatible with Julia v0.6), please switch to version 1.0.0 of the package and/or load the zenodo virtual machine. The update mostly fixed Julia language deprecations. For a detailed list of changes with the current version please read the [News](NEWS.md). </b>
+<b> Note that this package has been updated to be compatible with the Julia v1 series and later. To see the code directly associated with the paper (compatible with Julia v0.6), please switch to version 1.0.0 of the package and/or load the zenodo virtual machine associated with that version. The update mostly fixed Julia language deprecations. For a detailed list of changes with the current version please read the [News](NEWS.md). </b>
 
 ## Documentation
 [Link to detailed documentation](docs/DOCUMENTATION.md)
@@ -25,7 +25,7 @@ julia> notebook(detached = true)
 ```
 This starts the notebook server. Then load any of the notebooks in the docs/ folder.
 
-Quickstart: The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer. A virtual machine with a working copy of all software components (for Julia 0.6.4) can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.2652893). Instructions for setting up the machine are in the Supporting Information.
+Quickstart: The Julia DMA language is documented in a journal manuscript and 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via NBViewer. Virtual machine with a working copies of all software components can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.2652893). Instructions for setting up the machine are in the Supporting Information.
 
 The Julia DMA Language: [Manuscript](docs/Manuscript.pdf) and [Supporting Information](docs/SI.pdf)<br>
 [Notebook S1. Differential Mobility Analyzer](https://nbviewer.jupyter.org/github/mdpetters/DifferentialMobilityAnalyzers.jl/blob/master/docs/Notebook%20S01.%20Differential%20Mobility%20Analyzer.ipynb) <br>
