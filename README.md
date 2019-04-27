@@ -16,6 +16,7 @@ This package implements the Julia DMA language. The language is a tool to facili
 The package  <b> DifferentialMobiliyAnalyzers </b> can be installed from the Julia package prompt with
 ```julia
 pkg> add https://github.com/mdpetters/DifferentialMobilityAnalyzers.jl.git
+pkg> add Calculus DataFrames Distributions Glob IJulia Interpolations LambertW LinearAlgebra LsqFit NetCDF ORCA PlotlyJS Plots Printf ProgressMeter Random SpecialFunctions StatsBase
 ```
 This installs the package and any missing dependencies. (Patience required for fresh install).
 ```julia
