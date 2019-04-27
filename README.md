@@ -50,7 +50,7 @@ This work was supported by the United States Department of Energy, Office of Sci
 
 Petters, M.D. (2018) <i> A language to simplify computation of differential mobility analyzer response functions </i> Aerosol Science & Technology, 52 (12), 1437-1451, https://doi.org/10.1080/02786826.2018.1530724.
 
-Petters, M.D. (2018) <i> Virtual Machine containing Software for "A language to simplify computation of differential mobility analyzer response functions"</i> (Version 2.0), [Software], Zenodo, https://doi.org/10.5281/zenodo.2652893.
+Petters, M.D. (2019, April 27) <i> Virtual Machine containing Software for "A language to simplify computation of differential mobility analyzer response functions"</i> (Version 2.0), [Software], Zenodo, https://doi.org/10.5281/zenodo.2652893.
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 
