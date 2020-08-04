@@ -5,12 +5,14 @@ else
     using Test
 end
 
-tests = ["dmafunctions",
-         "sizedistribution",
-         "inversion1",
-         "inversion2",
-         "inversion3",
-         "coagulation"]
+tests = [
+    "dmafunctions",
+    "sizedistribution",
+    "inversion1",
+    "inversion2",
+    "inversion3",
+    "coagulation",
+]
 
 println("Running tests:")
 
