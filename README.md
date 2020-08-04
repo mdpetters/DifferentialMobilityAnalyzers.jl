@@ -1,6 +1,5 @@
 ## DifferentialMobilityAnalyzers.jl
 [![travis badge][travis_badge]][travis_url]
-[![appveyor badge][appveyor_badge]][appveyor_url]
 [![codecov badge][codecov_badge]][codecov_url]
 [![][docs-stable-img]](docs/DOCUMENTATION.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2652893.svg)](https://doi.org/10.5281/zenodo.2652893)
