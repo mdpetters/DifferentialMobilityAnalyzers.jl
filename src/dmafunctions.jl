@@ -26,11 +26,11 @@ Tl = (Λ,dp) -> clean(Peff(u(Λ,dab(Λ,dp*1e-9))))
 
 function getTc(Λ)
 	if Λ.polarity == :+    # positive polarity power supply
-		A1 = convert(Array{Float64}, ax[:n1])
-		A2 = convert(Array{Float64}, ax[:n2])
+		A1 = convert(Array{Float64}, ax[!,:n1])
+		A2 = convert(Array{Float64}, ax[!,:n2])
 	elseif Λ.polarity == :-
-		A1 = convert(Array{Float64}, ax[:p1])
-		A2 = convert(Array{Float64}, ax[:p2])
+		A1 = convert(Array{Float64}, ax[!,:p1])
+		A2 = convert(Array{Float64}, ax[!,:p2])
 	end
 
 	fc = Function[]

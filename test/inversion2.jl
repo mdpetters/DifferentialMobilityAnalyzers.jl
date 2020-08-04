@@ -31,4 +31,4 @@ setupRegularization(δ.𝐀,eyeM,R,inv(δ.𝐒)*R)
 λopt = lcorner(λ₁,λ₂;n=10,r=3)
 N =  clean((reginv(λopt, r = :Nλ))[1])
 𝕟ᵢₙᵥ= SizeDistribution([],𝕟.De,𝕟.Dp,𝕟.ΔlnD,N./𝕟.ΔlnD,N,:regularized)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 894
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890
