@@ -10,6 +10,11 @@ m = 3
 bins, z₁, z₂ = 128, dtoz(Λ, 1000e-9), dtoz(Λ, 10e-9)
 δ = setupDMA(Λ, z₁, z₂, bins);
 
+𝐀 =
+    (hcat(map(
+        i -> Σ(k -> δ.Ω(Λ, δ.Z, i / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp), Λ.m),
+        δ.Z,
+    )...))'
 
 𝕟 = DMALognormalDistribution([[400, 30, 1.2], [500, 110, 1.7]], δ)
 Random.seed!(703)
@@ -18,6 +23,13 @@ Qcpc = 16.66
 t = tscan ./ bins
 
 𝕣 = δ.𝐀 * 𝕟;
+
+𝕣1 = 𝐀 * 𝕟;
+𝕣2 = 𝕟 * 𝐀;
+
+@test 𝕣.N == 𝕣1.N
+@test 𝕣2.N == 𝕣1.N
+
 c = 𝕣.N * Qcpc * t;
 R = Float64[]
 for i in c

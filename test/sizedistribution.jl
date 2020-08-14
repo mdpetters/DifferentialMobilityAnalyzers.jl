@@ -24,11 +24,18 @@ bins, z1, z2 = 128, dtoz(Λ, 1000e-9), dtoz(Λ, 10e-9)
 𝕟 = 1.5 * 𝕥
 @test round(Int, sum(𝕟.N)) == 600
 
+𝕟 =  𝕥 * 1.5
+@test round(Int, sum(𝕟.N)) == 600
+
 𝕟 = lognormal([[100, 100, 1.1]]; d1 = 10.0, d2 = 1000.0, bins = 256);
 μ, σ = 100.0, 200.0
 T = 0.5 * (1.0 .+ erf.((𝕟.Dp .- μ) ./ sqrt(2σ)))
 𝕩 = T * 𝕟
 @test round(Int, sum(𝕟.N)) == 100
+
+𝕩 = 𝕟 * T
+@test round(Int, sum(𝕟.N)) == 100
+
 
 # Add test later
 𝕟 = DMALognormalDistribution([[130, 50, 1.3], [280, 140, 1.9]], δ);
@@ -52,6 +59,9 @@ a = 1.4
 𝕩 = a ⋅ 𝕟
 @test round(𝕩.Dp[argmax(𝕩.N)] / 𝕟.Dp[argmax(𝕟.N)], digits = 1) == a
 
+𝕩 = 𝕟 ⋅ a
+@test round(𝕩.Dp[argmax(𝕩.N)] / 𝕟.Dp[argmax(𝕟.N)], digits = 1) == a
+
 𝕟 = DMALognormalDistribution([[100, 100, 1.1]], δ);
 𝕩 = a ⋅ 𝕟
 @test round(𝕩.Dp[argmax(𝕩.N)] / 𝕟.Dp[argmax(𝕟.N)], digits = 1) == a
@@ -60,6 +70,9 @@ a = 1.4
 μ, σ = 80.0, 2000.0
 T = (1.0 .+ erf.((𝕟.Dp .- μ) ./ (sqrt(2σ))))
 𝕩 = T ⋅ 𝕟
+@test round(Int, sum(𝕩.N)) == 218
+
+𝕩 = 𝕟 ⋅ T
 @test round(Int, sum(𝕩.N)) == 218
 
 𝕟 = DMALognormalDistribution([[100, 100, 1.1]], δ);

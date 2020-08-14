@@ -49,7 +49,7 @@ end
 κ = λ -> 2.0 * (ρᵖ(λ) * η²ᵖ(λ) - ηᵖ(λ) * ρ²ᵖ(λ)) / (ρᵖ(λ)^2.0 + ηᵖ(λ)^2.0)^1.5
 
 # Compute the L-curve for n points between limits λ₁ and λ₂
-function lcurve(λ₁::Float64, λ₂::Float64; n::Int = 10)
+function lcurve(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10)
     λs = 10 .^ range(log10(λ₁), stop = log10(λ₂), length = n)
     L1, L2 = reginv(λs, r = :L1L2)
     κs = map(λ -> κ(λ), λs)
@@ -63,7 +63,7 @@ function lcurve(λ₁::Float64, λ₂::Float64; n::Int = 10)
 end
 
 # Find the corner of the L-curve using iterative adjustment of the grid
-function lcorner(λ₁::Float64, λ₂::Float64; n::Int = 10, r::Int = 3)
+function lcorner(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10, r::Int = 3)
     L1, L2, λs, ii = lcurve(λ₁, λ₂; n = 10)
     for i = 1:r
         L1, L2, λs, ii = lcurve(λs[1], λs[3]; n = 10)
@@ -73,9 +73,9 @@ end
 
 # Warpper for the regularized inversion
 function rinv(R, δ; λ₁ = 1e-2, λ₂ = 1e1)
-    eyeM = Matrix{Float64}(I, length(R), length(R))
+    eyeM = Matrix{AbstractFloat}(I, length(R), length(R))
     setupRegularization(δ.𝐀, eyeM, R, inv(δ.𝐒) * R) # setup the system
-    λopt = lcorner(λ₁, λ₂; n = 10, r = 3)                  # compute the optimal λ
-    N = clean((reginv(λopt, r = :Nλ))[1])          # find the inverted size
+    λopt = lcorner(λ₁, λ₂; n = 10, r = 3)           # compute the optimal λ
+    N = clean((reginv(λopt, r = :Nλ))[1])           # find the inverted size
     return SizeDistribution([], δ.De, δ.Dp, δ.ΔlnD, N ./ δ.ΔlnD, N, :regularized)
 end

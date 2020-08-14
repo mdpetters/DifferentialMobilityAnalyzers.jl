@@ -60,14 +60,14 @@ export DMAconfig,                    # Data type to hold DMA config
 
 # Data type to describe DMA
 struct DMAconfig
-    t::Float64                # Temperature [K]
-    p::Float64                # Pressure [Pa]
-    qsa::Float64              # Sample flow [m3 s-1]
-    qsh::Float64              # Sheath flow [m3 s-1]
-    r1::Float64               # Inner column radius [m]
-    r2::Float64               # Outer column radius [m]
-    l::Float64                # Column length [m]
-    leff::Float64             # Effective length [m]
+    t::AbstractFloat          # Temperature [K]
+    p::AbstractFloat          # Pressure [Pa]
+    qsa::AbstractFloat        # Sample flow [m3 s-1]
+    qsh::AbstractFloat        # Sheath flow [m3 s-1]
+    r1::AbstractFloat         # Inner column radius [m]
+    r2::AbstractFloat         # Outer column radius [m]
+    l::AbstractFloat          # Column length [m]
+    leff::AbstractFloat       # Effective length [m]
     polarity::Symbol          # Power supply polarity [:+] or [:-]
     m::Int8                   # Number of charges in charge correction [-]
     DMAtype::Symbol           # Designate :radial, :cylindrical
@@ -78,33 +78,33 @@ struct DifferentialMobilityAnalyzer
     Ω::Function                    # DMA transfer function
     Tc::Function                   # Charge filter Function
     Tl::Function                   # DMA Penetration efficiency function
-    Z::Array{Float64,1}            # Mobility array midpoints
-    Ze::Array{Float64,1}           # Mobility array bin edges
-    Dp::Array{Float64,1}           # Mobility diameter midpoints
-    De::Array{Float64,1}           # Mobility diameter bin edges
-    ΔlnD::Array{Float64,1}         # ln(de[i+1])-ln(de[i])
-    𝐀::Array{Float64,2}            # Convolution matrix
-    𝐒::Array{Float64,2}            # Convolution matrix for initial guess
-    𝐎::Array{Float64,2}            # Convolution matrix for no charge filter
+    Z::Vector{<:AbstractFloat}     # Mobility array midpoints
+    Ze::Vector{<:AbstractFloat}           # Mobility array bin edges
+    Dp::Vector{<:AbstractFloat}           # Mobility diameter midpoints
+    De::Vector{<:AbstractFloat}           # Mobility diameter bin edges
+    ΔlnD::Vector{<:AbstractFloat}         # ln(de[i+1])-ln(de[i])
+    𝐀::AbstractMatrix            # Convolution matrix
+    𝐒::AbstractMatrix            # Convolution matrix for initial guess
+    𝐎::AbstractMatrix            # Convolution matrix for no charge filter
 end
 
 # Data type that is used to describe the size distributions
 mutable struct SizeDistribution
-    A::Any                   # Input parameters [[N1,Dg1,σg1], ...] or DMA
-    De::Array{Float64,1}     # bin edges
-    Dp::Array{Float64,1}     # bin midpoints
-    ΔlnD::Array{Float64,1}   # ΔlnD of the grid
-    S::Array{Float64,1}      # spectral density
-    N::Array{Float64,1}      # number concentration per bin
+    A::Any                        # Input parameters [[N1,Dg1,σg1], ...] or DMA
+    De::Vector{<:AbstractFloat}   # bin edges
+    Dp::Vector{<:AbstractFloat}   # bin midpoints
+    ΔlnD::Vector{<:AbstractFloat} # ΔlnD of the grid
+    S::Vector{<:AbstractFloat}    # spectral density
+    N::Vector{<:AbstractFloat}    # number concentration per bin
     form::Symbol             # form of the size distributio [:lognormal, ....]
 end
 
 # Data type that is used to describe the reguarization
 struct Regvars
-    𝐀::Array{Float64,2}      # Convolution matrix
-    𝐈::Array{Float64,2}      # Identity matrix
-    B::Array{Float64,1}      # residual vector
-    X₀::Array{Float64,1}     # initial guess
+    𝐀::AbstractMatrix               # Convolution matrix
+    𝐈::AbstractMatrix               # Identity matrix
+    B::Vector{<:AbstractFloat}      # residual vector
+    X₀::Vector{<:AbstractFloat}     # initial guess
 end
 
 ### Constants

@@ -52,7 +52,7 @@ end
 
 # -------------------------- Size Distribution Arithmetic ---------------------
 # --------------------------- Block 1: * .* and ./  ---------------------------
-function *(a::Float64, 𝕟::SizeDistribution)
+function *(a::AbstractFloat, 𝕟::SizeDistribution)
     # This function defines the product of a scalar and a size distribution
     N = a * 𝕟.N
     S = a * 𝕟.S
@@ -60,20 +60,27 @@ function *(a::Float64, 𝕟::SizeDistribution)
     return SizeDistribution([[]], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, S, N, :axdist)
 end
 
+*(𝕟::SizeDistribution, a::AbstractFloat) = *(a::AbstractFloat, 𝕟::SizeDistribution)
 
-function *(a::Array{Float64,1}, 𝕟::SizeDistribution)
+function *(a::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
     # This function defines the product of a vector and a size distribution
     N = a .* 𝕟.N
     S = a .* 𝕟.S
     return SizeDistribution([[]], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, S, N, :axdist)
 end
 
-function *(𝐀::Array{Float64,2}, 𝕟::SizeDistribution)
+*(𝕟::SizeDistribution, a::Vector{<:AbstractFloat}) =
+    *(a::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
+
+
+function *(𝐀::AbstractMatrix, 𝕟::SizeDistribution)
     # This function defines the product of a matrix and a size distribution
     N = 𝐀 * 𝕟.N
     S = 𝐀 * 𝕟.S
     return SizeDistribution([[]], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, S, N, :axdist)
 end
+
+*(𝕟::SizeDistribution, 𝐀::AbstractMatrix) = *(𝐀::AbstractMatrix, 𝕟::SizeDistribution)
 
 function *(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     # This function defines the product of two size distributions
@@ -93,7 +100,7 @@ end
 
 
 # --------------------------- Block 2: ⋅ and .⋅  -----------------------------
-function LinearAlgebra.:⋅(a::Float64, 𝕟::SizeDistribution)
+function LinearAlgebra.:⋅(a::AbstractFloat, 𝕟::SizeDistribution)
     if 𝕟.Dp[1] > 𝕟.Dp[2]
         nDp = reverse(a * 𝕟.Dp)
         itpN = interpolate((nDp,), reverse(𝕟.N), Gridded(Linear()))
@@ -120,8 +127,10 @@ function LinearAlgebra.:⋅(a::Float64, 𝕟::SizeDistribution)
     end
 end
 
+⋅(𝕟::SizeDistribution, a::AbstractFloat) = ⋅(a::AbstractFloat, 𝕟::SizeDistribution)
+
 #function LinearAlgebra.:.⋅(A::Array{Float64,1}, 𝕟::SizeDistribution)
-function LinearAlgebra.:⋅(A::Array{Float64,1}, 𝕟::SizeDistribution)
+function LinearAlgebra.:⋅(A::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
     if 𝕟.Dp[1] > 𝕟.Dp[2]
         nDp = reverse(A .* 𝕟.Dp)
         itpN = interpolate((nDp,), reverse(𝕟.N), Gridded(Linear()))
@@ -146,6 +155,9 @@ function LinearAlgebra.:⋅(A::Array{Float64,1}, 𝕟::SizeDistribution)
         return SizeDistribution([[]], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, S, N, :axdist)
     end
 end
+
+⋅(𝕟::SizeDistribution, A::Vector{<:AbstractFloat}) =
+    ⋅(A::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
 
 # --------------------------- Block 3: +-------------------------------------
 function +(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
