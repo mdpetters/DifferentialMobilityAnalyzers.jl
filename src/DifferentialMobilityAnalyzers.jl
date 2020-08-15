@@ -17,21 +17,21 @@ using Calculus
 using LinearAlgebra
 using Random
 using Distributions
-using Plots
 
-import Base.*,                   # Import to extend operators
+import Base.*,                # Import to extend operators
     Base./,                   # Import to extend operators
     Base.+,                   # Import to extend operators
+    Base.-,                   # Import to extend operators
     LinearAlgebra.⋅
 
 export DMAconfig,                    # Data type to hold DMA config
-    DifferentialMobilityAnalyzer, # Data type to hold grid and matrices
+    DifferentialMobilityAnalyzer,    # Data type to hold grid and matrices
     SizeDistribution,         # Data type to hold size distribution
     Regvars,                  # Data type to hold regularization problem
     Ψ,                        # Data structure that contains regvars
     setupDMA,                 # Function to initialize DMA
     setupSMPS,                # Function to initialize SMPS
-    setupSMPSdata, # Function to initialize SMPS with data
+    setupSMPSdata,            # Function to initialize SMPS with data
     setupRegularization,      # Function to initialize regularization
     clean,                    # Function to remove negative numbers
     Σ,                        # Function to sum functions
@@ -49,12 +49,12 @@ export DMAconfig,                    # Data type to hold DMA config
     reginv,                   # Function to compute regularized inverse
     lcurve,                   # Function to compute the L-curve
     lcorner,                  # Function to find corner of L-curve
-    rinv,  # Function to compute the inverse
+    rinv,                     # Function to compute the inverse
     loadtsidata,              # Function to loads TSI data file; loadtsidata.
     β12brown,                 # Brownian coagualation kernel
     β12zebel,                 # Zebel charge enhancement
     β12,                      # Brownian+Zebel coagulation kernel
-    figure  # Function to setup figures
+    figure                    # Function to setup figures
 
 ### Data types
 
