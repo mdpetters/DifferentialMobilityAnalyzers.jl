@@ -101,10 +101,10 @@ end
 
 # Data type that is used to describe the reguarization
 struct Regvars
-    𝐀::AbstractMatrix               # Convolution matrix
-    𝐈::AbstractMatrix               # Identity matrix
-    B::Vector{<:AbstractFloat}      # residual vector
-    X₀::Vector{<:AbstractFloat}     # initial guess
+    𝐀::Matrix{Float64}     # Convolution matrix
+    𝐈::Matrix{Float64}      # Identity matrix
+    B::Array{Float64}      # residual vector
+    X₀::Array{Float64}     # initial guess
 end
 
 ### Constants
