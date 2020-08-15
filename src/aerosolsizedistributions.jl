@@ -179,3 +179,24 @@ function +(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     N = S .* 𝕟₁.ΔlnD
     return SizeDistribution([[]], 𝕟₁.De, 𝕟₁.Dp, 𝕟₁.ΔlnD, S, N, :distsum)
 end
+
+function -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
+    # This function defines the subtraction of two size distributions
+
+    # If grids are not equal, then interpolate n2 onto n1 grid
+    if 𝕟₁.Dp ≠ 𝕟₂.Dp
+        itp = interpolate((𝕟₂.Dp,), 𝕟₂.N, Gridded(Linear()))
+        ext = extrapolate(itp, 0)
+        N = clean(ext(𝕟₁.Dp))
+
+        itp = interpolate((𝕟₂.Dp,), 𝕟₂.S, Gridded(Linear()))
+        ext = extrapolate(itp, 0)
+        S = clean(ext(𝕟₁.Dp))
+        S = 𝕟₁.S - S
+    else
+        S = 𝕟₁.S - 𝕟₂.S
+    end
+    N = S .* 𝕟₁.ΔlnD
+    return SizeDistribution([[]], 𝕟₁.De, 𝕟₁.Dp, 𝕟₁.ΔlnD, S, N, :distsum)
+end
+
