@@ -54,7 +54,8 @@ export DMAconfig,                    # Data type to hold DMA config
     β12brown,                 # Brownian coagualation kernel
     β12zebel,                 # Zebel charge enhancement
     β12,                      # Brownian+Zebel coagulation kernel
-    figure                    # Function to setup figures
+    figure,                   # Function to setup figures
+    interpolateDataFrameOntoδ # Interpolate data onto DMA grid
 
 ### Data types
 

@@ -200,3 +200,24 @@ function -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     return SizeDistribution([[]], 𝕟₁.De, 𝕟₁.Dp, 𝕟₁.ΔlnD, S, N, :distsum)
 end
 
+"""
+   interpolate_df_onto_thisδ(kw)
+
+   This function takes some measured size distribution in a DataFrame and 
+   and interpolates it onto a DMA grid. 
+
+   Example Usage
+   𝕣 = (df, :Dp, :R, δ) |> interpolate_df_onto_thisδ
+
+   This extracts the columns Dp and R from df and interpolates it ont grid δ and
+   returns the results as a SizeDistribution. The df has to be sorted in ascending order
+"""
+function interpolateDataFrameOntoδ(kw)
+    df, δ  = kw[1], kw[end]
+    Dp, Rcn = df[!,kw[2]], df[!,kw[3]]
+    itp = interpolate((Dp,), Rcn, Gridded(Linear()))
+    etp = extrapolate(itp, 0.0) 
+    R = etp(δ.Dp)
+    
+    return SizeDistribution([],δ.De,δ.Dp,δ.ΔlnD,R./δ.ΔlnD,R,:response)
+end
