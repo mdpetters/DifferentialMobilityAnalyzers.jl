@@ -9,6 +9,9 @@
 
 ---
 ## (current master)
+- Fix performance regression caused by changes in 2.1
+- Add subtraction operator: 𝕟1 - 𝕟2
+- Remove Plots.jl/PlotlyJS.jl/ORCA.jl dependencies for core project. The packages are still needed for executing the notebooks but they don't need to be installed when the package is embedded for regular use and carry a lot of overhead.
 
 ## 2.1
 - Fix deprecation warnings from DataFrames API
