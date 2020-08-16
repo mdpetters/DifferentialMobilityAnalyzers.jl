@@ -1,8 +1,6 @@
 # DifferentialMobilityAnalyzers.jl NEWS
 
 #### Notes on release changes and ongoing development
-
-- preallocate identity matrix
 - current master is compatible with Julia 1.5
 - v2.1 supports Julia 1.5
 - v2.0 supports Julia 1.1
@@ -10,6 +8,7 @@
 
 ---
 ## (current master)
+- preallocate identity matrix
 - Fix performance regression caused by changes in 2.1
 - Add subtraction operator: 𝕟1 - 𝕟2
 - Remove Plots.jl/PlotlyJS.jl/ORCA.jl dependencies for core project. The packages are still needed for executing the notebooks but they don't need to be installed when the package is embedded for regular use and carry a lot of overhead.
