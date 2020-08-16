@@ -134,12 +134,13 @@ function setupSMPS(Λ, v1, v2, tscan, tc)
     T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Dp)
     global 𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
     global 𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
+    global 𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
     𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
-    return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎)
+    return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
 function setupSMPSdata(Λ, V)
@@ -157,12 +158,13 @@ function setupSMPSdata(Λ, V)
     T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Dp)
     global 𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
     global 𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
+    global 𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
     𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
-    return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎)
+    return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
 
@@ -176,10 +178,11 @@ function setupDMA(Λ, z1, z2, bins)
     T = (zˢ, k, Λ) -> Ω(Λ, Z, zˢ / k) .* Tc(k, Dp) .* Tl(Λ, Dp)
     global 𝐀 = (hcat(map(zˢ -> Σ(k -> T(zˢ, k, Λ), Λ.m), Z)...))'
     global 𝐎 = (hcat(map(i -> Σ(k -> Ω(Λ, Z, i / k) .* Tl(Λ, Dp), 1), Z)...))'
+    global 𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
     𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
-    return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎)
+    return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end

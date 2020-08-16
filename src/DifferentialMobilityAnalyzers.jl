@@ -86,6 +86,7 @@ struct DifferentialMobilityAnalyzer
     𝐀::AbstractMatrix            # Convolution matrix
     𝐒::AbstractMatrix            # Convolution matrix for initial guess
     𝐎::AbstractMatrix            # Convolution matrix for no charge filter
+    𝐈::AbstractMatrix            # IdentiyMatrix
 end
 
 # Data type that is used to describe the size distributions

@@ -2,6 +2,7 @@
 
 #### Notes on release changes and ongoing development
 
+- preallocate identity matrix
 - current master is compatible with Julia 1.5
 - v2.1 supports Julia 1.5
 - v2.0 supports Julia 1.1
