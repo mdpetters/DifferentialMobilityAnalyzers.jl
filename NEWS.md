@@ -1,13 +1,14 @@
 # DifferentialMobilityAnalyzers.jl NEWS
 
 #### Notes on release changes and ongoing development
-- current master is compatible with Julia 1.5
 - v2.1 supports Julia 1.5
 - v2.0 supports Julia 1.1
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
-## (current master)
+## current master
+
+## v2.2
 - Add interpolateDataFrameOntoδ function. This is used to convert a  measured size distribution stored as a DataFrame and to a SizeDistribution that matches a DMA grid. The function simplifies using the package with real data.
 - Preallocate identity matrix
 - Fix performance regression caused by changes in 2.1
