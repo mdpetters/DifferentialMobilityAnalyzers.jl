@@ -7,6 +7,7 @@
 
 ---
 ## current master
+- Limit number of BLAS threads to 1 for factor 4 speedup in inversion.
 
 ## v2.2
 - Add interpolateDataFrameOntoδ function. This is used to convert a  measured size distribution stored as a DataFrame and to a SizeDistribution that matches a DMA grid. The function simplifies using the package with real data.

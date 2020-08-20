@@ -1,11 +1,12 @@
 name = "DifferentialMobilityAnalyzers"
 uuid = "050a7be8-18f9-52d6-bdba-0a194485d082"
 authors = ["Markus Petters <mdpetter@ncsu.edu>"]
-version = "2"
+version = "2.0.0"
 
 [deps]
 Calculus = "49dc2e85-a5d0-5ad3-a950-438e2897f1b9"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Glob = "c27321d9-0574-5035-807b-f59d2c89b15c"
 IJulia = "7073ff75-c697-5162-941a-fcdaad2a7d2a"

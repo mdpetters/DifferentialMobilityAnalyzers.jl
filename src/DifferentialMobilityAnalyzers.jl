@@ -98,7 +98,7 @@ mutable struct SizeDistribution
     ΔlnD::Vector{<:AbstractFloat} # ΔlnD of the grid
     S::Vector{<:AbstractFloat}    # spectral density
     N::Vector{<:AbstractFloat}    # number concentration per bin
-    form::Symbol             # form of the size distributio [:lognormal, ....]
+    form::Symbol                  # form of the size distributio [:lognormal, ....]
 end
 
 # Data type that is used to describe the reguarization
@@ -126,6 +126,8 @@ const ax = DataFrame(
     p1 = [-2.3484, 0.6044, 0.4800, 0.0013, -0.1553, 0.0320],
     p2 = [-44.4756, 79.3772, -62.8900, 26.4492, -5.7480, 0.5049],
 )
+
+BLAS.set_num_threads(1) # Limit threads for speed gain
 
 ### Source files
 include("dmafunctions.jl")
