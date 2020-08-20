@@ -127,8 +127,6 @@ const ax = DataFrame(
     p2 = [-44.4756, 79.3772, -62.8900, 26.4492, -5.7480, 0.5049],
 )
 
-BLAS.set_num_threads(1) # Limit threads for speed gain
-
 ### Source files
 include("dmafunctions.jl")
 include("aerosolsizedistributions.jl")

@@ -73,6 +73,7 @@ end
 
 # Warpper for the regularized inversion
 function rinv(R, δ; λ₁ = 1e-2, λ₂ = 1e1)
+	BLAS.set_num_threads(1)
     setupRegularization(δ.𝐀, δ.𝐈, R, inv(δ.𝐒) * R)  # setup the system
     λopt = lcorner(λ₁, λ₂; n = 10, r = 3)           # compute the optimal λ
     N = clean((reginv(λopt, r = :Nλ))[1])           # find the inverted size
