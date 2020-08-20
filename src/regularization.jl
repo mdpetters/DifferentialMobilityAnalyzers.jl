@@ -50,6 +50,7 @@ end
 
 # Compute the L-curve for n points between limits λ₁ and λ₂
 function lcurve(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10)
+	BLAS.set_num_threads(1)
     λs = 10.0 .^ range(log10(λ₁), stop = log10(λ₂), length = n)
     L1, L2 = reginv(λs, r = :L1L2)
     κs = map(λ -> κ(λ), λs)
