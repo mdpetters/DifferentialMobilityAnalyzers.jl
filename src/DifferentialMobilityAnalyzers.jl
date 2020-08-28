@@ -55,7 +55,9 @@ export DMAconfig,                    # Data type to hold DMA config
     β12zebel,                 # Zebel charge enhancement
     β12,                      # Brownian+Zebel coagulation kernel
     figure,                   # Function to setup figures
-    interpolateDataFrameOntoδ # Interpolate data onto DMA grid
+    interpolateDataFrameOntoδ,# Interpolate data onto DMA grid
+    benchmark,                # Single benchmark ren
+    runbenchmarks             # Create summary of benchmarks
 
 ### Data types
 
@@ -135,6 +137,7 @@ include("aerosolsizedistributions.jl")
 include("regularization.jl")
 include("loadtsidata.jl")
 include("coagulationrates.jl")
+include("benchmark.jl")
 include("myfigure.jl")
 
 end

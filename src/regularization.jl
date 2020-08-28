@@ -19,12 +19,6 @@ also stores the precomputed A'A matrix for performance optimization
 - B is the response vector
 - X0 is the initial guess
 - n is the number of BLAS threads 
-
-# Examples
-```julia-repl
-julia> bar([1, 2], [1, 2])
-1
-```
 """
 function setupRegularization(𝐀, 𝐈, B, X₀, n)
     global Ψ = Regvars(𝐀, 𝐈, B, X₀,𝐀'𝐀,n)
