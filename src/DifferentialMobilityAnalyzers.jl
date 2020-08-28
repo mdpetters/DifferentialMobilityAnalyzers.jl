@@ -107,6 +107,7 @@ struct Regvars
     𝐈::Matrix{Float64}      # Identity matrix
     B::Array{Float64}      # residual vector
     X₀::Array{Float64}     # initial guess
+    AA::Matrix{Float64}
 end
 
 ### Constants

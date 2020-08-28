@@ -11,7 +11,7 @@
 
 # Function to setup the problem
 function setupRegularization(𝐀, 𝐈, B, X₀)
-    global Ψ = Regvars(𝐀, 𝐈, B, X₀)
+    global Ψ = Regvars(𝐀, 𝐈, B, X₀,𝐀'𝐀)
 end
 
 # This function returns the inverted distribution as well as the
@@ -21,7 +21,7 @@ function reginv(λs; r = :L1)
     Nλ = Array{Array{Float64}}(undef, 0)
     L1, L2 = Float64[], Float64[]
     for λ in λs
-        Nx = inv(Ψ.𝐀' * Ψ.𝐀 + λ^2.0 * Ψ.𝐈) * (Ψ.𝐀' * Ψ.B + λ^2.0 * Ψ.X₀)
+        Nx = cholesky!(Hermitian(Ψ.AA + λ^2.0 * Ψ.𝐈)) \ (Ψ.𝐀' * Ψ.B + λ^2.0 * Ψ.X₀)
         push!(L1, norm(Ψ.𝐀 * Nx - Ψ.B))
         push!(L2, norm(Ψ.𝐈 * (Nx - Ψ.X₀)))
         push!(Nλ, Nx)
