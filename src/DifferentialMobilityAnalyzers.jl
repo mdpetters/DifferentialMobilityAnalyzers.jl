@@ -16,6 +16,7 @@ using DataFrames
 using Calculus
 using LinearAlgebra
 using Random
+using CSV
 using Distributions
 
 import Base.*,                # Import to extend operators
