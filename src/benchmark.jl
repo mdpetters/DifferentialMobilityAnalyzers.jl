@@ -12,7 +12,7 @@ blasthreads, number of bins, and the three timed benchmarks for rinv, setupDMA, 
 """
 function benchmark(bins::Integer, num_threads::Integer)
     # Load a simple comma delimited text file
-    df = CSV.read("../data/example_data.csv")
+    df = CSV.read("example_data.csv")
 
     # Setup the DMA
     t, p, lpm = 293.15, 940e2, 1.666e-5      
