@@ -39,7 +39,7 @@ end
 
 λ₁, λ₂ = 1e-3, 1e1
 eyeM = Matrix{Float64}(I, bins, bins)
-setupRegularization(δ.𝐀, eyeM, R, inv(δ.𝐒) * R)
+setupRegularization(δ.𝐀, eyeM, R, inv(δ.𝐒) * R, 1)
 λopt = lcorner(λ₁, λ₂; n = 10, r = 3)
 N = clean((reginv(λopt, r = :Nλ))[1])
 𝕟ᵢₙᵥ = SizeDistribution([], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, N ./ 𝕟.ΔlnD, N, :regularized)

@@ -107,7 +107,8 @@ struct Regvars
     𝐈::Matrix{Float64}      # Identity matrix
     B::Array{Float64}      # residual vector
     X₀::Array{Float64}     # initial guess
-    AA::Matrix{Float64}
+    AA::Matrix{Float64}    # precomputed A'A for speed
+    n::Int                 # Blas # threads
 end
 
 ### Constants

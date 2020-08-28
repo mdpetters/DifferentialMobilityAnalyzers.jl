@@ -9,9 +9,25 @@
 #         April, 2018
 #-
 
-# Function to setup the problem
-function setupRegularization(𝐀, 𝐈, B, X₀)
-    global Ψ = Regvars(𝐀, 𝐈, B, X₀,𝐀'𝐀)
+"""
+    setupRegularization(𝐀, 𝐈, B, X₀, n)
+
+Initialize the Regvars used to compute the Tikhonov regularization. Regvars 
+also stores the precomputed A'A matrix for performance optimization
+- A is the convolution matrix
+- I is the identity matrix
+- B is the response vector
+- X0 is the initial guess
+- n is the number of BLAS threads 
+
+# Examples
+```julia-repl
+julia> bar([1, 2], [1, 2])
+1
+```
+"""
+function setupRegularization(𝐀, 𝐈, B, X₀, n)
+    global Ψ = Regvars(𝐀, 𝐈, B, X₀,𝐀'𝐀,n)
 end
 
 # This function returns the inverted distribution as well as the
@@ -50,7 +66,7 @@ end
 
 # Compute the L-curve for n points between limits λ₁ and λ₂
 function lcurve(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10)
-	BLAS.set_num_threads(1)
+	BLAS.set_num_threads(Ψ.n)
     λs = 10.0 .^ range(log10(λ₁), stop = log10(λ₂), length = n)
     L1, L2 = reginv(λs, r = :L1L2)
     κs = map(λ -> κ(λ), λs)
@@ -73,9 +89,8 @@ function lcorner(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10, r::Int
 end
 
 # Warpper for the regularized inversion
-function rinv(R, δ; λ₁ = 1e-2, λ₂ = 1e1)
-	BLAS.set_num_threads(1)
-    setupRegularization(δ.𝐀, δ.𝐈, R, inv(δ.𝐒) * R)  # setup the system
+function rinv(R, δ; λ₁ = 1e-2, λ₂ = 1e1, n = 1)
+    setupRegularization(δ.𝐀, δ.𝐈, R, inv(δ.𝐒) * R, n)  # setup the system
     λopt = lcorner(λ₁, λ₂; n = 10, r = 3)           # compute the optimal λ
     N = clean((reginv(λopt, r = :Nλ))[1])           # find the inverted size
     return SizeDistribution([], δ.De, δ.Dp, δ.ΔlnD, N ./ δ.ΔlnD, N, :regularized)
