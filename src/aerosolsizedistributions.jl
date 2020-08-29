@@ -99,7 +99,28 @@ function /(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
 end
 
 
-# --------------------------- Block 2: ⋅ and .⋅  -----------------------------
+"""
+    ⋅(a::AbstractFloat, 𝕟::SizeDistribution)
+
+Multiplication of a scalare and a size distribution. The net result is a uniform diameter 
+shift of the size distribution. The function is symmetric such that a⋅𝕟 == 𝕟⋅a
+
+Let a denote a floating point scalar and 𝕟 denote a size distribution. Then
+```julia
+𝕩 = a⋅𝕟
+```
+is defined such that 
+```julia
+𝕩.Dp = a*𝕟.Dp 
+```
+
+Example Usage
+```julia
+a = 2.0 # Note that a must be a floating point number
+𝕟 = lognormal([[300, 100, 1.3]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝕩 = a⋅𝕟 
+```
+"""
 function LinearAlgebra.:⋅(a::AbstractFloat, 𝕟::SizeDistribution)
     if 𝕟.Dp[1] > 𝕟.Dp[2]
         nDp = reverse(a * 𝕟.Dp)
@@ -159,11 +180,30 @@ end
 ⋅(𝕟::SizeDistribution, A::Vector{<:AbstractFloat}) =
     ⋅(A::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
 
-# --------------------------- Block 3: +-------------------------------------
-function +(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
-    # This function defines the sum of two size distributions
+"""
+    +(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
 
-    # If grids are not equal, then interpolate n2 onto n1 grid
+Defines the sum of two size distributions. If diameter grids are not equal, then the
+diameter grid of n2 is interpolated onto the n1 grid prior to addition.
+
+```julia
+𝕩 = 𝕟₁ + 𝕟₂ 
+```
+is defined such that 
+
+```julia
+𝕩.S = 𝕟₁.S + 𝕟₂.S 
+𝕩.N = 𝕩.S .* 𝕟.ΔlnD 
+```
+
+Example Usage
+```julia
+𝕟₁ = lognormal([[120, 90, 1.20]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64
+𝕩 = 𝕟₁ + 𝕟₂
+```
+"""
+function +(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     if 𝕟₁.Dp ≠ 𝕟₂.Dp
         itp = interpolate((𝕟₂.Dp,), 𝕟₂.N, Gridded(Linear()))
         ext = extrapolate(itp, 0)
@@ -201,16 +241,19 @@ function -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
 end
 
 """
-   interpolate_df_onto_thisδ(kw)
+    interpolate_df_onto_thisδ(kw)
 
-   This function takes some measured size distribution in a DataFrame and 
-   and interpolates it onto a DMA grid. 
+This function takes some measured size distribution in a DataFrame and and interpolates 
+it onto a DMA grid. kw is a tuple containing a DataFrame, symbols to columns to extract
+which contain diameter and response function, and a DMA grid.
 
-   Example Usage
-   𝕣 = (df, :Dp, :R, δ) |> interpolate_df_onto_thisδ
+Example Usage
+```julia
+    𝕣 = (df, :Dp, :R, δ) |> interpolate_df_onto_thisδ
+```
 
-   This extracts the columns Dp and R from df and interpolates it ont grid δ and
-   returns the results as a SizeDistribution. The df has to be sorted in ascending order
+This extracts the columns Dp and R from df and interpolates it ont grid δ and
+returns the results as a SizeDistribution. The df has to be sorted in ascending order.
 """
 function interpolateDataFrameOntoδ(kw)
     df, δ  = kw[1], kw[end]

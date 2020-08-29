@@ -13,7 +13,8 @@
     setupRegularization(𝐀, 𝐈, B, X₀, n)
 
 Initialize the Regvars used to compute the Tikhonov regularization. Regvars 
-also stores the precomputed A'A matrix for performance optimization
+is a data type that stores the inversion problem setup. It also stores the precomputed 
+A'A matrix for performance optimization
 - A is the convolution matrix
 - I is the identity matrix
 - B is the response vector

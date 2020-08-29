@@ -1,13 +1,15 @@
 push!(LOAD_PATH, "../src/")
-using Documenter
-
+using Documenter, DifferentialMobilityAnalyzers, LinearAlgebra
 
 makedocs(
-  sitename = "DifferentialMobilityAnalyzers.jl",
+  sitename = "DifferentialMobilityAnalyzers",
   authors = "Markus Petters",
-  pages = [
+  pages = Any[
     "Home" => "index.md",
+    "Library" => Any[
+      "Operators" => "operators.md",
+      "Benchmarks" => "benchmarks.md"
+    ]
   ]
-
 )
 

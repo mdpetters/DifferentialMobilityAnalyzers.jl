@@ -8,7 +8,7 @@ Computes benchmarks for the three slowest operations, rinv, setupDMA, setupSMPS
 - num_threads is the number of BLAS threads
 
 The function returns a dataframe that includes cpuinfo, juliaversion, blasvendor,
-blasthreads, number of bins, and the three timed benchmarks for rinv, setupDMA, setupSMPS
+blasthreads, number of bins, and the three timed benchmarks for rinv, setupDMA, setupSMPS.
 """
 function benchmark(bins::Integer, num_threads::Integer)
     # Load a simple comma delimited text file
