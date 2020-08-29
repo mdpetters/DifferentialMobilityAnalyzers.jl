@@ -18,6 +18,7 @@ using LinearAlgebra
 using Random
 using CSV
 using Distributions
+using Documenter
 
 import Base.*,                # Import to extend operators
     Base./,                   # Import to extend operators
@@ -38,6 +39,8 @@ export DMAconfig,                    # Data type to hold DMA config
     Σ,                        # Function to sum functions
     λ,                        # Function to compute mean free path
     η,                        # Function to compute air viscosity
+    Ωav,                      # Function to compute transfer through the DMA
+    Ω,                        # Function to compute transfer through the DMA
     cc,                       # Function to compute slip-flow correction
     dab,                      # Function to compute diffusion coefficient
     vtoz,                     # Function to convert Voltage to Mobility
@@ -46,6 +49,8 @@ export DMAconfig,                    # Data type to hold DMA config
     ztod,                     # Function to convert Mobility to Diameter
     lognormal,                # Function to compute lognormal size dist
     triangular,               # Function to compute DMA triangular size dist
+    getTc,                    # Function to compute charge distribution function
+    Tl,                       # Function to compute transmission efficiency
     DMALognormalDistribution, # Function to compute lognormal size dist
     reginv,                   # Function to compute regularized inverse
     lcurve,                   # Function to compute the L-curve
@@ -60,9 +65,40 @@ export DMAconfig,                    # Data type to hold DMA config
     benchmark,                # Single benchmark ren
     runbenchmarks             # Create summary of benchmarks
 
-### Data types
 
-# Data type to describe DMA
+@doc raw"""
+    DMAconfig
+
+Data type to abstract the DMA geometry and state of the fluid. 
+
+    t::AbstractFloat          # Temperature [K]
+    p::AbstractFloat          # Pressure [Pa]
+    qsa::AbstractFloat        # Sample flow [m3 s-1]
+    qsh::AbstractFloat        # Sheath flow [m3 s-1]
+    r1::AbstractFloat         # Inner column radius [m]
+    r2::AbstractFloat         # Outer column radius [m]
+    l::AbstractFloat          # Column length [m]
+    leff::AbstractFloat       # Effective length [m]
+    polarity::Symbol          # Power supply polarity [:+] or [:-]
+    m::Int8                   # Number of charges in charge correction [-]
+    DMAtype::Symbol           # Designate :radial, :cylindrical
+
+Example Usage
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 3.33e-6                     
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,13.0,:-,6,:cylindrical) 
+```julia
+
+!!! note
+
+    When defining a radial DMA, r₁,r₂,l map to  r₁,r₂,b as defined in Zhang Shou-Hua Zhang, 
+    Yoshiaki Akutsu, Lynn M. Russell, Richard C. Flagan & John H. Seinfeld (1995) 
+    Radial Differential Mobility Analyzer, Aerosol Science and Technology, 
+    23:3, 357-372, DOI: 10.1080/02786829508965320.
+
+"""
 struct DMAconfig
     t::AbstractFloat          # Temperature [K]
     p::AbstractFloat          # Pressure [Pa]
@@ -77,7 +113,31 @@ struct DMAconfig
     DMAtype::Symbol           # Designate :radial, :cylindrical
 end
 
-# Data type to facility DMA caluclations
+@doc raw"""
+    DifferentialMobilityAnalyzer
+
+The type DifferentialMobilityAnalyzer contains the DMA transmission functions, 
+a discretized mobility grid to represent the mobility distribution and precomputed
+convolution matrices.
+
+    Ω::Function                    # DMA transfer function
+    Tc::Function                   # Charge filter Function
+    Tl::Function                   # DMA Penetration efficiency function
+    Z::Vector{<:AbstractFloat}     # Mobility array midpoints
+    Ze::Vector{<:AbstractFloat}    # Mobility array bin edges
+    Dp::Vector{<:AbstractFloat}    # Mobility diameter midpoints
+    De::Vector{<:AbstractFloat}    # Mobility diameter bin edges
+    ΔlnD::Vector{<:AbstractFloat}  # ln(de[i+1])-ln(de[i])
+    𝐀::AbstractMatrix              # Convolution matrix
+    𝐒::AbstractMatrix              # Convolution matrix for initial guess
+    𝐎::AbstractMatrix              # Convolution matrix for no charge filter
+    𝐈::AbstractMatrix               # IdentiyMatrix
+
+The field is initialized using one of the the constructor functions:
+- setupDMA
+- setupSMPS
+- setupSMPSdata
+"""
 struct DifferentialMobilityAnalyzer
     Ω::Function                    # DMA transfer function
     Tc::Function                   # Charge filter Function
@@ -93,7 +153,26 @@ struct DifferentialMobilityAnalyzer
     𝐈::AbstractMatrix            # IdentiyMatrix
 end
 
-# Data type that is used to describe the size distributions
+@doc raw"""
+    SizeDistribution
+
+The type SizeDistribution abstracts the aerosol size distribution. The parameter A is 
+a set of input parameters, e.g. for a lognormal function. The form contains a symbol 
+that traces the function or process that created the distribution.
+
+    A::Any                        # Input parameters [[N1,Dg1,σg1], ...] or DMA
+    De::Vector{<:AbstractFloat}   # bin edges
+    Dp::Vector{<:AbstractFloat}   # bin midpoints
+    ΔlnD::Vector{<:AbstractFloat} # ΔlnD of the grid
+    S::Vector{<:AbstractFloat}    # spectral density
+    N::Vector{<:AbstractFloat}    # number concentration per bin
+    form::Symbol                  # form of the size distribution [:lognormal, ....]
+
+SizeDistributions can be created through one of the constructor functions:
+- lognormal
+- triangular
+- DMALognormalDistribution
+"""
 mutable struct SizeDistribution
     A::Any                        # Input parameters [[N1,Dg1,σg1], ...] or DMA
     De::Vector{<:AbstractFloat}   # bin edges
@@ -101,10 +180,27 @@ mutable struct SizeDistribution
     ΔlnD::Vector{<:AbstractFloat} # ΔlnD of the grid
     S::Vector{<:AbstractFloat}    # spectral density
     N::Vector{<:AbstractFloat}    # number concentration per bin
-    form::Symbol                  # form of the size distributio [:lognormal, ....]
+    form::Symbol                  # form of the size distribution [:lognormal, ....]
 end
 
-# Data type that is used to describe the reguarization
+@doc raw"""
+    Regvars
+
+The type Regvars abstracts the inversion setup, including the convolution matrix,
+the idenity matrix, the response function (residual vector) and the initial guess.
+The matrix 𝐀'𝐀 is stored as precomputed matrix to avoid recomputing it when evaluating
+the derivatives in the l-curve search. Setting the number of BLAS threads is experimental.
+
+    𝐀::Matrix{Float64}     # Convolution matrix
+    𝐈::Matrix{Float64}      # Identity matrix
+    B::Array{Float64}      # residual vector
+    X₀::Array{Float64}     # initial guess
+    AA::Matrix{Float64}    # precomputed 𝐀'𝐀 for speed
+    n::Int                 # Blas threads
+
+Regvars is initialized in the rinv function. See examples folder on how to use this 
+structure at the top level.
+"""
 struct Regvars
     𝐀::Matrix{Float64}     # Convolution matrix
     𝐈::Matrix{Float64}      # Identity matrix

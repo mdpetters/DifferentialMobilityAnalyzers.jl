@@ -12,7 +12,6 @@
 # λ functions
 md = (A, x) -> @. A[1] / (√(2π) * log(A[3])) * exp(-(log(x / A[2]))^2 / (2log(A[3])^2))
 logn = (A, x) -> mapreduce((A) -> md(A, x), +, A)
-clean = x -> map(x -> x < 0.0 ? 0.0 : x, x)
 
 # Multimodal lognormal size distribution on a generic logspace grid
 function lognormal(A; d1 = 8.0, d2 = 2000.0, bins = 256)
@@ -50,9 +49,30 @@ function DMALognormalDistribution(A, δ::DifferentialMobilityAnalyzer)
     return SizeDistribution(A, δ.De, δ.Dp, δ.ΔlnD, S, S .* δ.ΔlnD, :DMA)
 end
 
-# -------------------------- Size Distribution Arithmetic ---------------------
-# --------------------------- Block 1: * .* and ./  ---------------------------
-function *(a::AbstractFloat, 𝕟::SizeDistribution)
+"""
+    *(a::Number, 𝕟::SizeDistribution)
+
+Multiplication of scalar and size distribution. The net result is a scaling of the 
+number concentration of the spectra by a. The function is symmetric such that a * 𝕟 == 𝕟 * a.
+
+Let a denote a number and 𝕟 denote a size distribution. Then
+```julia
+𝕩 = a * 𝕟 
+```
+is defined such that
+
+```julia
+𝕩.N = a * 𝕟.N
+𝕩.S = a * 𝕟.S
+```
+
+Example Usage
+```julia
+𝕟 = lognormal([[120, 90, 1.20]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝕩 = 2.3 * 𝕟₂
+```
+"""
+function *(a::Number, 𝕟::SizeDistribution)
     # This function defines the product of a scalar and a size distribution
     N = a * 𝕟.N
     S = a * 𝕟.S
@@ -62,6 +82,32 @@ end
 
 *(𝕟::SizeDistribution, a::AbstractFloat) = *(a::AbstractFloat, 𝕟::SizeDistribution)
 
+
+"""
+    *(a::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
+
+Multiplication of vector and size distribution. The net result is a bin-by-bin scaling 
+of the number concentration. The function is symmetric such that a * 𝕟 == 𝕟 * a.
+
+Let T denote a 1D vector that has the same number of elements as the 
+size distribution 𝕟. Then
+```julia
+𝕩 = T * 𝕟 
+```
+is defined such that 
+```julia
+𝕩.N = T * 𝕟.N
+𝕩.S = T * 𝕟.S
+```
+    
+Example Usage
+```julia
+𝕟 = lognormal([[100, 100, 1.1]]; d1 = 10.0, d2 = 1000.0, bins = 256)  
+μ,σ = 100.0, 200.0
+T = 0.5*(1.0 .+ erf.((𝕟.Dp .- μ)./(sqrt(2σ)))) 
+𝕩 = T * 𝕟                                        
+```
+"""
 function *(a::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
     # This function defines the product of a vector and a size distribution
     N = a .* 𝕟.N
@@ -73,6 +119,28 @@ end
     *(a::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
 
 
+"""
+    *(𝐀::AbstractMatrix, 𝕟::SizeDistribution)
+
+Multiplication of matrix and size distribution. The net result is the multiplication of the 
+matrix with number concentration and spectral density fields. 
+
+Let 𝐀 denote an nxn matrix where n equals the number of size bins of 𝕟. Then
+```julia
+𝕩 = 𝐀 * 𝕟 
+```
+is defined such that 
+```julia
+𝕩.N = 𝐀 * 𝕟.N
+𝕩.S = 𝐀 * 𝕟.S
+```
+
+```julia
+𝕟 = lognormal([[100, 100, 1.1]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝐀 = rand(256,256)
+𝕩 = 𝐀 * 𝕟                                        
+```
+"""
 function *(𝐀::AbstractMatrix, 𝕟::SizeDistribution)
     # This function defines the product of a matrix and a size distribution
     N = 𝐀 * 𝕟.N
@@ -80,8 +148,33 @@ function *(𝐀::AbstractMatrix, 𝕟::SizeDistribution)
     return SizeDistribution([[]], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, S, N, :axdist)
 end
 
-*(𝕟::SizeDistribution, 𝐀::AbstractMatrix) = *(𝐀::AbstractMatrix, 𝕟::SizeDistribution)
 
+"""
+    *(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
+
+Multiplication of size distribution and a size distribution. The net result is a 
+size distribution that has total number concentration square. For a probability 
+distributions that by definition integrate to unity, this operation corresponds to 
+the product of two random variates with distribution 1 and 2.
+    
+Let 𝕟₁ and 𝕟₂ denote a two size distribution defined on the same diameter grid. Then
+```julia
+𝕩 = 𝕟₁ * 𝕟₂ 
+```
+is defined such that 
+```julia
+Nsq = 𝕟₁.N * 𝕟₂.N
+𝕩.N = sum(𝕟₁.N) * sum(𝕟₂.N) * Nsq./sum(Nsq)
+𝕩.S = N ./ 𝕟₁.ΔdlnD
+```
+
+Example Usage
+```julia
+𝕟₁ = lognormal([[120, 90, 1.20]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64)
+𝕩 = 𝕟₁ * 𝕟₂
+```
+"""
 function *(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     # This function defines the product of two size distributions
     Nsq = 𝕟₁.N .* 𝕟₂.N
@@ -90,7 +183,32 @@ function *(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     return SizeDistribution([[]], 𝕟₁.De, 𝕟₁.Dp, 𝕟₁.ΔlnD, S, N, :dist_sq)
 end
 
+"""
+    /(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
 
+Division of size distribution and size distribution. The net result is a size distribution 
+that is the ratio of the concentration vectors.
+
+Let 𝕟₁ and 𝕟₂ denote a two size distribution defined on the same diameter grid. Then
+    
+```julia
+𝕩 = 𝕟₁ / 𝕟₂
+```
+is defined such that
+
+```julia
+N = 𝕟₁.N ./ 𝕟₂.N
+S = 𝕟₁.S ./ 𝕟₂.S
+```
+
+Example Usage
+```julia
+𝕟₁ = lognormal([[120, 90, 1.20]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64)
+𝕩 = 𝕟₁ / 𝕟₂
+```
+
+"""
 function /(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     # This function defines the product of two size distributions
     N = 𝕟₁.N ./ 𝕟₂.N
@@ -100,28 +218,28 @@ end
 
 
 """
-    ⋅(a::AbstractFloat, 𝕟::SizeDistribution)
+    ⋅(a::Number, 𝕟::SizeDistribution)
 
-Multiplication of a scalare and a size distribution. The net result is a uniform diameter 
-shift of the size distribution. The function is symmetric such that a⋅𝕟 == 𝕟⋅a
+Multiplication of a scalar and a size distribution. The net result is a uniform diameter 
+shift of the size distribution. The function is symmetric such that a ⋅ 𝕟 == 𝕟 ⋅ a.
 
 Let a denote a floating point scalar and 𝕟 denote a size distribution. Then
 ```julia
-𝕩 = a⋅𝕟
+𝕩 = a ⋅ 𝕟
 ```
 is defined such that 
 ```julia
-𝕩.Dp = a*𝕟.Dp 
+𝕩.Dp = a * 𝕟.Dp 
 ```
 
 Example Usage
 ```julia
-a = 2.0 # Note that a must be a floating point number
+a = 2.0 
 𝕟 = lognormal([[300, 100, 1.3]]; d1 = 10.0, d2 = 1000.0, bins = 256)
-𝕩 = a⋅𝕟 
+𝕩 = a ⋅ 𝕟 
 ```
 """
-function LinearAlgebra.:⋅(a::AbstractFloat, 𝕟::SizeDistribution)
+function LinearAlgebra.:⋅(a::Number, 𝕟::SizeDistribution)
     if 𝕟.Dp[1] > 𝕟.Dp[2]
         nDp = reverse(a * 𝕟.Dp)
         itpN = interpolate((nDp,), reverse(𝕟.N), Gridded(Linear()))
@@ -150,7 +268,31 @@ end
 
 ⋅(𝕟::SizeDistribution, a::AbstractFloat) = ⋅(a::AbstractFloat, 𝕟::SizeDistribution)
 
-#function LinearAlgebra.:.⋅(A::Array{Float64,1}, 𝕟::SizeDistribution)
+"""
+    LinearAlgebra.:⋅(A::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
+
+Dot product of vector and size distribution.   The net result is diameter dependent shift of 
+the size distribution. The function is symmetric such that A ⋅ 𝕟 == 𝕟 ⋅ A.
+
+
+Let T denote a floating point vector with the same number of elements as the size distribution 𝕟. Then
+```julia
+𝕩 = T ⋅ 𝕟 
+```
+
+is defined such that 
+```julia
+𝕩.Dp = T .* 𝕟.dp 
+```
+
+Example Usage
+```julia
+𝕟 = lognormal([[100, 100, 1.1]]; d1 = 10.0, d2 = 1000.0, bins = 256)  
+μ,σ = 80.0, 2000.0
+T = (1.0 .+ erf.((𝕟.Dp .- μ)./(sqrt(2σ)))) 
+𝕩 = T ⋅ 𝕟  
+```
+"""
 function LinearAlgebra.:⋅(A::Vector{<:AbstractFloat}, 𝕟::SizeDistribution)
     if 𝕟.Dp[1] > 𝕟.Dp[2]
         nDp = reverse(A .* 𝕟.Dp)
@@ -199,7 +341,7 @@ is defined such that
 Example Usage
 ```julia
 𝕟₁ = lognormal([[120, 90, 1.20]]; d1 = 10.0, d2 = 1000.0, bins = 256)
-𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64
+𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64)
 𝕩 = 𝕟₁ + 𝕟₂
 ```
 """
@@ -220,10 +362,30 @@ function +(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     return SizeDistribution([[]], 𝕟₁.De, 𝕟₁.Dp, 𝕟₁.ΔlnD, S, N, :distsum)
 end
 
-function -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
-    # This function defines the subtraction of two size distributions
+"""
+    -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
 
-    # If grids are not equal, then interpolate n2 onto n1 grid
+Defines the sum of two size distributions. If diameter grids are not equal, then the
+diameter grid of n2 is interpolated onto the n1 grid prior to addition.
+
+```julia
+𝕩 = 𝕟₁ - 𝕟₂ 
+```
+is defined such that 
+
+```julia
+𝕩.S = 𝕟₁.S - 𝕟₂.S 
+𝕩.N = 𝕩.S .* 𝕟.ΔlnD 
+```
+
+Example Usage
+```julia
+𝕟₁ = lognormal([[120, 90, 1.20]]; d1 = 10.0, d2 = 1000.0, bins = 256)
+𝕟₂ = lognormal([[90, 140, 1.15]]; d1 = 20.0, d2 = 800.0, bins = 64)
+𝕩 = 𝕟₁ - 𝕟₂
+```
+"""
+function -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
     if 𝕟₁.Dp ≠ 𝕟₂.Dp
         itp = interpolate((𝕟₂.Dp,), 𝕟₂.N, Gridded(Linear()))
         ext = extrapolate(itp, 0)
