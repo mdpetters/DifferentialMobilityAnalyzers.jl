@@ -20,6 +20,7 @@ using CSV
 using Distributions
 using Documenter
 using IJulia
+using WebIO
 
 import Base.*,                # Import to extend operators
     Base./,                   # Import to extend operators
