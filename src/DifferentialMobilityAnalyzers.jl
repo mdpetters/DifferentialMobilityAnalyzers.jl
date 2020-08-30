@@ -19,8 +19,7 @@ using Random
 using CSV
 using Distributions
 using Documenter
-using IJulia
-using WebIO
+
 
 import Base.*,                # Import to extend operators
     Base./,                   # Import to extend operators
@@ -244,7 +243,6 @@ include("regularization.jl")
 include("loadtsidata.jl")
 include("coagulationrates.jl")
 include("benchmark.jl")
-include("tutorial.jl")
 include("myfigure.jl")
 
 end
