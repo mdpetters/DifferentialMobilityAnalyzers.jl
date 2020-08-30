@@ -64,8 +64,8 @@ export DMAconfig,                    # Data type to hold DMA config
     figure,                   # Function to setup figures
     interpolateDataFrameOntoδ,# Interpolate data onto DMA grid
     benchmark,                # Single benchmark ren
-    runbenchmarks             # Create summary of benchmarks
-
+    runbenchmarks,            # Create summary of benchmarks
+    launch_tutorial           # Execute tutorial
 
 @doc raw"""
     DMAconfig
