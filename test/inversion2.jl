@@ -38,6 +38,7 @@ end
 eyeM = Matrix{Float64}(I, bins, bins)
 setupRegularization(δ.𝐀, eyeM, R, inv(δ.𝐒) * R, 1)
 λopt = lcorner(λ₁, λ₂; n = 10, r = 3)
-N = clean((reginv(λopt, r = :Nλ))[1])
+#N = clean((reginv(λopt, r = :Nλ))[1])
+N = clean(Ninv(λopt))
 𝕟ᵢₙᵥ = SizeDistribution([], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, N ./ 𝕟.ΔlnD, N, :regularized)
 @test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890

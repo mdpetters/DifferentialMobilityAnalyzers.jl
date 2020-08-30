@@ -291,7 +291,7 @@ dtoz(Λ::DMAconfig, d) = ec .* cc(Λ, d) ./ (3.0π .* η(Λ) .* d)
 @doc raw"""
     vtoz(Λ::DMAconfig, v)
 
-Converts between voltage and selected mobility. 
+Converts between voltage and selected mobility. It is the inverse of [ztov](@ref). 
 
 For the cylindrical DMA and balanced flows: 
 
@@ -301,7 +301,7 @@ For the radial DMA and balanced flows:
 
 ``z^s = \frac{q_{sh} l}{\pi v \left({r_2}^2 - {r_1}^2\right)} ``
 
-where ``v``` is the potential applied between the inner and out section of the annulus, 
+where ``v`` is the potential applied between the inner and out section of the annulus, 
 ``r_1``, ``r_2``, and ``l`` are the dimensions of the cylindrical DMA  and ``q_{sh}`` is 
 the sheath flow rate.
 
@@ -318,14 +318,45 @@ vtoz(Λ::DMAconfig, v) =
     (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) .* v) :
         Λ.qsh ./ (2.0π .* Λ.l .* v) .* log(Λ.r2 / Λ.r1)
 
-ztov =
-    (Λ, z) -> (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) * z) :
+@doc raw"""
+    ztov(Λ::DMAconfig, v)
+    
+Converts between selected mobility and voltage. It is the inverse of [vtoz](@ref). 
+
+Example Usage
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 8.3e-5
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
+voltage = ztov(Λ,1e-9) 
+```
+""" 
+ztov(Λ::DMAconfig, z) = (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) * z) :
         Λ.qsh ./ (2.0π .* Λ.l .* z) .* log(Λ.r2 / Λ.r1)
 
-f = (Λ, i, z, di) -> @. i .* ec .* cc($Ref(Λ), di) ./ (3.0π .* η($Ref(Λ)) .* z)
-converge = (f, g) -> maximum(abs.(1.0 .- f ./ g) .^ 2.0) < 1e-20
-g = (Λ, i, z, di) -> converge(f(Λ, i, z, di), di) ? di : g(Λ, i, z, f(Λ, i, z, di))
-ztod = (Λ, i, z) -> g(Λ, i, z, di) .* 1e9;
+f(Λ, i, z, di) = @. i .* ec .* cc($Ref(Λ), di) ./ (3.0π .* η($Ref(Λ)) .* z)
+converge(f, g) = maximum(abs.(1.0 .- f ./ g) .^ 2.0) < 1e-20
+g(Λ, i, z, di) = converge(f(Λ, i, z, di), di) ? di : g(Λ, i, z, f(Λ, i, z, di))
+
+@doc raw"""
+    ztod(Λ::DMAconfig, i::Int, z)
+
+Converts mobility to diameter.
+- Λ is the DMA configuration
+- i is the number of charges
+- z is the mobility
+
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 8.3e-5                     
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
+z = dtoz(Λ,100.0*1e-9) 
+diameter = ztod(Λ,1,z) 
+```
+"""
+ztod(Λ::DMAconfig, i::Int, z) = g(Λ, i, z, di) .* 1e9;
 
 @doc raw"""
     Ω(Λ::DMAconfig, Z, zs)

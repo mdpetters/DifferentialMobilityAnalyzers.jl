@@ -23,14 +23,24 @@ cc(Λ::DMAconfig, d)
 dab(Λ::DMAconfig, d)
 ```
 
-### Diameter to Mobility
+### dtoz
 ```@docs
 dtoz(Λ::DMAconfig, d)
 ```
 
-### Voltage to Mobility
+### ztod
+```@docs
+ztod
+```
+
+### vtoz
 ```@docs
 vtoz(Λ::DMAconfig, v)
+```
+
+### ztov
+```@docs
+ztov(Λ::DMAconfig, z)
 ```
 
 ### Transfer Function

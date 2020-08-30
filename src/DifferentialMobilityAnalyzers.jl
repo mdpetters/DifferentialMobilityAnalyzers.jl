@@ -54,6 +54,7 @@ export DMAconfig,                    # Data type to hold DMA config
     Tl,                       # Function to compute transmission efficiency
     DMALognormalDistribution, # Function to compute lognormal size dist
     reginv,                   # Function to compute regularized inverse
+    Ninv,                     # Function to compute regularized inverse
     lcurve,                   # Function to compute the L-curve
     lcorner,                  # Function to find corner of L-curve
     rinv,                     # Function to compute the inverse
