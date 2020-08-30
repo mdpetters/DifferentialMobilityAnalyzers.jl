@@ -8,26 +8,32 @@ Pages = ["physics.md"]
 ```
 
 ## Functions
+### Fluid Viscosity
 ```@docs
 η(Λ::DMAconfig)
 ```
 
+### Cunningham Correction
 ```@docs
 cc(Λ::DMAconfig, d)
 ```
 
+### Diffusion Coefficient
 ```@docs
 dab(Λ::DMAconfig, d)
 ```
 
+### Diameter to Mobility
 ```@docs
 dtoz(Λ::DMAconfig, d)
 ```
 
+### Voltage to Mobility
 ```@docs
 vtoz(Λ::DMAconfig, v)
 ```
 
+### Transfer Function
 ```@docs
 Ω(Λ::DMAconfig, Z, zs)
 ```
@@ -36,10 +42,12 @@ vtoz(Λ::DMAconfig, v)
 Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
 ```
 
+### Charge Function
 ```@docs
 getTc(Λ::DMAconfig)
 ```
 
+### Transmission Function
 ```@docs
 Tl(Λ::DMAconfig, Dp)
 ```

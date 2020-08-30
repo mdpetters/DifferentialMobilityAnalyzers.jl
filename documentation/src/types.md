@@ -13,20 +13,55 @@ Pages = ["types.md"]
 
 ## Types
 
+### DMAconfig
 ```@docs
 DMAconfig
 ```
 
+### DifferentialMobilityAnalyzer
 ```@docs
 DifferentialMobilityAnalyzer
 ```
 
+### SizeDistribution
 ```@docs
 SizeDistribution
 ```
 
+### Regvars
 ```@docs
 Regvars
 ```
 
 ## Constructor Functions
+
+### setupDMA
+```@docs
+setupDMA
+```
+
+### setupSMPS
+```@docs
+setupSMPS
+```
+
+### setupSMPSdata
+```@docs
+setupSMPSdata
+```
+
+### lognormal
+```@docs
+lognormal
+```
+
+### DMALognormalDistribution
+```@docs
+DMALognormalDistribution    
+```
+
+### triangular
+```@docs
+triangular    
+```
+

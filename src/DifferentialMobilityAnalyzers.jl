@@ -86,7 +86,7 @@ Data type to abstract the DMA geometry and state of the fluid.
 Example Usage
 ```julia
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,13.0,:-,6,:cylindrical) 
 ```julia
@@ -134,9 +134,16 @@ convolution matrices.
     𝐈::AbstractMatrix               # IdentiyMatrix
 
 The field is initialized using one of the the constructor functions:
-- setupDMA
-- setupSMPS
-- setupSMPSdata
+- [setupDMA](@ref)
+- [setupSMPS](@ref)
+- [setupSMPSdata](@ref)
+
+!!! note
+
+    Diameters stored in δ are in units of nm. Mobility in m2 s-1 V-1. The functions 
+    [Transfer Function](@ref) Ω, [Charge Function](@ref) Tc and 
+    [Transmission Function](@ref) Tl take diameter in units of nm
+
 """
 struct DifferentialMobilityAnalyzer
     Ω::Function                    # DMA transfer function
@@ -168,10 +175,10 @@ that traces the function or process that created the distribution.
     N::Vector{<:AbstractFloat}    # number concentration per bin
     form::Symbol                  # form of the size distribution [:lognormal, ....]
 
-SizeDistributions can be created through one of the constructor functions:
-- lognormal
-- triangular
-- DMALognormalDistribution
+SizeDistributionscan be created by hand or through one of the constructor functions:
+- [lognormal](@ref)
+- [DMALognormalDistribution](@ref)
+- [triangular](@ref)
 """
 mutable struct SizeDistribution
     A::Any                        # Input parameters [[N1,Dg1,σg1], ...] or DMA

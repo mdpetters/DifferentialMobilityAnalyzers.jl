@@ -11,8 +11,13 @@ makedocs(
       "Tutorial" => "tutorial.md",
       "Notebooks" => "notebooks.md"
     ],
+    "Manual" => Any[
+      "Initializing DMAs" => "dmas.md",
+      "Tranmsission through the DMA" => "transmission.md",
+      "Size Distribution Inversion" => "inversion.md",
+    ],
     "Library" => Any[
-      "Physics" => "physics.md",
+      "Physical Relations" => "physics.md",
       "Data Types" => "types.md",
       "Operators" => "operators.md",
       "Helper Functions" => "helpers.md",

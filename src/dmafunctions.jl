@@ -60,7 +60,7 @@ Example Usage
 
 ```julia
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 mfp = λ(Λ)
@@ -81,7 +81,7 @@ Example Usage
 
 ```julia
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 viscosity = η(Λ)
@@ -110,7 +110,7 @@ Example Usage
 ```julia
 Dp = exp10.(range(log10(1e-9), stop=log10(1000e-9), length=100))
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                    
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 correction = cc(Λ, Dp)
@@ -137,7 +137,7 @@ Example Usage
 ```julia
 Dp = exp10.(range(log10(1e-9), stop=log10(1000e-9), length=100))
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 diffusion_coefficient = dab(Λ,Dp)
@@ -204,7 +204,7 @@ where ``e`` is the elementary charge and ``\epsilon`` is the dielectric constant
 Example Usage
 ```julia
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 Tc = getTc(Λ)
@@ -280,7 +280,7 @@ The diameter in dtoz is in units of [m].
 Example Usage
 ```julia
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 mobility = dtoz(Λ,dp*1e-9) # [m2 V-1 s-1]
@@ -308,7 +308,7 @@ the sheath flow rate.
 Example Usage
 ```julia
 t,p = 295.15, 1e5                        
-qsa,qsh = 1.66e-5, 3.33e-6                     
+qsa,qsh = 1.66e-5, 8.3e-5
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 mobility = vtoz(Λ,1000.0) # [m2 V-1 s-1]
@@ -340,7 +340,7 @@ and McMurry (2008).
     (1-\beta)}{\sqrt{2}\sigma} \right) - 2\epsilon \left 
     ( \frac{\tilde{z}-1}{\sqrt{2}\sigma}\right)  \right]``
         
-where ``\tilde{z} = \frac{z}{z^s}`` is the dimensionless mobility, ``z``` is the particle 
+where ``\tilde{z} = \frac{z}{z^s}`` is the dimensionless mobility, ``z`` is the particle 
 mobility ``z^s`` is the centroid mobility selected by the DMA, 
 ``\epsilon = x \mathrm{erf}(x) +\left(\exp(-x^2)/\sqrt{\pi}\right)``, ``\mathrm{erf}`` is 
 the error function, and ``\beta = \frac{q_{sa}}{q_{sh}}``. The parameter ``\sigma`` 
@@ -420,7 +420,7 @@ selected centroid mobility at time t and is calculated from the applied voltage.
     
     This function is used internally to compute the SMPS function and is tied to 
     a specific DMA setup and scanning profile. It is called by the setupSMPS constructor
-    functions. See setupSMPS in the source code to see how it is used.
+    functions. See [setupSMPS](@ref) in the source code to see how it is used.
 
 """
 function Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
@@ -428,7 +428,28 @@ function Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
     return mapreduce(zˢ -> Ω(Λ, Z, zˢ / k), +, vtoz(Λ, Vex)) / nint
 end
 
-function setupSMPS(Λ, v1, v2, tscan, tc)
+@doc raw"""
+    setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Number)
+
+Construct the [DifferentialMobilityAnalyzer](@ref) type for DMA configuration
+[DMAconfig](@ref). The size grid is constructed between voltage v1 and v2, tscan is 
+the duration of the SMPS scan in seconds, tc is the integration time per bin. The
+number of bins is given by tscan / tc. Per convenction instantiations of this type are
+denoted as δ, or δ₁, δ₂ ... to distinguish DMA chains. The grid must be setup from low 
+voltage to high voltage. The grid is then setup in order from high to low diameter.
+
+Diameters stored in δ are in units of nm.
+
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 8.3e-5                     
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
+
+δ = setupSMPS(Λ, 10, 10000, 180, 1.5)
+```
+"""
+function setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Number)
     bins = round(Int, tscan / tc) # Number of size bins
     global Ve = reverse(10 .^ range(log10(v1), stop = log10(v2), length = bins + 1))  # Voltage bin-edges
     global Vp = sqrt.(Ve[2:end] .* Ve[1:end-1])  # Voltage midpoints
@@ -450,9 +471,29 @@ function setupSMPS(Λ, v1, v2, tscan, tc)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
-function setupSMPSdata(Λ, V)
+@doc raw"""
+    setupSMPSdata(Λ::DMAconfig, V::AbstractVector)
+
+Construct the [DifferentialMobilityAnalyzer](@ref) type for DMA configuration
+[DMAconfig](@ref). The size grid is constructed for a vector of voltages sorted from
+low to high. The voltage correspond to bin edges and might correspond to gridded data
+output obtained from an SMPS. The number of bins is bins = length(V)-1. 
+
+Diameters stored in δ are in units of nm.
+
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 8.3e-5                     
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
+
+V = range(10, stop = 10000, length=121)
+δ = setupSMPSdata(Λ, V)
+```
+"""
+function setupSMPSdata(Λ::DMAconfig, V::AbstractVector)
     tc = 1
-    global Ve = V
+    global Ve = (V[1] < V[2]) ? reverse(V) : V
     global bins = length(Ve) - 1
     global Vp = sqrt.(Ve[2:end] .* Ve[1:end-1])  # Voltage midpoints
     global Tc = getTc(Λ)
@@ -474,8 +515,29 @@ function setupSMPSdata(Λ, V)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
+@doc raw"""
+    setupDMA(Λ::DMAconfig, z1::Number, z2::Number, bins::Int)
 
-function setupDMA(Λ, z1, z2, bins)
+Construct the [DifferentialMobilityAnalyzer](@ref) type for DMA configuration
+[DMAconfig](@ref). The size grid is constructed between mobility z1 and z2, with 
+bin + 1 edges and bin number of midpoints. Per convenction instantiations of this
+type are denoted as δ, or δ₁, δ₂ ... to distinguish DMA chains. The grid must be 
+setup from low to high mobility, corresponding to large to small mobility diameter.
+
+Diameters stored in δ are in units of nm.
+
+Example Usage
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 8.3e-5                     
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
+bins,z₁,z₂ = 60, vtoz(Λ,10000), vtoz(Λ,10)   
+
+δ = setupDMA(Λ, z₁, z₂, bins)
+```
+"""
+function setupDMA(Λ::DMAconfig, z1::Number, z2::Number, bins::Int)
     global Tc = getTc(Λ)
     global Ze = 10 .^ range(log10(z1), stop = log10(z2), length = bins + 1)
     global Z = sqrt.(Ze[2:end] .* Ze[1:end-1])

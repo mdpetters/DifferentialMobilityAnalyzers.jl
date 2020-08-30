@@ -9,13 +9,43 @@
 #         April, 2018
 #-
 
-# λ functions
-md = (A, x) -> @. A[1] / (√(2π) * log(A[3])) * exp(-(log(x / A[2]))^2 / (2log(A[3])^2))
-logn = (A, x) -> mapreduce((A) -> md(A, x), +, A)
 
-# Multimodal lognormal size distribution on a generic logspace grid
+# Helper functions for lognormal distribution
+md(A, x) = @. A[1] / (√(2π) * log(A[3])) * exp(-(log(x / A[2]))^2 / (2log(A[3])^2))
+logn(A, x) = mapreduce((A) -> md(A, x), +, A)
+
+@doc raw"""
+    lognormal(A; d1 = 8.0, d2 = 2000.0, bins = 256)
+    
+
+The lognormal function instantiates a the [SizeDistribution](@ref) type with a multi-modal
+lognormal distribution. The multi-modal lognormal size distribution is given by 
+(e.g. Seinfeld and Pandis, 2006)
+
+``\frac{dN}{d\ln D_p} = \sum_{i=1}^n \frac{N_{t,i}}{\sqrt{2\pi}\ln\sigma_{g,i}} 
+\exp \left(- \frac{\left[\ln D_p-\ln D_{pg,i}\right]^2}{2\ln \sigma_{g,i}^2}\right)``
+
+where ``\frac{dN}{d\ln D_p}`` is the spectral number density, ``N_{t,i}`` is the total
+number concentration, ``\sigma_{g,i}`` is the geometric standard deviation,  
+``D_{pg,i}`` is the geometric mean diameter of the ``i^{th}`` mode,  ``n``is the number of 
+modes.  
+    
+Each mode is coded as an array of [Nt, Dg, sg]. The inputs are
+- A is an array of arrays with modes, i.e. [[Nt1,Dg1,sg1],[Nt2,Dg2,sg2], ...]
+- d1 is the lower diameter of the grid
+- d2 is the upper diameter of the grid
+- bins is the number of size bins.
+
+By definition of the function sg >= 1, with sg1 corresponding to an infinitely narrow mode
+The function is unit agnostic. 
+
+Example Usage
+```julia
+𝕟 = lognormal([[200.0, 80.0, 1.3]]; d1 = 10, d2 = 500.0, bins = 120)
+𝕟 = lognormal([[200.0, 80.0, 1.3], [200.0, 150.0, 1.3]]; d1 = 10, d2 = 800.0, bins = 60)
+```
+"""
 function lognormal(A; d1 = 8.0, d2 = 2000.0, bins = 256)
-    #De = logspace(log10(d1), log10(d2), bins+1)
     De = 10.0 .^ range(log10(d1), stop = log10(d2), length = bins + 1)
     Dp = sqrt.(De[2:end] .* De[1:end-1])
     ΔlnD = log.(De[2:end] ./ De[1:end-1])
@@ -24,7 +54,18 @@ function lognormal(A; d1 = 8.0, d2 = 2000.0, bins = 256)
     return SizeDistribution(A, De, Dp, ΔlnD, S, N, :lognormal)
 end
 
-# Triangular size distribution for a given diameter and number concentration
+@doc raw"""
+    triangular(Λ::DMAconfig, δ::DifferentialMobilityAnalyzer, A)
+
+Instantiates a single mode triangular distribution in mobility space with number 
+concentration Nt and mode diameter Dg. This is a convenient constructor to model a single
+mode of the distribution output of an idealized DMA.
+
+Example Usage
+```julia
+𝕟 = triangular(Λ, δ, [200.0, 50.0])
+```
+"""
 function triangular(Λ::DMAconfig, δ::DifferentialMobilityAnalyzer, A)
     Nt = A[1]
     zˢ = dtoz(Λ, A[2] .* 1e-9)
@@ -42,7 +83,42 @@ function triangular(Λ::DMAconfig, δ::DifferentialMobilityAnalyzer, A)
     )
 end
 
-# Lognormal distrubution on a DMA size grid
+@doc raw"""
+    DMALognormalDistribution(A, δ::DifferentialMobilityAnalyzer)
+    
+The DMALognormalDistribution function instantiates a the [SizeDistribution](@ref) type with
+a multi-modal lognormal distribution. The multi-modal lognormal size distribution is given by 
+(e.g. Seinfeld and Pandis, 2006)
+
+``\frac{dN}{d\ln D_p} = \sum_{i=1}^n \frac{N_{t,i}}{\sqrt{2\pi}\ln\sigma_{g,i}} 
+\exp \left(- \frac{\left[\ln D_p-\ln D_{pg,i}\right]^2}{2\ln \sigma_{g,i}^2}\right)``
+
+where ``\frac{dN}{d\ln D_p}`` is the spectral number density, ``N_{t,i}`` is the total
+number concentration, ``\sigma_{g,i}`` is the geometric standard deviation,  
+``D_{pg,i}`` is the geometric mean diameter of the ``i^{th}`` mode,  ``n``is the number of 
+modes.  
+    
+Each mode is coded as an array of [Nt, Dg, sg]. The inputs are
+- A is an array of arrays with modes, i.e. [[Nt1,Dg1,sg1],[Nt2,Dg2,sg2], ...]
+- δ is a DifferentialMobilityAnalyzer
+
+By definition of the function sg >= 1, with sg1 corresponding to an infinitely narrow mode
+The function is unit agnostic. The diameter grid is that from the 
+DifferentialMobilityAnalyzer δ. 
+
+Example Usage
+```julia
+t,p = 295.15, 1e5                        
+qsa,qsh = 1.66e-5, 8.3e-5                     
+r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
+bins,z₁,z₂ = 30, vtoz(Λ,10000), vtoz(Λ,10)   
+δ = setupDMA(Λ, z₁, z₂, bins)
+
+𝕟 = DMALognormalDistribution([[200.0, 80.0, 1.3]], δ)
+𝕟 = DMALognormalDistribution([[200.0, 80.0, 1.3], [200.0, 150.0, 1.3]], δ)
+```
+"""
 function DMALognormalDistribution(A, δ::DifferentialMobilityAnalyzer)
     S = logn(A, δ.Dp)
 
