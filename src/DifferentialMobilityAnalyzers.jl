@@ -67,6 +67,7 @@ export DMAconfig,                    # Data type to hold DMA config
     β12,                      # Brownian+Zebel coagulation kernel
     figure,                   # Function to setup figures
     interpolateDataFrameOntoδ,# Interpolate data onto DMA grid
+    interpolateSizeDistributionOntoδ,# Interpolate data onto DMA grid
     benchmark,                # Single benchmark ren
     runbenchmarks,            # Create summary of benchmarks
     launch_tutorial           # Execute tutorial

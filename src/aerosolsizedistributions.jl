@@ -479,9 +479,9 @@ function -(𝕟₁::SizeDistribution, 𝕟₂::SizeDistribution)
 end
 
 """
-    interpolate_df_onto_thisδ(kw)
+    interpolateDataFrameOntoδ(kw)
 
-This function takes some measured size distribution in a DataFrame and and interpolates 
+This function takes some measured size distribution in a DataFrame and interpolates 
 it onto a DMA grid. kw is a tuple containing a DataFrame, symbols to columns to extract
 which contain diameter and response function, and a DMA grid.
 
@@ -500,5 +500,28 @@ function interpolateDataFrameOntoδ(kw)
     etp = extrapolate(itp, 0.0) 
     R = etp(δ.Dp)
     
-    return SizeDistribution([],δ.De,δ.Dp,δ.ΔlnD,R./δ.ΔlnD,R,:response)
+    return SizeDistribution([],δ.De,δ.Dp,δ.ΔlnD,R./δ.ΔlnD,R,:interpolated)
+end
+
+"""
+    interpolateSizeDistributionOntoδ(kw)
+
+This function takes a size distribution and interpolates it onto a DMA grid. 
+kw is a tuple containing a SizeDistribution and a DMA grid.
+
+Example Usage
+```julia
+    𝕣 = (𝕟, δ) |> interpolateSizeDistributionOntoδ
+```
+
+This extracts the columns Dp and R from df and interpolates it ont grid δ and
+returns the results as a SizeDistribution. The df has to be sorted in ascending order.
+"""
+function interpolateSizeDistributionOntoδ(kw)
+    𝕟, δ = kw[1], kw[2]
+    itp = interpolate((reverse(𝕟.Dp),), reverse(𝕟.S), Gridded(Linear()))
+    etp = extrapolate(itp, 0.0) 
+    S = etp(δ.Dp)
+    
+    return SizeDistribution([],δ.De,δ.Dp,δ.ΔlnD,S,S.*δ.ΔlnD,:interpolated)
 end

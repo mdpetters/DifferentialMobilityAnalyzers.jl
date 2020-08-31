@@ -1,10 +1,6 @@
 # Operators
 
-Operators are used to transform size distributions. The operators overload the Base or 
-LinearAlgebra methods. Operators fall into two broad categories: operators changing 
-number concentration and spectral density fields (𝕟.N and 𝕟.S) and operators that change 
-the sizing vector (𝕟.Dp). The former include 𝕟₁ + 𝕟₂, 𝕟₁ - 𝕟₂, 𝕟₁ ∗ 𝕟₂, 𝕟₁ / 𝕟₂, a ∗ 𝕟, 
-T .∗ 𝕟, and A ∗ 𝕟, while the latter include a · 𝕟 and T · 𝕟.
+Operators are used to transform size distributions. The operators overload the Base or LinearAlgebra methods. Operators fall into two broad categories: operators changing number concentration and spectral density fields (𝕟.N and 𝕟.S) and operators that change the sizing vector (𝕟.Dp). The former include 𝕟₁ + 𝕟₂, 𝕟₁ - 𝕟₂, 𝕟₁ ∗ 𝕟₂, 𝕟₁ / 𝕟₂, a ∗ 𝕟, T .∗ 𝕟, and A ∗ 𝕟, while the latter include a · 𝕟 and T · 𝕟.
 
 |  Operator |  Description |
 |---|---|

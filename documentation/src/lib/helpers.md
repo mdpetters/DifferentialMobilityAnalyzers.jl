@@ -17,3 +17,13 @@ Pages = ["helpers.md"]
 ```@docs
 clean(x)
 ```
+
+### interpolateSizeDistributionOntoδ
+```@docs
+interpolateSizeDistributionOntoδ
+```
+
+### interpolateDataFrameOntoδ
+```@docs
+interpolateDataFrameOntoδ
+```

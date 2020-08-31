@@ -12,15 +12,16 @@ makedocs(
       "Notebooks" => "notebooks.md"
     ],
     "Manual" => Any[
+      "Overview" => "man/overview.md",
       "Size Distributions" => "man/sizedistribution.md",
       "Initializing DMAs" => "man/dmas.md",
-      "Tranmsission through the DMA" => "man/transmission.md",
-      "Creating Convolution Matrices" => "man/matrix.md",
-      "Size Distribution Inversion" => "man/inversion.md",
-      "Tandem DMA Setups" => "man/tandem.md"
+      "Convolution Matrices" => "man/matrix.md",
+      "Forward Models" => "man/forward.md",
+      "Inverse Models" => "man/inverse.md",
+      "Performance Benchmarks" => "man/benchmarks.md",
     ],
     "Library" => Any[
-      "Physical Relations" => "lib/physics.md",
+      "Physics" => "lib/physics.md",
       "Data Types" => "lib/types.md",
       "Operators" => "lib/operators.md",
       "Helper Functions" => "lib/helpers.md",
