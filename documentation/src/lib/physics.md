@@ -13,7 +13,7 @@ Pages = ["physics.md"]
 η(Λ::DMAconfig)
 ```
 
-### Cunningham Correction
+### Cunningham Correction Factor
 ```@docs
 cc(Λ::DMAconfig, d)
 ```
@@ -52,12 +52,12 @@ ztov(Λ::DMAconfig, z)
 Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
 ```
 
-### Charge Function
+### Charging Probability
 ```@docs
 getTc(Λ::DMAconfig)
 ```
 
-### Transmission Function
+### Transmission Loss
 ```@docs
 Tl(Λ::DMAconfig, Dp)
 ```

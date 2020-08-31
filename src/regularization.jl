@@ -9,7 +9,7 @@
 #         April, 2018
 #-
 
-"""
+@doc raw"""
     setupRegularization(𝐀, 𝐈, B, X₀, n)
 
 Initialize the [Regvars](@ref) used to compute the Tikhonov regularization. Regvars 
@@ -168,7 +168,7 @@ function lcorner(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10, r::Int
     return λs[2]
 end
 
-"""
+@doc raw"""
     rinv(R::AbstractVector, δ::DifferentialMobilityAnalyzer; λ₁ = 1e-2, λ₂ = 1e1, n = 1)
 
 The function rinv is a wrapper to perform the Tikhonov inversion.

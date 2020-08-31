@@ -58,6 +58,9 @@ export DMAconfig,                    # Data type to hold DMA config
     lcurve,                   # Function to compute the L-curve
     lcorner,                  # Function to find corner of L-curve
     rinv,                     # Function to compute the inverse
+    L1,                       # Function to compute L1 norm
+    L2,                       # Function to compute L2 norm
+    L1L2,                     # Function to compute L1 and L2 norms
     loadtsidata,              # Function to loads TSI data file; loadtsidata.
     β12brown,                 # Brownian coagualation kernel
     β12zebel,                 # Zebel charge enhancement
@@ -143,8 +146,8 @@ The field is initialized using one of the the constructor functions:
 !!! note
 
     Diameters stored in δ are in units of nm. Mobility in m2 s-1 V-1. The functions 
-    [Transfer Function](@ref) Ω, [Charge Function](@ref) Tc and 
-    [Transmission Function](@ref) Tl take diameter in units of nm
+    [Transfer Function](@ref) Ω, [Charging Probability](@ref) Tc and 
+    [Transmission Loss](@ref) Tl take diameter in units of nm
 
 """
 struct DifferentialMobilityAnalyzer
