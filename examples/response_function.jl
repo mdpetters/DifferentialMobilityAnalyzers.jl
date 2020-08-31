@@ -31,12 +31,12 @@ function getresponse(𝕣, 𝕟)
     )
 end
 
-qsa,qsh = 1.66e-5, 8.33e-5           
-t,p = 295.15, 1e5                    
-r₁,r₂,l = 9.37e-3,1.961e-2,0.44369   
-Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical)  
-z₁,z₂ = vtoz(Λ,10000), vtoz(Λ,10)    
-δ  = setupDMA(Λ, z₁, z₂, 60); 
-𝕟 = DMALognormalDistribution([[400, 30, 1.2],[500, 110, 1.7]], δ)
+qsa, qsh = 1.66e-5, 8.33e-5
+t, p = 295.15, 1e5
+r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369
+Λ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
+z₁, z₂ = vtoz(Λ, 10000), vtoz(Λ, 10)
+δ = setupDMA(Λ, z₁, z₂, 60);
+𝕟 = DMALognormalDistribution([[400, 30, 1.2], [500, 110, 1.7]], δ)
 𝕣 = δ.𝐀 * 𝕟
 getresponse(𝕣, 𝕟)

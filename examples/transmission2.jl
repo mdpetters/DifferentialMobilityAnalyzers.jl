@@ -22,7 +22,7 @@ Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]
 𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
 
 # Tandem DMA equations
-T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp) 
+T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp)
 DMA₁(𝕟, zˢ, gf, Λ, δ) =
     sum(map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)), 1:3))
 DMA₂(𝕟, δ) = δ.𝐎 * 𝕟

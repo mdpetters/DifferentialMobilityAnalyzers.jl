@@ -8,18 +8,18 @@ using LinearAlgebra
 using Printf
 using DataFrames
 
-t, p = 295.15, 1e5                    
-qsa, qsh = 1.66e-5, 8.33e-5   
+t, p = 295.15, 1e5
+qsa, qsh = 1.66e-5, 8.33e-5
 
 # Standard TSI DMA
 r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369
-Λ₁ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  
-δ₁ = setupDMA(Λ₁, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9), 120)    
+Λ₁ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 3, :cylindrical)
+δ₁ = setupDMA(Λ₁, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9), 120)
 
 # High-Flow DMA
 r₁, r₂, l = 0.05, 0.058, 0.6
-Λ₂ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  
-δ₂ = setupDMA(Λ₂, dtoz(Λ₂, 300e-9), dtoz(Λ₂, 50e-9), 60)                   
+Λ₂ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical)
+δ₂ = setupDMA(Λ₂, dtoz(Λ₂, 300e-9), dtoz(Λ₂, 50e-9), 60)
 
 # Upstream Size Distribution
 Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]

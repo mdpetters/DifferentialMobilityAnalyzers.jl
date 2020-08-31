@@ -9,43 +9,43 @@ using Printf
 using DataFrames
 
 # Create a DMA config
-qsa,qsh = 1.66e-5, 8.33e-5                       # Qsample [m3 s-1], Qsheath [m3 s-1]
-t,p = 295.15, 1e5                                # Temperature [K], Pressure [Pa]
-r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               # DMA geometry [m]
-Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical)
+qsa, qsh = 1.66e-5, 8.33e-5                       # Qsample [m3 s-1], Qsheath [m3 s-1]
+t, p = 295.15, 1e5                                # Temperature [K], Pressure [Pa]
+r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369               # DMA geometry [m]
+Λ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
 
 # Create a DMA grid
-z₁,z₂ = vtoz(Λ,10000), vtoz(Λ,10)    # bins, upper, lower mobility limit
+z₁, z₂ = vtoz(Λ, 10000), vtoz(Λ, 10)    # bins, upper, lower mobility limit
 δ = setupDMA(Λ, z₁, z₂, 512);
 
 # Compute the transmission through the DMA
-T(zˢ,k,Λ,δ) = δ.Ω(Λ,δ.Z,zˢ/k).*δ.Tc(k,δ.Dp).*δ.Tl(Λ,δ.Dp)
-zˢ = dtoz(Λ, 100*1e-9)
-𝕟ᶜⁿ = DMALognormalDistribution([[900., 40., 1.5], [500., 180., 1.4]], δ)
-ℕ = map(k -> T(zˢ,k,Λ,δ)*𝕟ᶜⁿ,1:3)
-𝕄 = map(k -> (ztod(Λ,1,zˢ)/ztod(Λ,k,zˢ))⋅(T(zˢ,k,Λ,δ)*𝕟ᶜⁿ),1:3)
+T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp)
+zˢ = dtoz(Λ, 100 * 1e-9)
+𝕟ᶜⁿ = DMALognormalDistribution([[900.0, 40.0, 1.5], [500.0, 180.0, 1.4]], δ)
+ℕ = map(k -> T(zˢ, k, Λ, δ) * 𝕟ᶜⁿ, 1:3)
+𝕄 = map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (T(zˢ, k, Λ, δ) * 𝕟ᶜⁿ), 1:3)
 𝕟ₜ, 𝕞ₜ = sum(ℕ), sum(𝕄)
 
 # Plot the results
-set_default_plot_size(25cm, 7cm) 
+set_default_plot_size(25cm, 7cm)
 
-xlabels = log10.([10, 50, 100, 500]) 
+xlabels = log10.([10, 50, 100, 500])
 p1 = plot(
-	x = 𝕟ᶜⁿ.Dp, 
-    y = 𝕟ᶜⁿ.S, 
-    Geom.step, 
-    color = ["𝕟ᶜⁿ" for i in 𝕟ᶜⁿ.Dp], 
+    x = 𝕟ᶜⁿ.Dp,
+    y = 𝕟ᶜⁿ.S,
+    Geom.step,
+    color = ["𝕟ᶜⁿ" for i in 𝕟ᶜⁿ.Dp],
     Guide.xlabel("Particle diameter (nm)"), #
-    Guide.ylabel("dN/dlnD (cm-3)"), 
+    Guide.ylabel("dN/dlnD (cm-3)"),
     Guide.xticks( # hide
-        ticks = log10.([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600]), 
-    ), 
+        ticks = log10.([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600]),
+    ),
     Guide.colorkey(; title = ""),
     Scale.x_log10(labels = x -> x in xlabels ? @sprintf("%2i", exp10(x)) : ""),
     Scale.color_discrete_manual("black"),
     Coord.cartesian(xmin = log10(10), xmax = log10(600)),
     Theme(plot_padding = [0mm, 0mm, 0mm, 0mm]),
-) 
+)
 
 df1 = let
     xx = map(1:3) do i

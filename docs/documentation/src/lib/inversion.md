@@ -24,7 +24,7 @@ Ninv
 rinv
 ```
 
-### rinv
+### L1
 ```@docs
 L1
 ```

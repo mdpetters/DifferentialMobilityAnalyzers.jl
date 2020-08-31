@@ -27,7 +27,8 @@ makedocs(
       "Helper Functions" => "lib/helpers.md",
       "Inversion Routines" => "lib/inversion.md",
       "Benchmarks" => "lib/benchmarks.md"
-    ]
+    ],
+    "References" => "references.md"
   ]
 )
 

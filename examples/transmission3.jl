@@ -22,7 +22,7 @@ Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]
 𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
 
 # Tandem DMA equations
-T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp) 
+T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp)
 DMA₁(𝕟, zˢ, gf, Λ, δ) =
     sum(map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)), 1:3))
 DMA₂(𝕟, δ) = δ.𝐎 * 𝕟
@@ -33,14 +33,14 @@ gf = 1.55                # Growth factor
 
 # Pass size distribution to DMA₁ and then output distributiom to DMA₂
 𝕞 = model(zˢ, gf)
-P = [0.5,0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
+P = [0.5, 0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
 gf = [1.0, 1.2, 1.6, 2.1]    # Values of growth factor
-𝕞 = sum(map(i->(P[i]*model(zˢ, gf[i])), 1:length(P)))  # The growth factor distribution
+𝕞 = sum(map(i -> (P[i] * model(zˢ, gf[i])), 1:length(P)))  # The growth factor distribution
 
 set_default_plot_size(14cm, 8cm)
 xlabels = collect(1:0.5:3)
 p1 = plot(
-    x = 𝕞.Dp./100.0,
+    x = 𝕞.Dp ./ 100.0,
     y = 𝕞.N,
     Geom.step,
     Guide.xlabel("Growth Factor (-)"),
