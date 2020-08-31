@@ -1,12 +1,27 @@
 # DifferentialMobilityAnalyzers.jl NEWS
 
 #### Notes on release changes and ongoing development
-- v2.1 supports Julia 1.5
+- current master supports Julia 1.5 (works on 1.4)
+- v2.3 supports Julia 1.5 (works on 1.4)
+- v2.2 supports Julia 1.5 (works on 1.4)
+- v2.1 supports Julia 1.5 (works on 1.4)
 - v2.0 supports Julia 1.1
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
 ## current master
+
+## v2.3
+- Various small bugfixes discovered during documentation
+- Add benchmark scripts to track performance across CPU architectures and over time.
+- Add self-contained examples folder with code that matches the docs.
+- Add docstrings and write Documenter.jl documentation for the package.
+- Add links to Docker container with precompiles sys image.
+- Add links to narrated tutorial notes to manual.
+- Add interpolateSizeDistributionOntoδ function. This is match grids for chained DMA systems.
+- Add recommendation for MKL library for additional performance gain
+- Signficant speedup in inversion by switching to Choleskey decomposition for computing the inverse
+- Revise search functions for performance gain.
 - Limit number of BLAS threads to 1 for factor 4 speedup in inversion.
 
 ## v2.2
