@@ -58,4 +58,4 @@ Petters, M.D. (2019, April 27) <i> Virtual Machine containing Software for "A la
 [docs-dev-url]: https://mdpetters.github.io/DifferentialMobilityAnalyzers.jl/latest/
 
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://mdpetters.github.io/DifferentialMobilityAnalyzers.jl/latest/
+[docs-stable-url]: https://mdpetters.github.io/DifferentialMobilityAnalyzers.jl/stable/
