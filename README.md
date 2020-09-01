@@ -1,10 +1,10 @@
 # DifferentialMobilityAnalyzers.jl
 
-*A Julia package for working with data from differential mobility analyzers.*
+*A Julia package for working with differential mobility analyzers.*
 
 | **Documentation**                                                               | **Build Status**                                                                                | **Citations** |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]](docs/DOCUMENTATION.md) | [![travis badge][travis_badge]][travis_url] [![codecov badge][codecov_badge]][codecov_url] | [![DOI](https://img.shields.io/badge/DOI-10.1080/02786826.2018.1530724-blue?label=DOI)](https://doi.org/10.1080/02786826.2018.1530724) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2652893.svg)](https://doi.org/10.5281/zenodo.2652893)  |
+| [![][docs-stable-img]][docs-stable-url] | [![travis badge][travis_badge]][travis_url] [![codecov badge][codecov_badge]][codecov_url] | [![DOI](https://img.shields.io/badge/DOI-10.1080/02786826.2018.1530724-blue?label=DOI)](https://doi.org/10.1080/02786826.2018.1530724) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2652893.svg)](https://doi.org/10.5281/zenodo.2652893)  |
 
 # Installation
 
