@@ -22,7 +22,7 @@ A'A matrix for performance optimization
 - n is the number of BLAS threads 
 """
 function setupRegularization(𝐀, 𝐈, B, X₀, n)
-    global Ψ = Regvars(𝐀, 𝐈, B, X₀,𝐀'𝐀,n)
+    global Ψ = Regvars(𝐀[:,:], 𝐈, B, X₀,(𝐀'𝐀)[:,:],n)
 end
 
 # This function returns the inverted distribution as well as the
@@ -50,6 +50,16 @@ function reginv(λs; r = :L1)
     end
 end
 
+function zot(A::AbstractMatrix, λ::AbstractFloat) 
+    a = deepcopy(A)
+    n = size(a, 1)
+    for i = 1:n
+        @inbounds a[i,i] += λ
+    end
+    return a
+end
+
+
 @doc raw"""
     Ninv(λ)
 
@@ -65,7 +75,7 @@ N = clean(Ninv(0.5))
 ```
 """
 Ninv(λ::AbstractFloat) = 
-    cholesky!(Hermitian(Ψ.AA + λ^2.0 * Ψ.𝐈)) \ (Ψ.𝐀' * Ψ.B + λ^2.0 * Ψ.X₀)
+    cholesky!(Hermitian(zot(Ψ.AA, λ^2.0))) \ (Ψ.𝐀' * Ψ.B + λ^2.0 * Ψ.X₀)
 
 @doc raw"""
     L1L2(λ::AbstractFloat)
