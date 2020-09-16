@@ -128,7 +128,11 @@ end
 ρᵖ(λ) = (derivative(ρ⁰, λ))[1]
 ρ²ᵖ(λ) = (second_derivative(ρ⁰, λ))[1]
 η²ᵖ(λ) = (second_derivative(η⁰, λ))[1]
-κ(λ) = 2.0 * (ρᵖ(λ) * η²ᵖ(λ) - ηᵖ(λ) * ρ²ᵖ(λ)) / (ρᵖ(λ)^2.0 + ηᵖ(λ)^2.0)^1.5
+function κ(λ::AbstractFloat)  
+    rᵖ = ρᵖ(λ)
+    nᵖ = ηᵖ(λ)
+    2.0 * (rᵖ * η²ᵖ(λ) - nᵖ * ρ²ᵖ(λ)) / (rᵖ^2.0 + nᵖ^2.0)^1.5
+end
 
 # Compute the L-curve for n points between limits λ₁ and λ₂
 function lcurve(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10)
