@@ -71,7 +71,8 @@ export DMAconfig,                    # Data type to hold DMA config
     interpolateDataFrameOntoδ,# Interpolate data onto DMA grid
     interpolateSizeDistributionOntoδ,# Interpolate data onto DMA grid
     benchmark,                # Single benchmark ren
-    runbenchmarks            # Create summary of benchmarks
+    runbenchmarks,            # Create summary of benchmarks
+    initializeDefaultMatrices # Precompute inversion matrices
 
 @doc raw"""
     DMAconfig

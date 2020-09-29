@@ -323,9 +323,7 @@ end
 """
 function rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
     if ~@isdefined(Ψ₀)
-        global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
-        global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
-        global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
+        initializeDefaultMatrices()
     end
     (n == 1) || BLAS.set_num_threads(n)
 
@@ -342,4 +340,22 @@ function rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial 
     end
 
     return SizeDistribution([], De, Dp, ΔlnD, N ./ ΔlnD, N, :regularized)
+end
+
+@doc raw"""
+    initializeDefaultMatrices()
+
+Precompute matrices for skinny rinv procedure. This function is needed to reinitialize
+the matrices if the DMA config has changed.
+
+```julia
+Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
+Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
+Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
+```
+"""
+function initializeDefaultMatrices()
+    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
+    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
+    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
 end

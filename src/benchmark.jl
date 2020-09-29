@@ -26,6 +26,7 @@ function benchmark(bins::Integer, num_threads::Integer)
     a = @benchmark setupDMA($Λ, vtoz($Λ, 10000), vtoz($Λ, 10), $bins)
     b = @benchmark setupSMPS($Λ, 10000, 10, $bins, 1.0)
     c = @benchmark rinv($(𝕣.N), $δ, λ₁ = 0.1, λ₂ = 1.0)
+    initializeDefaultMatrices()
     d = @benchmark rinv2($(𝕣.N), λ₁ = 0.1, λ₂ = 1.0)
 
     cpuio = IOBuffer() # print cpu_summary with correct alignment
