@@ -46,7 +46,7 @@ p1 = plot(
     Guide.xlabel("Growth Factor (-)"),
     Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),
     Guide.xticks(ticks = (collect(0.8:0.1:3))),
-    Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%.1fi", (x)) : ""),
+    Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%.1f", (x)) : ""),
     Scale.color_discrete_manual("black"),
     Coord.cartesian(xmin = 0.8, xmax = 3),
     Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),

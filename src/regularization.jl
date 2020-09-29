@@ -322,6 +322,11 @@ end
     rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
 """
 function rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
+    if ~@isdefined(Ψ₀)
+        global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
+        global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
+        global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
+    end
     (n == 1) || BLAS.set_num_threads(n)
 
     global Ψₓ = @match order begin

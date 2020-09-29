@@ -500,9 +500,6 @@ function setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Num
         𝐒[i, i] = sum(𝐀[i, :])
     end    
     global 𝐒⁺ = inv(𝐒)
-    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
-    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
-    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -548,9 +545,6 @@ function setupSMPSdata(Λ::DMAconfig, V::AbstractVector)
         𝐒[i, i] = sum(𝐀[i, :])
     end
     global 𝐒⁺ = inv(𝐒)
-    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
-    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
-    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -593,8 +587,5 @@ function setupDMA(Λ::DMAconfig, z1::Number, z2::Number, bins::Int)
         𝐒[i, i] = sum(𝐀[i, :])
     end
     global 𝐒⁺ = inv(𝐒)
-    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
-    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
-    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
     return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
