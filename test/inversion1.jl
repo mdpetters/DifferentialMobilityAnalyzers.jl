@@ -8,7 +8,6 @@ m = 3
 bins, z₁, z₂ = 128, dtoz(Λ, 1000e-9), dtoz(Λ, 10e-9)
 δ = setupDMA(Λ, z₁, z₂, bins);
 
-
 𝐀 =
     (hcat(map(
         i -> Σ(k -> δ.Ω(Λ, δ.Z, i / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp), Λ.m),
