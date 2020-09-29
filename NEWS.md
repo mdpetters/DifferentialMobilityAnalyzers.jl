@@ -10,9 +10,12 @@
 
 ---
 ## current master
+- Add rinv2 function based on RegularizationTools.jl. Intended to supersede rinv and supports higher order inversions and performance gains.
+- Revisions related to the addition of rinv2
+- Thinned out Project.toml and added Compat section.
 
 ## v2.3
-- Various small bugfixes discovered during documentation
+- Various small bugfixes discovered during documentation.
 - Add benchmark scripts to track performance across CPU architectures and over time.
 - Add self-contained examples folder with code that matches the docs.
 - Add docstrings and write Documenter.jl documentation for the package.
