@@ -495,10 +495,14 @@ function setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Num
     global 𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
     global 𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
-    𝐒 = zeros(n, m)
+    global 𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
-    end
+    end    
+    global 𝐒⁺ = inv(𝐒)
+    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
+    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
+    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -539,10 +543,14 @@ function setupSMPSdata(Λ::DMAconfig, V::AbstractVector)
     global 𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
     global 𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
-    𝐒 = zeros(n, m)
+    global 𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
+    global 𝐒⁺ = inv(𝐒)
+    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
+    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
+    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -580,9 +588,13 @@ function setupDMA(Λ::DMAconfig, z1::Number, z2::Number, bins::Int)
     global 𝐎 = (hcat(map(i -> Σ(k -> Ω(Λ, Z, i / k) .* Tl(Λ, Dp), 1), Z)...))'
     global 𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
-    𝐒 = zeros(n, m)
+    global 𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
+    global 𝐒⁺ = inv(𝐒)
+    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
+    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
+    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
     return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end

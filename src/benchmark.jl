@@ -26,6 +26,7 @@ function benchmark(bins::Integer, num_threads::Integer)
     a = @benchmark setupDMA($Λ, vtoz($Λ, 10000), vtoz($Λ, 10), $bins)
     b = @benchmark setupSMPS($Λ, 10000, 10, $bins, 1.0)
     c = @benchmark rinv($(𝕣.N), $δ, λ₁ = 0.1, λ₂ = 1.0)
+    d = @benchmark rinv2($(𝕣.N), λ₁ = 0.1, λ₂ = 1.0)
 
     cpuio = IOBuffer() # print cpu_summary with correct alignment
     Sys.cpu_summary(cpuio)
@@ -36,13 +37,14 @@ function benchmark(bins::Integer, num_threads::Integer)
 
     DataFrame(
         cpuinfo = CPU,
-        juliaversion = juliav,
-        blasvendor = blasvendor,
-        blasthreads = num_threads,
+        julia = juliav,
+        blas = blasvendor,
+        threads = num_threads,
         nbins = bins,
         setupDMA = string(BenchmarkTools.prettytime(median(a).time)),
         setupSMPS = string(BenchmarkTools.prettytime(median(b).time)),
         rinv = string(BenchmarkTools.prettytime(median(c).time)),
+        rinv2 = string(BenchmarkTools.prettytime(median(d).time))
     )
 end
 

@@ -18,8 +18,9 @@ using LinearAlgebra
 using Random
 using CSV
 using Distributions
-using Documenter
-
+using RegularizationTools
+using Lazy
+using MLStyle
 
 import Base.*,                # Import to extend operators
     Base./,                   # Import to extend operators
@@ -58,6 +59,7 @@ export DMAconfig,                    # Data type to hold DMA config
     lcurve,                   # Function to compute the L-curve
     lcorner,                  # Function to find corner of L-curve
     rinv,                     # Function to compute the inverse
+    rinv2,                    # Function to compute the inverse with RegularizationTools
     L1,                       # Function to compute L1 norm
     L2,                       # Function to compute L2 norm
     L1L2,                     # Function to compute L1 and L2 norms
@@ -69,8 +71,7 @@ export DMAconfig,                    # Data type to hold DMA config
     interpolateDataFrameOntoδ,# Interpolate data onto DMA grid
     interpolateSizeDistributionOntoδ,# Interpolate data onto DMA grid
     benchmark,                # Single benchmark ren
-    runbenchmarks,            # Create summary of benchmarks
-    launch_tutorial           # Execute tutorial
+    runbenchmarks            # Create summary of benchmarks
 
 @doc raw"""
     DMAconfig

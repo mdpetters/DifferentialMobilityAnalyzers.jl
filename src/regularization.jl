@@ -22,7 +22,7 @@ A'A matrix for performance optimization
 - n is the number of BLAS threads 
 """
 function setupRegularization(𝐀, 𝐈, B, X₀, n)
-    global Ψ = Regvars(𝐀[:,:], 𝐈, B, X₀,(𝐀'𝐀)[:,:],n)
+    global Ψ = Regvars(𝐀[:, :], 𝐈, B, X₀, (𝐀'𝐀)[:, :], n)
 end
 
 # This function returns the inverted distribution as well as the
@@ -50,11 +50,11 @@ function reginv(λs; r = :L1)
     end
 end
 
-function zot(A::AbstractMatrix, λ::AbstractFloat) 
+function zot(A::AbstractMatrix, λ::AbstractFloat)
     a = deepcopy(A)
     n = size(a, 1)
     for i = 1:n
-        @inbounds a[i,i] += λ
+        @inbounds a[i, i] += λ
     end
     return a
 end
@@ -74,7 +74,7 @@ setupRegularization(δ.𝐀, δ.𝐈, R, inv(δ.𝐒) * R, n)
 N = clean(Ninv(0.5))                           
 ```
 """
-Ninv(λ::AbstractFloat) = 
+Ninv(λ::AbstractFloat) =
     cholesky!(Hermitian(zot(Ψ.AA, λ^2.0))) \ (Ψ.𝐀' * Ψ.B + λ^2.0 * Ψ.X₀)
 
 @doc raw"""
@@ -90,7 +90,7 @@ L1, L2 = L1L2(0.5)
 ```
 """
 function L1L2(λ::AbstractFloat)
-    Nx = Ninv(λ) 
+    Nx = Ninv(λ)
     return norm(Ψ.𝐀 * Nx - Ψ.B), norm(Ψ.𝐈 * (Nx - Ψ.X₀))
 end
 
@@ -138,7 +138,7 @@ end
 ρᵖ(λ) = (derivative(ρ⁰, λ))[1]
 ρ²ᵖ(λ) = (second_derivative(ρ⁰, λ))[1]
 η²ᵖ(λ) = (second_derivative(η⁰, λ))[1]
-function κ(λ::AbstractFloat)  
+function κ(λ::AbstractFloat)
     rᵖ = ρᵖ(λ)
     nᵖ = ηᵖ(λ)
     2.0 * (rᵖ * η²ᵖ(λ) - nᵖ * ρ²ᵖ(λ)) / (rᵖ^2.0 + nᵖ^2.0)^1.5
@@ -146,7 +146,7 @@ end
 
 # Compute the L-curve for n points between limits λ₁ and λ₂
 function lcurve(λ₁::AbstractFloat, λ₂::AbstractFloat; n::Int = 10)
-	BLAS.set_num_threads(Ψ.n)
+    BLAS.set_num_threads(Ψ.n)
     λs = 10.0 .^ range(log10(λ₁), stop = log10(λ₂), length = n)
     L1, L2 = L1L2.(λs)
     κs = map(λ -> κ(λ), λs)
@@ -185,6 +185,10 @@ end
 @doc raw"""
     rinv(R::AbstractVector, δ::DifferentialMobilityAnalyzer; λ₁ = 1e-2, λ₂ = 1e1, n = 1)
 
+!!! warning
+    This function is included to maintain backward compatibility with older code. Consider 
+    switching to [rinv2](@ref) instead.
+
 The function rinv is a wrapper to perform the Tikhonov inversion.
 - R the response vector to be inverted
 - δ the DifferentialMobilityAnalyzer from which R was produced
@@ -212,9 +216,125 @@ r₁, r₂, l = 9.37e-3,1.961e-2,0.44369
 𝕟ⁱⁿᵛ = rinv(𝕣.N, δ, λ₁ = 0.1, λ₂ = 1.0)
 ```
 """
-function rinv(R::AbstractVector, δ::DifferentialMobilityAnalyzer; λ₁ = 1e-2, λ₂ = 1e1, n = 1)
+function rinv(
+    R::AbstractVector,
+    δ::DifferentialMobilityAnalyzer;
+    λ₁ = 1e-2,
+    λ₂ = 1e1,
+    n = 1,
+)
     setupRegularization(δ.𝐀, δ.𝐈, R, inv(δ.𝐒) * R, n)  # setup the system
     λopt = lcorner(λ₁, λ₂; n = 10, r = 3)           # compute the optimal λ
     N = clean(Ninv(λopt))                           # find the inverted size
     return SizeDistribution([], δ.De, δ.Dp, δ.ΔlnD, N ./ δ.ΔlnD, N, :regularized)
+end
+
+@doc raw"""
+    rinv2(
+        R::AbstractVector,
+        δ::DifferentialMobilityAnalyzer;
+        λ₁ = 1e-2,
+        λ₂ = 1e1,
+        order = 0,
+        initial = true,
+        n = 1,
+    )
+
+- R the response vector to be inverted
+- δ the DifferentialMobilityAnalyzer from which R was produced
+- λ₁ and λ₂ are the bounds of the search for the optical regularization parameter
+- order is 0, 1, or 2 corresponding to 0th, 1st, and 2nd order Tikhonov
+- use a priori estimate from Tadlukdar and Swihart (2003) method: true/false 
+- n is the number of BLAS threads to use (currently 1 is fastest)
+    
+The function rinv2 is a wrapper to perform the Tikhonov inversion using 
+[RegularizationTools](https://mdpetters.github.io/RegularizationTools.jl/stable/). The function 
+supersedes [rinv](@ref). It has more flexibility. For default inputs 
+```
+    𝕟ᵢₙᵥ = rinv(R, δ)
+    𝕟ᵢₙᵥ = rinv2(R, δ)
+```
+
+the two function should produce nearly identical results. The main difference is that 
+rinv2 used generalized cross validation instead of the L-curve method. The switch improves
+stability and spreed. The default setting is 0th order + initial guess, which is identical 
+to what is assumed in the rinv1 algorithm. Note that 0th order without initial guess 
+produces poor results.
+
+!! tip
+    For fastest results use the sister function
+    ```julia
+    rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
+    ```
+    which is the same but does not specify the DifferentialMobilityAnalyzer field. The difference
+    between the two rinv2 functions is that when you pass δ, several matrices are recomputed, 
+    which is uncecessary when performing repeat inversions. In the version without passing 
+    δ, the matrices are taken from last call to setupDMA, setupSMPS, or setupSMPSdata
+
+The function returns an inverted size distribution of type [SizeDistribution](@ref)
+
+Example Usage 
+
+```julia
+# Load Data
+df = CSV.read("example_data.csv", DataFrame)
+
+# Setup the DMA
+t, p, lpm = 293.15, 940e2, 1.666e-5      
+r₁, r₂, l = 9.37e-3,1.961e-2,0.44369     
+Λ = DMAconfig(t,p,1lpm,4lpm,r₁,r₂,l,0.0,:+,6,:cylindrical)  
+δ = setupDMA(Λ, vtoz(Λ,10000), vtoz(Λ,10), 120)
+
+# Interpolate the data onto the DMA grid
+𝕣 = (df, :Dp, :Rcn, δ) |> interpolateDataFrameOntoδ
+
+# Compute the inverse with explicit DMA passing (slower) 
+𝕟ⁱⁿᵛ = rinv(𝕣.N, δ, λ₁ = 0.1, λ₂ = 1.0)
+
+# Compute the inverse without explicit DMA passing (much faster) 
+𝕟ⁱⁿᵛ = rinv(𝕣.N, λ₁ = 0.1, λ₂ = 1.0)
+```
+"""
+function rinv2(
+    R::AbstractVector,
+    δ::DifferentialMobilityAnalyzer;
+    λ₁ = 1e-2,
+    λ₂ = 1e1,
+    order = 0,
+    initial = true,
+    n = 1,
+)
+    (n == 1) || BLAS.set_num_threads(n)
+    global Ψ = @match order begin
+        0:2 => setupRegularizationProblem(δ.𝐀[:, :], order)
+        _ => throw("Order not supported: use 0, 1 or 2")
+    end
+
+    N = @match initial begin
+        true => @> solve(Ψ, R, 𝐒⁺ * R) getfield(:x) clean
+        false => @> solve(Ψ, R) getfield(:x) clean
+    end
+
+    return SizeDistribution([], δ.De, δ.Dp, δ.ΔlnD, N ./ δ.ΔlnD, N, :regularized)
+end
+
+@doc raw"""
+    rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
+"""
+function rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
+    (n == 1) || BLAS.set_num_threads(n)
+
+    global Ψₓ = @match order begin
+        0 => DifferentialMobilityAnalyzers.Ψ₀
+        1 => DifferentialMobilityAnalyzers.Ψ₁
+        2 => DifferentialMobilityAnalyzers.Ψ₂
+        _ => throw("Order not supported: use 0, 1 or 2")
+    end
+
+    N = @match initial begin
+        true => @> solve(Ψₓ, R, 𝐒⁺ * R) getfield(:x) clean
+        false => @> solve(Ψₓ, R) getfield(:x) clean
+    end
+
+    return SizeDistribution([], De, Dp, ΔlnD, N ./ ΔlnD, N, :regularized)
 end
