@@ -21,9 +21,15 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 [compat]
 BenchmarkTools = "0.4, 0.5"
 CSV = "0.4 - 0.7"
+Calculus = "0.5"
 DataFrames = "0.10 - 0.21"
+<<<<<<< HEAD
 Interpolations = "0.12"
+=======
+Distributions = "0.24"
+>>>>>>> master
 Lazy = "0.13 - 0.15"
 MLStyle = "0.4"
 RegularizationTools = "0.1 - 0.2"
+SpecialFunctions = "0.10"
 julia = "1"
