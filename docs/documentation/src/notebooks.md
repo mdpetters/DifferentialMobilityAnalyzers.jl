@@ -1,5 +1,9 @@
 # Notebooks
 
+!!! warning
+    The notebooks were the original documentation of the project. Most of the material of the notebooks has been incorporated into the Manual section and is reproduced in the Tutorial. The notebooks are linked here for backward compatibility and to cover some content that is not yet included in the Manual section (e.g. the dual tandem DMA) or the FORTRAN integration.
+
+
 The project is documented in a journal manuscript. The original submission included
 12 Supplementary Jupyter Notebooks. The links open the notebooks in viewer mode via 
 NBViewer. The notebooks have been edited for compatibility and readability. 

@@ -261,7 +261,7 @@ stability and spreed. The default setting is 0th order + initial guess, which is
 to what is assumed in the rinv1 algorithm. Note that 0th order without initial guess 
 produces poor results.
 
-!! tip
+!!! tip
     For fastest results use the sister function
     ```julia
     rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
@@ -289,10 +289,10 @@ r₁, r₂, l = 9.37e-3,1.961e-2,0.44369
 𝕣 = (df, :Dp, :Rcn, δ) |> interpolateDataFrameOntoδ
 
 # Compute the inverse with explicit DMA passing (slower) 
-𝕟ⁱⁿᵛ = rinv(𝕣.N, δ, λ₁ = 0.1, λ₂ = 1.0)
+𝕟ⁱⁿᵛ = rinv2(𝕣.N, δ, λ₁ = 0.1, λ₂ = 1.0)
 
 # Compute the inverse without explicit DMA passing (much faster) 
-𝕟ⁱⁿᵛ = rinv(𝕣.N, λ₁ = 0.1, λ₂ = 1.0)
+𝕟ⁱⁿᵛ = rinv2(𝕣.N, λ₁ = 0.1, λ₂ = 1.0)
 ```
 """
 function rinv2(

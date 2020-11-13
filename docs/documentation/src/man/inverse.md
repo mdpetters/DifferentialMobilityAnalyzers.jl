@@ -24,7 +24,7 @@ The regularization parameter ``\lambda`` "interpolates" between the noisy least-
 See session 3 of the [Tutorial](@ref) for an interactive explanation on how Tikhonov regularization works.
 
 ### Example
-The L-curve search method is implemented in the [rinv](@ref) function. 
+The L-curve search method is implemented in the [rinv](@ref) function. Also check out the new [rinv2](@ref) function, which has much faster performance and is based on generalized cross validation. It also allows to specify higher order inversions. The default implementation gives near identical results to rinv. 
 
 ```julia
 𝕟ⁱⁿᵛ = rinv(𝕣.N, δ, λ₁=0.1, λ₂=1.0);
@@ -44,8 +44,11 @@ r₁, r₂, l = 9.37e-3,1.961e-2,0.44369
 
 𝕣 = (df,:Dp,:Rcn,δ) |> interpolateDataFrameOntoδ 
 𝕟ⁱⁿᵛ = rinv(𝕣.N, δ, λ₁=0.1, λ₂=1.0)
-
-df = DataFrame(Dp = 𝕟ⁱⁿᵛ.Dp, S = 𝕟ⁱⁿᵛ.S, Dist = ["𝕟ⁱⁿᵛ" for i = 1:length(𝕟ⁱⁿᵛ.Dp)]) #hide
+𝕟ⁱⁿᵛ² = rinv2(𝕣.N, δ, λ₁=0.1, λ₂=1.0)
+ 
+df1 = DataFrame(Dp = 𝕟ⁱⁿᵛ.Dp, S = 𝕟ⁱⁿᵛ.S, Dist = ["𝕟ⁱⁿᵛ" for i = 1:length(𝕟ⁱⁿᵛ.Dp)]) #hide
+df2 = DataFrame(Dp = 𝕟ⁱⁿᵛ².Dp, S = 𝕟ⁱⁿᵛ².S, Dist = ["𝕟ⁱⁿᵛ²" for i = 1:length(𝕟ⁱⁿᵛ².Dp)]) #hide
+df = [df1;df2] #hide
 dfr = DataFrame(Dp = 𝕣.Dp, S = 𝕣.N, Dist = ["𝕣" for i = 1:length(𝕣.Dp)])#hide
 #hide
 xlabels = log10.([10, 100, 500])#hide

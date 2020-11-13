@@ -1,7 +1,7 @@
 # Size Distributions
 
 ## Notation
-Since this package is working a lot with size distributions, it is useful to highlight them. By convention we will use blackboard bold characters to denote size distributions
+By convention blackboard bold characters denote size distributions
 
 !!! info
     **Blackboard bold font**: 𝕒, 𝕓, 𝕔, 𝕕, 𝕖, 𝕗, 𝕘, ...

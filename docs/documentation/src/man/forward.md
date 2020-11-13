@@ -50,8 +50,8 @@ p1 = plot( # hide
     y = 𝕟ᶜⁿ.S, # hide
     Geom.step, # hide
     color = ["𝕟ᶜⁿ" for i in 𝕟ᶜⁿ.Dp], # hide
-    Guide.xlabel("Particle diameter (nm)"), # hide
-    Guide.ylabel("dN/dlnD (cm-3)"), # hide
+    Guide.xlabel("Particle diameter (nm)", orientation = :horizontal), # hide
+    Guide.ylabel("dN/dlnD (cm-3)", orientation = :vertical), # hide
     Guide.xticks( # hide
         ticks = log10.([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600]), # hide
     ), # hide
@@ -268,7 +268,6 @@ p1 = plot(#hide
     Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),#hide
     Guide.xticks(ticks = (collect(100:10:220))),#hide
     Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%2i", (x)) : ""),#hide
-    Scale.color_discrete_manual("black"),#hide
     Coord.cartesian(xmin = 100, xmax = 220),#hide
     Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),#hide
 )#hide
@@ -330,7 +329,6 @@ p1 = plot(#hide
     Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),#hide
     Guide.xticks(ticks = (collect(0.8:0.1:3))),#hide
     Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%.1f", (x)) : ""),#hide
-    Scale.color_discrete_manual("black"),#hide
     Coord.cartesian(xmin = 0.8, xmax = 3),#hide
     Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),#hide
 )#hide
@@ -404,13 +402,10 @@ p1 = plot(#hide
     Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),#hide
     Guide.xticks(ticks = (collect(0.8:0.1:3))),#hide
     Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%.1f", (x)) : ""),#hide
-    Scale.color_discrete_manual("black"),#hide
     Coord.cartesian(xmin = 0.8, xmax = 3),#hide
     Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),#hide
 )#hide
 ```
-
-
 
 ### Volatilty Tandem DMA
 
