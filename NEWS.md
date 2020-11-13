@@ -2,6 +2,7 @@
 
 #### Notes on release changes and ongoing development
 - current master supports Julia 1.5 (works on 1.4)
+- v2.4 supports Julia 1.5 (works on 1.4)
 - v2.3 supports Julia 1.5 (works on 1.4)
 - v2.2 supports Julia 1.5 (works on 1.4)
 - v2.1 supports Julia 1.5 (works on 1.4)
@@ -10,6 +11,10 @@
 
 ---
 ## current master
+
+## v2.4
+- Update documentation for rinv2 and add logo
+- Merged CompatHelper: bump compat for "Interpolations" to "0.13
 - Add rinv2 function based on RegularizationTools.jl. Intended to supersede rinv and supports higher order inversions and performance gains.
 - Revisions related to the addition of rinv2
 - Thinned out Project.toml and added Compat section.
