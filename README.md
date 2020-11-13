@@ -26,7 +26,6 @@ julia> using DifferentialMobilityAnalyzers
 ## Documentation
 
 - [**STABLE**][docs-stable-url] &mdash; **documentation of the most recently tagged version.**
-- [**DEVEL**][docs-dev-url] &mdash; *documentation of the in-development version.*
 
 
 ## Project Status
