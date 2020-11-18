@@ -13,22 +13,21 @@ blasthreads, number of bins, and the three timed benchmarks for rinv, setupDMA, 
 function benchmark(bins::Integer, num_threads::Integer)
     # Load a simple comma delimited text file
     path = @__DIR__
-    df = CSV.read(path*"/example_data.csv")
+    df = CSV.read(path*"/example_data.csv", DataFrame)
 
     # Setup the DMA
     t, p, lpm = 293.15, 940e2, 1.666e-5      
     r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369   
     Λ = DMAconfig(t, p, 1lpm, 4lpm, r₁, r₂, l, 0.0, :+, 6, :cylindrical)
     δ = setupDMA(Λ, vtoz(Λ, 10000), vtoz(Λ, 10), bins)
-
+    
     𝕣 = (df, :Dp, :Rcn, δ) |> interpolateDataFrameOntoδ
 
     a = @benchmark setupDMA($Λ, vtoz($Λ, 10000), vtoz($Λ, 10), $bins)
     b = @benchmark setupSMPS($Λ, 10000, 10, $bins, 1.0)
-    c = @benchmark rinv($(𝕣.N), $δ, λ₁ = 0.1, λ₂ = 1.0)
-    initializeDefaultMatrices()
-    d = @benchmark rinv2($(𝕣.N), λ₁ = 0.1, λ₂ = 1.0)
-
+    c = @benchmark rinv($(𝕣.N), $δ; λ₁ = 0.1, λ₂ = 1.0)
+    d = @benchmark rinv2($(𝕣.N), $δ; λ₁ = 0.1, λ₂ = 1.0)
+ 
     cpuio = IOBuffer() # print cpu_summary with correct alignment
     Sys.cpu_summary(cpuio)
     CPU = String((split(String(take!(cpuio)), "\n"))[1])
@@ -56,6 +55,10 @@ Runs a set of standard benchmarks, varying the number bins and returns a datafra
 results. This function may take several minutes to complete. 
 """
 function runbenchmarks()
+    try 
+        benchmark(10,1)
+    catch
+    end
     bins = [30, 60, 120]
     xx = map(n->benchmark(n,1), bins)
     return vcat(xx...)
