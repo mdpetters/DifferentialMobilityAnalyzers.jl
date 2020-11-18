@@ -21,6 +21,7 @@ using Distributions
 using RegularizationTools
 using Lazy
 using MLStyle
+using Memoize
 
 import Base.*,                # Import to extend operators
     Base./,                   # Import to extend operators

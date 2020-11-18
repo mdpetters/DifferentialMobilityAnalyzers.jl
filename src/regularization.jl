@@ -261,16 +261,6 @@ stability and spreed. The default setting is 0th order + initial guess, which is
 to what is assumed in the rinv1 algorithm. Note that 0th order without initial guess 
 produces poor results.
 
-!!! tip
-    For fastest results use the sister function
-    ```julia
-    rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
-    ```
-    which is the same but does not specify the DifferentialMobilityAnalyzer field. The difference
-    between the two rinv2 functions is that when you pass δ, several matrices are recomputed, 
-    which is uncecessary when performing repeat inversions. In the version without passing 
-    δ, the matrices are taken from last call to setupDMA, setupSMPS, or setupSMPSdata
-
 The function returns an inverted size distribution of type [SizeDistribution](@ref)
 
 Example Usage 
@@ -305,13 +295,16 @@ function rinv2(
     n = 1,
 )
     (n == 1) || BLAS.set_num_threads(n)
-    global Ψ = @match order begin
-        0:2 => setupRegularizationProblem(δ.𝐀[:, :], order)
+    Ψ₀, Ψ₁, Ψ₂ = initializeDefaultMatrices(δ)
+    Ψ = @match order begin
+        0 => Ψ₀
+        1 => Ψ₁
+        2 => Ψ₂
         _ => throw("Order not supported: use 0, 1 or 2")
     end
 
     N = @match initial begin
-        true => @> solve(Ψ, R, 𝐒⁺ * R) getfield(:x) clean
+        true => @> solve(Ψ, R, inv(δ.𝐒) * R) getfield(:x) clean
         false => @> solve(Ψ, R) getfield(:x) clean
     end
 
@@ -319,31 +312,7 @@ function rinv2(
 end
 
 @doc raw"""
-    rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
-"""
-function rinv2(R::AbstractVector; λ₁ = 1e-2, λ₂ = 1e1, order = 0, initial = true, n = 1)
-    if ~@isdefined(Ψ₀)
-        initializeDefaultMatrices()
-    end
-    (n == 1) || BLAS.set_num_threads(n)
-
-    global Ψₓ = @match order begin
-        0 => DifferentialMobilityAnalyzers.Ψ₀
-        1 => DifferentialMobilityAnalyzers.Ψ₁
-        2 => DifferentialMobilityAnalyzers.Ψ₂
-        _ => throw("Order not supported: use 0, 1 or 2")
-    end
-
-    N = @match initial begin
-        true => @> solve(Ψₓ, R, 𝐒⁺ * R) getfield(:x) clean
-        false => @> solve(Ψₓ, R) getfield(:x) clean
-    end
-
-    return SizeDistribution([], De, Dp, ΔlnD, N ./ ΔlnD, N, :regularized)
-end
-
-@doc raw"""
-    initializeDefaultMatrices()
+    initializeDefaultMatrices(δ)
 
 Precompute matrices for skinny rinv procedure. This function is needed to reinitialize
 the matrices if the DMA config has changed.
@@ -354,8 +323,9 @@ the matrices if the DMA config has changed.
 Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
 ```
 """
-function initializeDefaultMatrices()
-    global Ψ₀ = setupRegularizationProblem(𝐀[:,:], 0)
-    global Ψ₁ = setupRegularizationProblem(𝐀[:,:], 1)
-    global Ψ₂ = setupRegularizationProblem(𝐀[:,:], 2)
+@memoize function initializeDefaultMatrices(δ)
+    Ψ₀ = setupRegularizationProblem(δ.𝐀[:,:], 0)
+    Ψ₁ = setupRegularizationProblem(δ.𝐀[:,:], 1)
+    Ψ₂ = setupRegularizationProblem(δ.𝐀[:,:], 2)
+    return Ψ₀, Ψ₁, Ψ₂  
 end

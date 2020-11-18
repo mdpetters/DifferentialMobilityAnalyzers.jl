@@ -431,33 +431,6 @@ function mylogspace(a::Float64, b::Float64, n::Int)
     return x
 end
 
-@doc raw"""
-    Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
-
-Transfer function of the scanning DMA. The voltage continuously changes.
-Signal is acquired during some discrete time interval ``t_c``. The SMPS transfer function
-is calculated as the average DMA transfer function during the time interval ``[t,t+t_c]``
-(Wang and Flagan, 1990). 
-
-``\Omega_{av} = \frac{1}{tc}\int_{t_i}^{t_i+t_c} \Omega(Z,z^s(t)) dt``
-    
-where ``t_i`` is the start time when counting begins in channel ``i``, ``z^s(t)`` is the 
-selected centroid mobility at time t and is calculated from the applied voltage. 
-
-!!! note
-
-    The function Ω is embedded in the the Type DifferentialMobilityAnalyzers.jl, which 
-    assigns δ.Ω either to this function Ωav or Ω applicable to stepping mode.
-    
-    This function is used internally to compute the SMPS function and is tied to 
-    a specific DMA setup and scanning profile. It is called by the setupSMPS constructor
-    functions. See [setupSMPS](@ref) in the source code to see how it is used.
-
-"""
-function Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
-    Vex = mylogspace(Ve[i], Ve[i+1], nint)
-    return mapreduce(zˢ -> Ω(Λ, Z, zˢ / k), +, vtoz(Λ, Vex)) / nint
-end
 
 @doc raw"""
     setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Number)
@@ -480,26 +453,32 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 δ = setupSMPS(Λ, 10, 10000, 180, 1.5)
 ```
 """
-function setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Number)
+@memoize function setupSMPS(Λ::DMAconfig, v1::Number, v2::Number, tscan::Number, tc::Number)
     bins = round(Int, tscan / tc) # Number of size bins
-    global Ve = reverse(10 .^ range(log10(v1), stop = log10(v2), length = bins + 1))  # Voltage bin-edges
-    global Vp = sqrt.(Ve[2:end] .* Ve[1:end-1])  # Voltage midpoints
-    global Tc = getTc(Λ)
-    global Ze = vtoz(Λ, Ve)
-    global Z = vtoz(Λ, Vp)
-    global Dp = ztod(Λ, 1, Z)
-    global De = ztod(Λ, 1, Ze)
-    global ΔlnD = log.(De[1:end-1] ./ De[2:end])
+    Ve = reverse(10 .^ range(log10(v1), stop = log10(v2), length = bins + 1))  # Voltage bin-edges
+    Vp = sqrt.(Ve[2:end] .* Ve[1:end-1])  # Voltage midpoints
+    Tc = getTc(Λ)
+    Ze = vtoz(Λ, Ve)
+    Z = vtoz(Λ, Vp)
+    Dp = ztod(Λ, 1, Z)
+    De = ztod(Λ, 1, Ze)
+    ΔlnD = log.(De[1:end-1] ./ De[2:end])
+
+    function Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
+        Vex = mylogspace(Ve[i], Ve[i+1], nint)
+        return mapreduce(zˢ -> Ω(Λ, Z, zˢ / k), +, vtoz(Λ, Vex)) / nint
+    end
+
     T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Dp)
-    global 𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
-    global 𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
-    global 𝐈 = Matrix{Float64}(I, bins, bins)
+    𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
+    𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
+    𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
-    global 𝐒 = zeros(n, m)
+    𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end    
-    global 𝐒⁺ = inv(𝐒)
+    
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -523,28 +502,28 @@ V = range(10, stop = 10000, length=121)
 δ = setupSMPSdata(Λ, V)
 ```
 """
-function setupSMPSdata(Λ::DMAconfig, V::AbstractVector)
+@memoize function setupSMPSdata(Λ::DMAconfig, V::AbstractVector)
     tc = 1
-    global Ve = (V[1] < V[2]) ? reverse(V) : V
-    global bins = length(Ve) - 1
-    global Vp = sqrt.(Ve[2:end] .* Ve[1:end-1])  # Voltage midpoints
-    global Tc = getTc(Λ)
-    global Ze = vtoz(Λ, Ve)
-    global Z = vtoz(Λ, Vp)
-    global Dp = ztod(Λ, 1, Z)
-    global De = ztod(Λ, 1, Ze)
-    global ΔlnD = log.(De[1:end-1] ./ De[2:end])
+    Ve = (V[1] < V[2]) ? reverse(V) : V
+    bins = length(Ve) - 1
+    Vp = sqrt.(Ve[2:end] .* Ve[1:end-1])  # Voltage midpoints
+    Tc = getTc(Λ)
+    Ze = vtoz(Λ, Ve)
+    Z = vtoz(Λ, Vp)
+    Dp = ztod(Λ, 1, Z)
+    De = ztod(Λ, 1, Ze)
+    ΔlnD = log.(De[1:end-1] ./ De[2:end])
 
     T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Dp)
-    global 𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
-    global 𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
-    global 𝐈 = Matrix{Float64}(I, bins, bins)
+    𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
+    𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
+    𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
-    global 𝐒 = zeros(n, m)
+    𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
-    global 𝐒⁺ = inv(𝐒)
+    𝐒⁺ = inv(𝐒)
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -570,22 +549,22 @@ bins,z₁,z₂ = 60, vtoz(Λ,10000), vtoz(Λ,10)
 δ = setupDMA(Λ, z₁, z₂, bins)
 ```
 """
-function setupDMA(Λ::DMAconfig, z1::Number, z2::Number, bins::Int)
-    global Tc = getTc(Λ)
-    global Ze = 10 .^ range(log10(z1), stop = log10(z2), length = bins + 1)
-    global Z = sqrt.(Ze[2:end] .* Ze[1:end-1])
-    global Dp = ztod(Λ, 1, Z)
-    global De = ztod(Λ, 1, Ze)
-    global ΔlnD = log.(De[1:end-1] ./ De[2:end])
+@memoize function setupDMA(Λ::DMAconfig, z1::Number, z2::Number, bins::Int)
+    Tc = getTc(Λ)
+    Ze = 10 .^ range(log10(z1), stop = log10(z2), length = bins + 1)
+    Z = sqrt.(Ze[2:end] .* Ze[1:end-1])
+    Dp = ztod(Λ, 1, Z)
+    De = ztod(Λ, 1, Ze)
+    ΔlnD = log.(De[1:end-1] ./ De[2:end])
     T = (zˢ, k, Λ) -> Ω(Λ, Z, zˢ / k) .* Tc(k, Dp) .* Tl(Λ, Dp)
-    global 𝐀 = (hcat(map(zˢ -> Σ(k -> T(zˢ, k, Λ), Λ.m), Z)...))'
-    global 𝐎 = (hcat(map(i -> Σ(k -> Ω(Λ, Z, i / k) .* Tl(Λ, Dp), 1), Z)...))'
-    global 𝐈 = Matrix{Float64}(I, bins, bins)
+    𝐀 = (hcat(map(zˢ -> Σ(k -> T(zˢ, k, Λ), Λ.m), Z)...))'
+    𝐎 = (hcat(map(i -> Σ(k -> Ω(Λ, Z, i / k) .* Tl(Λ, Dp), 1), Z)...))'
+    𝐈 = Matrix{Float64}(I, bins, bins)
     n, m = size(𝐀)
-    global 𝐒 = zeros(n, m)
+    𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
     end
-    global 𝐒⁺ = inv(𝐒)
+    𝐒⁺ = inv(𝐒)
     return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
