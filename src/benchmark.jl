@@ -41,8 +41,8 @@ function benchmark(bins::Integer, num_threads::Integer)
         blas = blasvendor,
         threads = num_threads,
         nbins = bins,
-        setupDMA = string(BenchmarkTools.prettytime(median(a).time)),
-        setupSMPS = string(BenchmarkTools.prettytime(median(b).time)),
+        # setupDMA = string(BenchmarkTools.prettytime(median(a).time)),
+        # setupSMPS = string(BenchmarkTools.prettytime(median(b).time)),
         rinv = string(BenchmarkTools.prettytime(median(c).time)),
         rinv2 = string(BenchmarkTools.prettytime(median(d).time))
     )
