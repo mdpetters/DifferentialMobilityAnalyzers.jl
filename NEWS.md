@@ -11,6 +11,14 @@
 
 ---
 ## current master
+- Add memoization of slow functions (setupSMPS, setupDMA, setupSMPSdata, and 
+initializeDefaultMatrices). This speeds up code when called with the same input parameters.
+- Remove most global variables in dmafunctions; the globals resulted in sometimes
+inconsistent results when multiple DMAs were initialized in the same script. 
+- One global variable remains in the code for compatibility reasons, otherwise the code should be pure 
+- Memoization means that rinv(R, δ) has no longer a performanc penalty when called multiple times with the same DMA δ. This makes the method rinv2(R) unnecessary and it is removed.  
+- Removal of globals required moving the function Ωₐᵥ into setupSMPS, due to a previous implicit
+dependence on a global. Reference to this function in the docs is removed.
 
 ## v2.4
 - Update documentation for rinv2 and add logo
