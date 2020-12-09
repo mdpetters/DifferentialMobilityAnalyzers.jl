@@ -2,6 +2,7 @@
 
 #### Notes on release changes and ongoing development
 - current master supports Julia 1.5 (works on 1.4)
+- v2.5 supports Julia 1.5 (works on 1.4)
 - v2.4 supports Julia 1.5 (works on 1.4)
 - v2.3 supports Julia 1.5 (works on 1.4)
 - v2.2 supports Julia 1.5 (works on 1.4)
@@ -10,7 +11,7 @@
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
-## current master
+## v2.5
 - Add memoization of slow functions (setupSMPS, setupDMA, setupSMPSdata, and 
 initializeDefaultMatrices). This speeds up code when called with the same input parameters.
 - Remove most global variables in dmafunctions; the globals resulted in sometimes
