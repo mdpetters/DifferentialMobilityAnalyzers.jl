@@ -6,6 +6,7 @@ tests = [
     "inversion1",
     "inversion2",
     "inversion3",
+    "inversion4",
     "coagulation",
 ]
 
