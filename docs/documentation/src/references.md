@@ -2,6 +2,9 @@
 
 Cruz, C. N. and S. N. Pandis (1997). A study of the ability of pure secondary organic aerosol to act as cloud condensation nuclei. Atmospheric Environment 31, 2205–2214, DOI:10.1016/S1352-2310(97)00054-X.
 
+Gysel, M., McFiggans, G., and Coe, H. (2009) Inversion of Tandem Differential Mobility Analyser (TDMA) Measurements, Journal of Aerosol
+Science, 40, 134–151, https://doi.org/10.1016/j.jaerosci.2008.07.013.
+
 Hansen, P. C. (2000) The L-Curve and its Use in the Numerical Treatment of Inverse Problems, in Computational Inverse Problems in Electrocardiology, ed. P. Johnston, Advances in Computational Bioengineering, 119-142, WIT Press.
 
 Hagwood, C. (1999) The DMA Transfer Function with Brownian
@@ -25,6 +28,9 @@ Petters, M. D. (2018) A language to simplify computation of differential mobilit
 Rader, D.J. and P.H. McMurry (1986) Application of the tandem differential mobility analyzer to studies of droplet growth or evaporation,Journal of Aerosol Science, 17(5), 771-787,DOI:10.1016/0021-8502(86)90031-5
 
 Reineking A. & J. Porstendörfer (1986) Measurements of Particle Loss Functions in a Differential Mobility Analyzer (TSI, Model 3071) for Different Flow Rates, Aerosol Science and Technology, 5:4, 483-486, DOI:10.1080/02786828608959112.
+
+Shen, C., Zhao, G., and Zhao, C. (2020) Effects of Multi-Charge on Aerosol Hygroscopicity Measurement by HTDMA, Atmospheric Measurement
+Techniques Discussions, 2020, 1–15, https://doi.org/10.5194/amt-2020-338.
 
 Snider, J. R., M. D. Petters, P. Wechsler, and P. S. K. Liu, (2006), Supersaturation in the Wyoming CCN instrument, Journal Atmospheric Oceanic Technology, 23, 1323-1339, doi:10.1175/JTECH1916.1. 
 
