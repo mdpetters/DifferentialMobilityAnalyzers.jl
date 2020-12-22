@@ -12,6 +12,7 @@
 
 ---
 ## v2.5
+- Add gfₖ function for multicharge treatment of mobility distribution function in HTDMA
 - Add TDMA model functions for matrix based TDMA data inversion 
 - Add memoization of slow functions (setupSMPS, setupDMA, setupSMPSdata, and 
 initializeDefaultMatrices). This speeds up code when called with the same input parameters.
