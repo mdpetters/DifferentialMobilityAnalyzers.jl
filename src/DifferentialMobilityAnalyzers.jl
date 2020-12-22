@@ -75,8 +75,9 @@ export DMAconfig,                    # Data type to hold DMA config
     interpolateSizeDistributionOntoδ,# Interpolate data onto DMA grid
     benchmark,                # Single benchmark ren
     runbenchmarks,            # Create summary of benchmarks
-    TDMA_1D_pdf,              # 1D PDF model of TDMA transfer
-    TDMA_1D_domainfunction,   # 1D domain function to compute design matrix    
+    gfₖ,                      # Effective growth factor multi-charge particles
+    TDMA1Dpdf  ,              # 1D PDF model of TDMA transfer
+    TDMA1Ddomainfunction,     # 1D domain function to compute design matrix    
     initializeDefaultMatrices # Precompute inversion matrices
 
 @doc raw"""

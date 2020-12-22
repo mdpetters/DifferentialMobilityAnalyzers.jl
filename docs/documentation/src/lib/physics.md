@@ -43,13 +43,15 @@ vtoz(Λ::DMAconfig, v)
 ztov(Λ::DMAconfig, z)
 ```
 
+### gfₖ
+```@docs
+gfₖ(Λ, zˢ, gf, k)
+```
+
+
 ### Transfer Function
 ```@docs
 Ω(Λ::DMAconfig, Z, zs)
-```
-
-```@docs
-Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
 ```
 
 ### Charging Probability

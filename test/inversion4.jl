@@ -12,13 +12,20 @@ Dd = 100e-9
 dma2range = (Dd, 0.8, 3.0, 100)
 mgf = 0.8:0.05:2.5 |> collect
 
-f = TDMA_1D_domainfunction(𝕟, Λ₁, Λ₂, dma2range)
+f = TDMA1Ddomainfunction(𝕟, Λ₁, Λ₂, dma2range)
 PDF(i) = @_ map(_ == i ? 1.0 : 0.0, 1:length(mgf))
 A = designmatrix(mgf, f)
 R1 = forwardmodel(mgf, PDF(10), mgf, f)
 R2 = A*(PDF(10))
-model = TDMA_1D_pdf(𝕟, Λ₁, Λ₂, dma2range)
+model = TDMA1Dpdf(𝕟, Λ₁, Λ₂, dma2range)
 sd = model(𝕟, PDF(10), Dd, mgf)
 
 @test R1 == R2
 @test round(maximum(sd.N), digits = 0) == round(maximum(R2), digits = 0)
+
+zˢ = dtoz(Λ₁, 100e-9) 
+truegf = 1.6          
+@test round(gfₖ(Λ₁, zˢ, truegf, 1), digits = 2) == 1.6
+@test round(gfₖ(Λ₁, zˢ, truegf, 2), digits = 2) == 1.54
+@test round(gfₖ(Λ₁, zˢ, truegf, 3), digits = 2) == 1.51
+@test round(gfₖ(Λ₁, zˢ, truegf, 4), digits = 2) == 1.48  

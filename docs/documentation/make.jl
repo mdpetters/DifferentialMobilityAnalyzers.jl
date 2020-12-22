@@ -24,6 +24,7 @@ makedocs(
        "Data Types" => "lib/types.md",
        "Operators" => "lib/operators.md",
        "Helper Functions" => "lib/helpers.md",
+       "Forward Models" => "lib/forward.md",
        "Inversion Routines" => "lib/inversion.md",
        "Benchmarks" => "lib/benchmarks.md"
      ],

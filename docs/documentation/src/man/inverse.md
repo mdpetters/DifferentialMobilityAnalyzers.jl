@@ -141,7 +141,7 @@ r₁, r₂, l = 9.37e-3,1.961e-2,0.44369
 δ = setupDMA(Λ, vtoz(Λ,10000), vtoz(Λ,10), 120)
 
 # Load a simple comma delimited text file - file contains :Dp, :Rcn, :Rccn
-df = CSV.read("example_data.csv")
+df = CSV.read("example_data.csv", DataFrame)
 𝕣ᶜⁿ = (df,:Dp,:Rcn,δ) |> interpolateDataFrameOntoδ        # CN response distribution
 𝕣ᶜᶜⁿ = (df,:Dp,:Rccn,δ) |> interpolateDataFrameOntoδ;     # CCN response distribution
 #hide

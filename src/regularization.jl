@@ -278,11 +278,8 @@ r₁, r₂, l = 9.37e-3,1.961e-2,0.44369
 # Interpolate the data onto the DMA grid
 𝕣 = (df, :Dp, :Rcn, δ) |> interpolateDataFrameOntoδ
 
-# Compute the inverse with explicit DMA passing (slower) 
+# Compute the inverse 
 𝕟ⁱⁿᵛ = rinv2(𝕣.N, δ, λ₁ = 0.1, λ₂ = 1.0)
-
-# Compute the inverse without explicit DMA passing (much faster) 
-𝕟ⁱⁿᵛ = rinv2(𝕣.N, λ₁ = 0.1, λ₂ = 1.0)
 ```
 """
 function rinv2(

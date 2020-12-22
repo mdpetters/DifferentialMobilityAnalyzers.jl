@@ -204,87 +204,41 @@ The transmission model is a combination of operating DMA₁ at [Constant Voltage
 
 ```julia
 # Tandem DMA equations
-T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp) 
-DMA₁(𝕟, zˢ, gf, Λ, δ) =
-    sum(map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)), 1:3))
-DMA₂(𝕟, δ) = δ.𝐎 * 𝕟
-model(zˢ, gf) = DMA₁(𝕟ᶜⁿ, zˢ, gf, Λ₁, δ₁) |> 𝕟 -> DMA₂(𝕟, δ₂)
+T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
+DMA₁(𝕟, zˢ, gf) = @_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:3)
+itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+DMA₂(𝕟) = δ₂.𝐎 * 𝕟
 ```
 
-The function ```T(zˢ, k, Λ, δ)``` is already known. The function DMA₁(𝕟, zˢ, gf, Λ, δ) takes a distribution 𝕟 and mobility zˢ and passes it through DMA Λ, δ. The inner function computes the mobility distributions ```𝕄 = map(k -> (ztod(Λ,1,zˢ)/ztod(Λ,k,zˢ))⋅(T(zˢ,k,Λ,δ)*𝕟ᶜⁿ),1:3)``` as in the [Constant Voltage](@ref) example. However, the output of DMA₁ is shifted by gf through ```gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)```. 
+The function ```T(zˢ, k, Λ, δ)``` is already known. The function ```DMA₁(𝕟, zˢ, gf)``` takes a distribution 𝕟 and mobility zˢ and passes it through DMA Λ₁, δ₁. It returns an 
+array of mobility distributions and corresponds to Eq. (14) in Petters (2018), with one
+exception. Petters (2018) assumed that the term ```gfₖ(Λ₁, zˢ, gf, k)``` is a constant. That
+is, the apparent growth factor is the same for multicharge particles. In fact, the 
+apparent growth fact, as described Gysel et al. (2009) and Shen et al. (2020), the  
+apparent growth factor decreases for increasing particle charge. This is described
+by the [gfₖ](@ref) function.
+
+The resulting distributions are interpolated into the same grid as DMA2 using
+[interpolateSizeDistributionOntoδ](@ref). 
+The function ```DMA₂(𝕟, δ)``` takes an input size distribution 𝕟 and passes it through DMA₂. No neutralizer is used. Therefore the convolution [Matrix 𝐎](@ref) is applied.
 
 !!! note
     The dot product of scalar ⋅ SizeDistribution shifts the size distribution in diameter space: [Size Operators](@ref). Check out the [Tutorial](@ref) Session 1 and/or Notebook S3 in the [Notebooks](@ref) section for visualizations.
 
-The resulting 𝕄 distributions are summed over all charges. The output of  ```DMA₁(𝕟, zˢ, gf, Λ, δ)``` is the mobility distribution passed through DMA₁ and shifted uniformly by the growth factor gf.
-
-The function ```DMA₂(𝕟, δ)``` takes an input size distribution 𝕟 and passes it through DMA₂. No neutralizer is used. Therefore the convolution [Matrix 𝐎](@ref) is applied.
-
-Finally, the function ```model(zˢ, gf)``` chains DMA₁ and DMA₂ together. The output of DMA₁ is piped as input to the function DMA₂. Below is the complete example, which produces the response function of the tandem DMA.
-
-```@example
-using DifferentialMobilityAnalyzers #hide
-using Gadfly#hide
-using NumericIO#hide
-using Colors#hide
-using LinearAlgebra#hide
-using Printf#hide
-using DataFrames#hide
-#hide
-# Setup two DMAs δ₁ and δ₂
-t, p = 295.15, 1e5            
-qsa, β = 1.66e-5, 1 / 5       
-r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369              
-Λ₁ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical) 
-Λ₂ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical) 
-bins, z₁, z₂ = 512, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9) 
-δ₁ = setupDMA(Λ₁, z₁, z₂, bins)                  
-δ₂ = setupDMA(Λ₂, z₁, z₂, bins)                  
-
-# Pick a known upstream size distribution
-Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]
-𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
-
-# Tandem DMA equations
-T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp) 
-DMA₁(𝕟, zˢ, gf, Λ, δ) =
-    sum(map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)), 1:3))
-DMA₂(𝕟, δ) = δ.𝐎 * 𝕟
-model(zˢ, gf) = DMA₁(𝕟ᶜⁿ, zˢ, gf, Λ₁, δ₁) |> 𝕟 -> DMA₂(𝕟, δ₂)
-
-# Pass size distribution to DMA₁ and then output distributiom to DMA₂
-zˢ = dtoz(Λ₁, 100e-9);   # Mobility of 100 nm particle
-gf = 1.55                # Growth factor
-𝕞 = model(zˢ, gf)
-#hide
-set_default_plot_size(14cm, 7cm)#hide
-#hide
-xlabels = collect(100:20:240)#hide
-p1 = plot(#hide
-    x = 𝕞.Dp,#hide
-    y = 𝕞.N,#hide
-    Geom.step,#hide
-    Guide.xlabel("Particle diameter (nm)"),#hide
-    Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),#hide
-    Guide.xticks(ticks = (collect(100:10:220))),#hide
-    Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%2i", (x)) : ""),#hide
-    Coord.cartesian(xmin = 100, xmax = 220),#hide
-    Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),#hide
-)#hide
-```
-
-#### Multiple Compositions
-The DMA output of a heterogenous population can be written from the tandem DMA model
+Here is an abriged example how to compute the output distributions from DMA2
 
 ```julia
-model(zˢ, gf) = DMA₁(𝕟ᶜⁿ, zˢ, gf, Λ₁, δ₁) |> 𝕟 -> DMA₂(𝕟, δ₂)
-P = [0.5,0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
-gf = [1.0, 1.2, 1.6, 2.1]    # Values of growth factor
-zˢ = dtoz(Λ₁, 100e-9)        # Mobility of 100 nm particle
-𝕞 = sum(map(i->(P[i]*model(zˢ, gf[i])), 1:length(P)))  # The growth factor distribution
+Dd = 100e-9             # Dry diameter
+zˢ = dtoz(Λ₁, Dd);      # Mobility of 100 nm particle
+gf = 1.6                # Growth factor
+𝕄 = @_ map(itp(_) |> DMA₂, DMA₁(𝕟ᶜⁿ, zˢ, gf)) # 𝕄[k] distributions
+𝕞ᵗ = sum(𝕄)                                  # total response
 ```
 
-This assumes 4 population each having a unique growth factor and fractional contribution to the total distribution. If the fractions are known, the net response function of the TDMA is readily computed. The ```map``` function results in 4 model distribution, one for each population. The ```sum``` function superimposes them into a single distribution. 
+𝕄[k] correspond to the +1, +2, +3 partial mobility response functions
+that would be measured after DMA2. The total is obtained by the sum of these distributions
+Below is the complete example, which produces the response function of the tandem DMA.
 
 ```@example
 using DifferentialMobilityAnalyzers #hide
@@ -294,109 +248,129 @@ using Colors #hide
 using LinearAlgebra #hide
 using Printf #hide
 using DataFrames #hide
-#hide
-t, p = 295.15, 1e5     #hide
-qsa, β = 1.66e-5, 1 / 5     #hide
-r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369             #hide
-Λ₁ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical) #hide
-Λ₂ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  #hide
-bins, z₁, z₂ = 512, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9) #hide
-δ₁ = setupDMA(Λ₁, z₁, z₂, bins)  #hide
-δ₂ = setupDMA(Λ₂, z₁, z₂, bins)       #hide
-
-Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]
-𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
-
-# Tandem DMA equations
-T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp) 
-DMA₁(𝕟, zˢ, gf, Λ, δ) =
-    sum(map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)), 1:3))
-DMA₂(𝕟, δ) = δ.𝐎 * 𝕟
-model(zˢ, gf) = DMA₁(𝕟ᶜⁿ, zˢ, gf, Λ₁, δ₁) |> 𝕟 -> DMA₂(𝕟, δ₂)
-
-P = [0.5,0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
-gf = [1.0, 1.2, 1.6, 2.1]    # Values of growth factor
-zˢ = dtoz(Λ₁, 100e-9)        # Mobility of 100 nm particle
-𝕞 = sum(map(i->(P[i]*model(zˢ, gf[i])), 1:length(P)))  # The growth factor distribution
-#hide
-set_default_plot_size(14cm, 8cm)#hide
-xlabels = collect(1:0.5:3)#hide
-p1 = plot(#hide
-    x = 𝕞.Dp./100.0,#hide
-    y = 𝕞.N,#hide
-    Geom.step,#hide
-    Guide.xlabel("Growth Factor (-)"),#hide
-    Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),#hide
-    Guide.xticks(ticks = (collect(0.8:0.1:3))),#hide
-    Scale.x_continuous(labels = x -> x in xlabels ? @sprintf("%.1f", (x)) : ""),#hide
-    Coord.cartesian(xmin = 0.8, xmax = 3),#hide
-    Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),#hide
-)#hide
-```
-
-See the [Manuscript](https://www.tandfonline.com/doi/full/10.1080/02786826.2018.1530724) and notebook S8 in the [Notebooks](@ref) section for partial charge distribution, and for examples involving the use of a second neutralizer in line. 
-
-
-#### Grid Mismatch
-
-In the above examples, the grids for DMA₁ and DMA₂ were identical. This is usually not the case. The DMAs are operated in different size ranges, flow regimes and may be of different physical design. To address this, the output of DMA₁ can be intpolated onto the grid of DMA₂ using the [interpolateSizeDistributionOntoδ](@ref) function. 
-
-```julia
-model(zˢ, gf) =
-    (DMA₁(𝕟ᶜⁿ, zˢ, gf, Λ₁, δ₁), δ₂) |> interpolateSizeDistributionOntoδ |> 𝕟 -> DMA₂(𝕟, δ₂)
-```
-
-The example below demonstrates how this works for two DMAs of different designs.
-
-```@example
-using DifferentialMobilityAnalyzers #hide
-using Gadfly #hide
-using NumericIO #hide
-using Colors #hide
-using LinearAlgebra #hide
-using Printf #hide
-using DataFrames #hide
-#hide
-t, p = 295.15, 1e5                    
-qsa, qsh = 1.66e-5, 8.33e-5   
-
-# Standard TSI DMA
-r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369
-Λ₁ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  
-δ₁ = setupDMA(Λ₁, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9), 120)    
-
-# High-Flow DMA
-r₁, r₂, l = 0.05, 0.058, 0.6
-Λ₂ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  
-δ₂ = setupDMA(Λ₂, dtoz(Λ₂, 250e-9), dtoz(Λ₂, 50e-9), 60)                   
+using Underscores #hide
+import Lazy.@>, Lazy.@>>#hide
+t, p = 295.15, 1e5                             # Temperature [K], Pressure [Pa]
+qsa, β = 1.66e-5, 1 / 5                        # Qsample [m3 s-1], Sample-to-sheath ratio
+r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369         # DMA geometry [m]
+Λ₁ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  # Specify DMA1
+Λ₂ = DMAconfig(t, p, qsa, qsa / β, r₁, r₂, l, 0.0, :-, 3, :cylindrical)  # Specify DMA2
+bins, z₁, z₂ = 512, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9) # bins, upper, lower mobility limit
+δ₁ = setupDMA(Λ₁, z₁, z₂, bins)                  # Compute matrices
+δ₂ = setupDMA(Λ₂, z₁, z₂, bins)                  # Compute matrices
 
 # Upstream Size Distribution
-Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]
+Ax = [[1300.0, 60.0, 1.4], [5000.0, 220.0, 1.6]]
 𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
 
 # Tandem DMA equations
-T(zˢ, k, Λ, δ) = δ.Ω(Λ, δ.Z, zˢ / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp)
-DMA₁(𝕟, zˢ, gf, Λ, δ) =
-    sum(map(k -> (ztod(Λ, 1, zˢ) / ztod(Λ, k, zˢ)) ⋅ (gf ⋅ (T(zˢ, k, Λ, δ) * 𝕟)), 1:3))
-DMA₂(𝕟, δ) = δ.𝐎 * 𝕟
+T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
+DMA₁(𝕟, zˢ, gf) = @_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:3)
+itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+DMA₂(𝕟) = δ₂.𝐎 * 𝕟
 
-model(zˢ, gf) =
-    (DMA₁(𝕟ᶜⁿ, zˢ, gf, Λ₁, δ₁), δ₂) |> interpolateSizeDistributionOntoδ |> 𝕟 -> DMA₂(𝕟, δ₂)
+Dd = 100e-9             # Dry diameter
+zˢ = dtoz(Λ₁, Dd);      # Mobility of 100 nm particle
+gf = 1.6                # Growth factor
+𝕄 = @_ map(itp(_) |> DMA₂, DMA₁(𝕟ᶜⁿ, zˢ, gf)) # 𝕄[k] distributions
+𝕞ᵗ = sum(𝕄)                                  # total response
+#hide
+mdf(k) = DataFrame(#hide
+    Dp = 𝕄[k].Dp./(Dd*1e9), #hide
+    S = 𝕄[k].S, #hide
+    Dist = ["𝕄[$k]" for i = 1:length(𝕄[k].Dp)]#hide
+)#hide
+#hide
+df1 = mapreduce(mdf, vcat, 1:3)#hide
+df2 = DataFrame(Dp = 𝕞ᵗ.Dp./(Dd*1e9), S = 𝕞ᵗ.S, Dist = ["𝕞ᵗ" for i = 1:length(𝕞ᵗ.Dp)])#hide
+df = [df2; df1]#hide
+#hide
+colors = ["black", "darkred", "steelblue3", "darkgoldenrod"]#hide
+#hide
+p2 = plot(#hide
+    df,#hide
+    x = :Dp,#hide
+    y = :S,#hide
+    color = :Dist,#hide
+    Geom.line,#hide
+    Guide.xlabel("Apparent Growth Factor", orientation = :horizontal),#hide
+    Guide.ylabel("dN/dlnD (cm⁻³)"),#hide
+    Guide.xticks(ticks = [1.2,1.4,1.6,1.8,2.0]),#hide
+    Guide.colorkey(; title = ""),#hide
+    Scale.color_discrete_manual(colors...),#hide
+    Coord.cartesian(xmin = 1.2, xmax = 2),#hide
+    Theme(plot_padding = [5mm, 10mm, 0mm, 0mm]),#hide
+)#hide
+```
 
-zˢ = dtoz(Λ₁, 100e-9);   # Mobility of 100 nm particle
-gf = 1.55                # Growth factor
+The figure demonstrates the apparent shift toward smaller growth factors for multicharge 
+particles.
 
-# Pass size distribution to DMA₁ and then output distributiom to DMA₂
-𝕞 = model(zˢ, gf)
-P = [0.5, 0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
+#### Multiple Compositions
+The above example can be extended to write a TDMA model that integrates over a pdf. This
+function can be obtained from [TDMA1Dpdf](@ref), which is part of the package.
+
+```julia
+function TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
+    Λ₁ , Λ₂, 𝕟1 = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ), deepcopy(𝕟ᵢₙ)
+    r = deepcopy(dma2rangeᵢₙ)
+    Dd, gmin, gmax, n = r[1], r[2], r[3], r[4]
+    nDMA, Dmin, Dmax = length(𝕟1.Dp), minimum(𝕟1.Dp), maximum(𝕟1.Dp)
+
+    δ₁ = setupDMA(Λ₁, dtoz(Λ₁, Dmax*1e-9), dtoz(Λ₁, Dmin*1e-9), nDMA)
+    δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax*Dd), dtoz(Λ₂, gmin*Dd), n)
+    𝕟 = interpolateSizeDistributionOntoδ((𝕟1, δ₁))
+    
+    T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+    cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
+    DMA₁(𝕟, zˢ, gf) = sum(@_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:6))
+    DMA₂(𝕟) = δ₂.𝐎 * 𝕟
+    itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+    TDMA(𝕟, zˢ, gf) = @> DMA₁(𝕟, zˢ, gf) itp DMA₂
+    model(𝕟, P, Dd, gf) = sum(@_ map(P[_]*TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
+end
+```
+
+Note that the basic principle is the same as the single composition above. However,
+```DMA₁(𝕟, zˢ, gf)``` sums directly over all charges. The function ```TDMA(𝕟, zˢ, gf)```
+returns the output from the TDMA and the function ```model(𝕟, P, Dd, gf)``` extends this over 
+a pdf, where gf is a list of growth fractors and P are corresponding probabilities. 
+
+Below is an example with 4 population each having a unique growth factor and fractional contribution to the total distribution. If the fractions are known, the net response function of the TDMA is readily computed. 
+
+
+```@example
+using Distributions #hide
+using DifferentialMobilityAnalyzers #hide
+using Gadfly #hide
+using Printf #hide
+t, p = 295.15, 1e5
+qsa, qsh = 1.66e-5, 8.33e-5
+r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369
+Λ₁ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
+Λ₂ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
+bins, z₁, z₂ = 120, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9) # bins, upper, lower mobility limit
+δ₁ = setupDMA(Λ₁, z₁, z₂, bins)                
+
+Ax = [[1300.0, 60.0, 1.4], [5000.0, 220.0, 1.6]] 
+𝕟 = DMALognormalDistribution(Ax, δ₁)
+
+# scan 100 nm Dd from 0.8Dd to 3.0Dd with 100 bins
+dma2range = (100e-9, 0.8, 3.0, 120)
+
+# Get the model function
+model = TDMA1Dpdf(𝕟, Λ₁, Λ₂, dma2range)
+
+P = [0.5,0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
 gf = [1.0, 1.2, 1.6, 2.1]    # Values of growth factor
-𝕞 = sum(map(i -> (P[i] * model(zˢ, gf[i])), 1:length(P)))  # The growth factor distribution
+𝕘 = model(𝕟, P, dma2range[1], gf)
 #hide
 set_default_plot_size(14cm, 8cm)#hide
 xlabels = collect(1:0.5:3)#hide
 p1 = plot(#hide
-    x = 𝕞.Dp ./ 100.0,#hide
-    y = 𝕞.N,#hide
+    x = 𝕘.Dp./100.0,#hide
+    y = 𝕘.N,#hide
     Geom.step,#hide
     Guide.xlabel("Growth Factor (-)"),#hide
     Guide.ylabel("Number concentration (cm-3)", orientation = :vertical),#hide
@@ -406,6 +380,7 @@ p1 = plot(#hide
     Theme(plot_padding = [2mm, 2mm, 2mm, 2mm]),#hide
 )#hide
 ```
+
 
 ### Volatilty Tandem DMA
 

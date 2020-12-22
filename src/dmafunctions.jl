@@ -356,7 +356,7 @@ z = dtoz(Λ,100.0*1e-9)
 diameter = ztod(Λ,1,z) 
 ```
 """
-ztod(Λ::DMAconfig, i::Int, z) = g(Λ, i, z, di) .* 1e9;
+@memoize ztod(Λ::DMAconfig, i::Int, z) = g(Λ, i, z, di) .* 1e9;
 
 @doc raw"""
     Ω(Λ::DMAconfig, Z, zs)
