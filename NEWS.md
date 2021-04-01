@@ -1,8 +1,9 @@
-# DifferentialMobilityAnalyzers.jl NEWS
+# Differentialdf
+
+MobilityAnalyzers.jl NEWS
 
 #### Notes on release changes and ongoing development
-- current master supports Julia 1.5 (works on 1.4)
-- v2.5 supports Julia 1.5 (works on 1.4)
+- v2.5.2 tested with Julia 1.6
 - v2.4 supports Julia 1.5 (works on 1.4)
 - v2.3 supports Julia 1.5 (works on 1.4)
 - v2.2 supports Julia 1.5 (works on 1.4)
@@ -11,6 +12,13 @@
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
+# v2.5.2
+Merge CompatHelper: bump compat for "BenchmarkTools" to "0.7"
+Tested for potential Julia 1.6 regressions (none found)
+
+## v2.5.1
+Merge CompatHelper: bump compat for "BenchmarkTools" to "0.6"
+
 ## v2.5
 - Add gfₖ function for multicharge treatment of mobility distribution function in HTDMA
 - Add TDMA model functions for matrix based TDMA data inversion 
