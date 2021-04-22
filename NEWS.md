@@ -12,6 +12,9 @@ MobilityAnalyzers.jl NEWS
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
+# v2.5.3
+Merge CompatHelper: bump compat for "DataFrames" to "1.0"
+
 # v2.5.2
 Merge CompatHelper: bump compat for "BenchmarkTools" to "0.7"
 Tested for potential Julia 1.6 regressions (none found)
