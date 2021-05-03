@@ -3,7 +3,7 @@
 MobilityAnalyzers.jl NEWS
 
 #### Notes on release changes and ongoing development
-- v2.5.2 tested with Julia 1.6
+- v2.5.4 tested with Julia 1.6
 - v2.4 supports Julia 1.5 (works on 1.4)
 - v2.3 supports Julia 1.5 (works on 1.4)
 - v2.2 supports Julia 1.5 (works on 1.4)
@@ -12,6 +12,9 @@ MobilityAnalyzers.jl NEWS
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
+# v2.5.4
+Merge CompatHelper: bump compat for "Distributions" to "0.25"
+
 # v2.5.3
 Merge CompatHelper: bump compat for "DataFrames" to "1.0"
 
