@@ -301,8 +301,8 @@ function rinv2(
     end
 
     N = @match initial begin
-        true => @> solve(Ψ, R, inv(δ.𝐒) * R) getfield(:x) clean
-        false => @> solve(Ψ, R) getfield(:x) clean
+        true => @> solve(Ψ, R, inv(δ.𝐒) * R, λ₁ = λ₁, λ₂ = λ₂) getfield(:x) clean
+        false => @> solve(Ψ, R, λ₁ = λ₁, λ₂ = λ₂) getfield(:x) clean
     end
 
     return SizeDistribution([], δ.De, δ.Dp, δ.ΔlnD, N ./ δ.ΔlnD, N, :regularized)
