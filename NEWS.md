@@ -11,22 +11,22 @@
 
 ---
 # V2.5.5
-CompatHelper: bump compat for "BenchmarkTools" to "1.0" 
-Update Project/Manifest
-Fix not passing bounds for lambda1 and lambda2 to regularization solver
+- CompatHelper: bump compat for "BenchmarkTools" to "1.0" 
+- Update Project/Manifest
+- Fix not passing bounds for lambda1 and lambda2 to regularization solver
 
 # v2.5.4
-Merge CompatHelper: bump compat for "Distributions" to "0.25"
+- Merge CompatHelper: bump compat for "Distributions" to "0.25"
 
 # v2.5.3
-Merge CompatHelper: bump compat for "DataFrames" to "1.0"
+- Merge CompatHelper: bump compat for "DataFrames" to "1.0"
 
 # v2.5.2
-Merge CompatHelper: bump compat for "BenchmarkTools" to "0.7"
-Tested for potential Julia 1.6 regressions (none found)
+- Merge CompatHelper: bump compat for "BenchmarkTools" to "0.7"
+- Tested for potential Julia 1.6 regressions (none found)
 
 ## v2.5.1
-Merge CompatHelper: bump compat for "BenchmarkTools" to "0.6"
+- Merge CompatHelper: bump compat for "BenchmarkTools" to "0.6"
 
 ## v2.5
 - Add gfₖ function for multicharge treatment of mobility distribution function in HTDMA
