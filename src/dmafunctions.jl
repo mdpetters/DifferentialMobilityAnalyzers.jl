@@ -174,6 +174,11 @@ diffusion length, and ``q_{sa}`` is the aerosol flow rate through the DMA.
 """
 Tl(Λ::DMAconfig, Dp) = clean(Peff(u(Λ, dab(Λ, Dp * 1e-9))))
 
+function Tl(Λ::DMAconfig, Z, k)
+    Dp = map(zs -> ztod(Λ, k, zs) * 1e-9, Z)
+    return clean(Peff(u(Λ, dab(Λ, Dp))))
+end
+
 @doc raw"""
     getTc(Λ::DMAconfig)
 
@@ -316,7 +321,7 @@ mobility = vtoz(Λ,1000.0) # [m2 V-1 s-1]
 """
 vtoz(Λ::DMAconfig, v) =
     (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) .* v) :
-        Λ.qsh ./ (2.0π .* Λ.l .* v) .* log(Λ.r2 / Λ.r1)
+    Λ.qsh ./ (2.0π .* Λ.l .* v) .* log(Λ.r2 / Λ.r1)
 
 @doc raw"""
     ztov(Λ::DMAconfig, v)
@@ -331,9 +336,10 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 voltage = ztov(Λ,1e-9) 
 ```
-""" 
-ztov(Λ::DMAconfig, z) = (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) * z) :
-        Λ.qsh ./ (2.0π .* Λ.l .* z) .* log(Λ.r2 / Λ.r1)
+"""
+ztov(Λ::DMAconfig, z) =
+    (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) * z) :
+    Λ.qsh ./ (2.0π .* Λ.l .* z) .* log(Λ.r2 / Λ.r1)
 
 f(Λ, i, z, di) = @. i .* ec .* cc($Ref(Λ), di) ./ (3.0π .* η($Ref(Λ)) .* z)
 converge(f, g) = maximum(abs.(1.0 .- f ./ g) .^ 2.0) < 1e-20
@@ -421,6 +427,23 @@ function Ω(Λ::DMAconfig, Z, zs)
     return clean(f(Z / zs, σ, β, ε))
 end
 
+function Ω(Λ::DMAconfig, Z, zs, k)
+    ε = (x) -> @. x * erf(x) .+ exp(-x^2.0) / √π
+    D = dab(Λ, ztod(Λ, k, zs) * 1e-9)
+    β = Λ.qsa / Λ.qsh
+    γ = (Λ.r1 / Λ.r2)^2.0
+    I = 0.5(1.0 + γ)
+    κ = Λ.l * Λ.r2 / (Λ.r2^2.0 - Λ.r1^2.0)
+    G = 4.0(1.0 + β)^2.0 / (1.0 - γ) * (I + (2.0(1.0 + β)κ)^(-2.0))
+    σ = √(G * 2.0π * Λ.l * D / Λ.qsh)
+    f =
+        (Z, σ, β, ε) -> @. σ / (√2.0 * β) * (
+            ε((Z - (1.0 + β)) / (√2.0 * σ)) + ε((Z - (1.0 - β)) / (√2.0 * σ)) -
+            2.0 * ε((Z - 1.0) / (√2.0 * σ))
+        )
+    return clean(f(Z / zs, σ, β, ε))
+end
+
 function mylogspace(a::Float64, b::Float64, n::Int)
     x = Float64[]
     push!(x, a)
@@ -466,10 +489,10 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 
     function Ωav(Λ::DMAconfig, i::Int, k::Int; nint = 20)
         Vex = mylogspace(Ve[i], Ve[i+1], nint)
-        return mapreduce(zˢ -> Ω(Λ, Z, zˢ / k), +, vtoz(Λ, Vex)) / nint
+        return mapreduce(zˢ -> Ω(Λ, Z, zˢ / k, k), +, vtoz(Λ, Vex)) / nint
     end
 
-    T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Dp)
+    T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Z, k)
     𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
     𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
     𝐈 = Matrix{Float64}(I, bins, bins)
@@ -477,8 +500,8 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
     𝐒 = zeros(n, m)
     for i = 1:n
         𝐒[i, i] = sum(𝐀[i, :])
-    end    
-    
+    end
+
     return DifferentialMobilityAnalyzer(Ωav, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
@@ -514,7 +537,7 @@ V = range(10, stop = 10000, length=121)
     De = ztod(Λ, 1, Ze)
     ΔlnD = log.(De[1:end-1] ./ De[2:end])
 
-    T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Dp)
+    T = (i, k, Λ) -> Ωav(Λ, i, k) .* Tc(k, Dp) .* Tl(Λ, Z, k)
     𝐀 = (hcat(map(i -> Σ(k -> T(i, k, Λ), Λ.m), 1:bins)...))'
     𝐎 = (hcat(map(i -> Σ(k -> Ωav(Λ, i, k) .* Tl(Λ, Dp), 1), 1:bins)...))'
     𝐈 = Matrix{Float64}(I, bins, bins)
@@ -556,7 +579,7 @@ bins,z₁,z₂ = 60, vtoz(Λ,10000), vtoz(Λ,10)
     Dp = ztod(Λ, 1, Z)
     De = ztod(Λ, 1, Ze)
     ΔlnD = log.(De[1:end-1] ./ De[2:end])
-    T = (zˢ, k, Λ) -> Ω(Λ, Z, zˢ / k) .* Tc(k, Dp) .* Tl(Λ, Dp)
+    T = (zˢ, k, Λ) -> Ω(Λ, Z, zˢ / k, k) .* Tc(k, Dp) .* Tl(Λ, Z, k)
     𝐀 = (hcat(map(zˢ -> Σ(k -> T(zˢ, k, Λ), Λ.m), Z)...))'
     𝐎 = (hcat(map(i -> Σ(k -> Ω(Λ, Z, i / k) .* Tl(Λ, Dp), 1), Z)...))'
     𝐈 = Matrix{Float64}(I, bins, bins)

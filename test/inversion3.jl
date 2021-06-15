@@ -26,22 +26,22 @@ end
 λ₁, λ₂ = 1e-3, 1e1
 
 𝕟ᵢₙᵥ = rinv(R, δ)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 891
 
 𝕟ᵢₙᵥ = rinv2(R, δ)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 891
 
 𝕟ᵢₙᵥ = rinv(R, δ, λ₁ = λ₁, λ₂ = λ₂)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 891
 
 𝕟ᵢₙᵥ = rinv2(R, δ, λ₁ = λ₁, λ₂ = λ₂)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 891
 
 𝕟ᵢₙᵥ = rinv2(R, δ, λ₁ = λ₁, λ₂ = λ₂, order = 2)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 895
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 896
 
 𝕟ᵢₙᵥ = rinv2(R, δ, λ₁ = λ₁, λ₂ = λ₂, order = 2, initial = false)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 892
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 893
 
 𝕟ᵢₙᵥ = rinv2(R, δ, λ₁ = λ₁, λ₂ = λ₂, order = 1, initial = false)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 893
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 895

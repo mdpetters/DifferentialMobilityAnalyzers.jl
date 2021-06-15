@@ -51,4 +51,4 @@ v1, v2 = 10, 10000
 tscan, tc = 120, 1
 z1, z2 = vtoz(Λ, v2), vtoz(Λ, v1)
 δ = setupSMPS(Λ, v1, v2, tscan, tc);
-@test round(sum(δ.𝐀), digits = 1) == 95.8
+@test round(sum(δ.𝐀), digits = 1) == 95.9

@@ -31,7 +31,8 @@ gfₖ(Λ, zˢ, truegf, 3)    # effective growth factor for 3 charges = 1.507
 gfₖ(Λ, zˢ, truegf, 4)    # effective growth factor for 4 charges = 1.481 
 ```
 """
-@memoize gfₖ(Λ, zˢ, gf, k) = ztod(Λ, 1, dtoz(Λ, 1e-9 * ztod(Λ, k, zˢ) * gf) * k) ./ ztod(Λ, 1, zˢ) 
+@memoize gfₖ(Λ, zˢ, gf, k) =
+    ztod(Λ, 1, dtoz(Λ, 1e-9 * ztod(Λ, k, zˢ) * gf) * k) ./ ztod(Λ, 1, zˢ)
 
 @doc raw"""
     TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
@@ -82,23 +83,29 @@ plot(x = 𝕘.Dp/(dma2range[1]*1e9), y = 𝕘.N, Geom.line,
     Coord.cartesian(xmin = 0.8, xmax = 3.0))
 ```
 """
-function TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
-    Λ₁ , Λ₂, 𝕟1 = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ), deepcopy(𝕟ᵢₙ)
+function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
+    Λ₁, Λ₂, 𝕟1 = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ), deepcopy(𝕟ᵢₙ)
     r = deepcopy(dma2rangeᵢₙ)
     Dd, gmin, gmax, n = r[1], r[2], r[3], r[4]
     nDMA, Dmin, Dmax = length(𝕟1.Dp), minimum(𝕟1.Dp), maximum(𝕟1.Dp)
 
-    δ₁ = setupDMA(Λ₁, dtoz(Λ₁, Dmax*1e-9), dtoz(Λ₁, Dmin*1e-9), nDMA)
-	δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax*Dd), dtoz(Λ₂, gmin*Dd), n)
+    δ₁ = setupDMA(Λ₁, dtoz(Λ₁, Dmax * 1e-9), dtoz(Λ₁, Dmin * 1e-9), nDMA)
+    δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax * Dd), dtoz(Λ₂, gmin * Dd), n)
     𝕟 = interpolateSizeDistributionOntoδ((𝕟1, δ₁))
-    
-	@memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+
+    @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
+    @memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
     @memoize cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
-    @memoize DMA₁(𝕟, zˢ, gf) = sum(@_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:6))
-    @memoize DMA₂(𝕟) = δ₂.𝐎 * 𝕟
-	@memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
-	@memoize TDMA(𝕟, zˢ, gf) = @> DMA₁(𝕟, zˢ, gf) itp DMA₂
-	@memoize model(𝕟, P, Dd, gf) = sum(@_ map(P[_]*TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
+    @memoize DMA₁(𝕟, zˢ, gf) =
+        @_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
+    @memoize DMA₂(𝕟, k) = O(k) * 𝕟
+    @memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+    @memoize function TDMA(𝕟, zˢ, gf)
+        ℕ = DMA₁(𝕟, zˢ, gf)
+        map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:length(ℕ)) |> sum
+    end
+    @memoize model(𝕟, P, Dd, gf) =
+        sum(@_ map(P[_] * TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
 end
 
 @doc raw"""
@@ -160,19 +167,19 @@ g = A*gfpdf
 plot(layer(x = 𝕘.Dp/(dma2range[1]*1e9), y = 𝕘.N), layer(x = mgf, y = g, Geom.line))
 ```
 """
-function TDMA1Ddomainfunction(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
-    Λ₁ , Λ₂ = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ)
+function TDMA1Ddomainfunction(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
+    Λ₁, Λ₂ = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ)
     𝕟 = deepcopy(𝕟ᵢₙ)
     r = deepcopy(dma2rangeᵢₙ)
     Dd = r[1]
-    model = TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
+    model = TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
 
     function f(domain::Domain)
         gf, P, ogf = domain.s, domain.x, domain.q
         out = model(𝕟, P, Dd, gf)
-        mgf = reverse(out.Dp)./(Dd*1e9)
+        mgf = reverse(out.Dp) ./ (Dd * 1e9)
         N = reverse(out.N)
         fitp = @> interpolate((mgf,), N, Gridded(Linear())) extrapolate(0.0)
-        return fitp(ogf)  
+        return fitp(ogf)
     end
 end

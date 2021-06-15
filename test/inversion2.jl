@@ -14,7 +14,7 @@ bins, z₁, z₂ = 128, dtoz(Λ, 1000e-9), dtoz(Λ, 10e-9)
 
 𝐀 =
     (hcat(map(
-        i -> Σ(k -> δ.Ω(Λ, δ.Z, i / k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Dp), Λ.m),
+        i -> Σ(k -> δ.Ω(Λ, δ.Z, i / k, k) .* δ.Tc(k, δ.Dp) .* δ.Tl(Λ, δ.Z, k), Λ.m),
         δ.Z,
     )...))'
 
@@ -41,4 +41,4 @@ x₀ = inv(δ.𝐒)*R
 ψ = setupRegularizationProblem(δ.𝐀[:,:], 0)
 N = @> solve(ψ, R, x₀) getfield(:x) clean
 𝕟ᵢₙᵥ = SizeDistribution([], 𝕟.De, 𝕟.Dp, 𝕟.ΔlnD, N ./ 𝕟.ΔlnD, N, :regularized)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 890
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 891
