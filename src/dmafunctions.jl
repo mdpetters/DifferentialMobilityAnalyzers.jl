@@ -291,7 +291,9 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 mobility = dtoz(Λ,dp*1e-9) # [m2 V-1 s-1]
 ```
 """
-dtoz(Λ::DMAconfig, d) = ec .* cc(Λ, d) ./ (3.0π .* η(Λ) .* d)
+dtoz(Λ::DMAconfig, d) = dtoz(Λ, 1, d)
+
+dtoz(Λ::DMAconfig, k, d) = k .* ec .* cc(Λ, d) ./ (3.0π .* η(Λ) .* d)
 
 @doc raw"""
     vtoz(Λ::DMAconfig, v)

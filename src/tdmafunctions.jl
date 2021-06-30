@@ -34,6 +34,8 @@ gfₖ(Λ, zˢ, truegf, 4)    # effective growth factor for 4 charges = 1.481
 @memoize gfₖ(Λ, zˢ, gf, k) =
     ztod(Λ, 1, dtoz(Λ, 1e-9 * ztod(Λ, k, zˢ) * gf) * k) ./ ztod(Λ, 1, zˢ)
 
+
+
 @doc raw"""
     TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
 
@@ -96,8 +98,8 @@ function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
     @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
     @memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
     @memoize cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
-    @memoize DMA₁(𝕟, zˢ, gf) =
-        @_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
+	@memoize Π(Λ, δ, k) = (@_ map(ztod(Λ₁, 1, _), dtoz(Λ, k, δ.Dp*1e-9))) ./ δ.Dp
+	@memoize DMA₁(𝕟, zˢ, gf) = @_ map(Π(Λ₁, δ₁, _) ⋅ (gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
     @memoize DMA₂(𝕟, k) = O(k) * 𝕟
     @memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
     @memoize function TDMA(𝕟, zˢ, gf)
