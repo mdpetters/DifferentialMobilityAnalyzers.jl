@@ -14,6 +14,8 @@
 - CompatHelper: bump compat for "BenchmarkTools" to "1.0" 
 - Update Project/Manifest
 - Fix not passing bounds for lambda1 and lambda2 to regularization solver
+- Fix restrictive assumptions for diffusional broadening treatement
+- Fix restrictive assumptions for tandem DMA transfer
 
 # v2.5.4
 - Merge CompatHelper: bump compat for "Distributions" to "0.25"
