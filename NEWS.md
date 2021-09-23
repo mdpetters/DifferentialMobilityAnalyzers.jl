@@ -10,7 +10,13 @@
 - Version 1.0.0 is the last one to support Julia 0.6.4
 
 ---
-# V2.5.5
+
+# v2.5.6
+- Merge CompatHelper: bump compat for CSV to 0.9
+- Update Project/Manifest 
+- remove PI function and gfk function 
+
+# v2.5.5
 - CompatHelper: bump compat for "BenchmarkTools" to "1.0" 
 - Update Project/Manifest
 - Fix not passing bounds for lambda1 and lambda2 to regularization solver
