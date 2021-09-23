@@ -24,8 +24,3 @@ sd = model(𝕟, PDF(10), Dd, mgf)
 @test round(maximum(sd.N), digits = 0) == round(maximum(R2), digits = 0)
 
 zˢ = dtoz(Λ₁, 100e-9) 
-truegf = 1.6          
-@test round(gfₖ(Λ₁, zˢ, truegf, 1), digits = 2) == 1.6
-@test round(gfₖ(Λ₁, zˢ, truegf, 2), digits = 2) == 1.54
-@test round(gfₖ(Λ₁, zˢ, truegf, 3), digits = 2) == 1.51
-@test round(gfₖ(Λ₁, zˢ, truegf, 4), digits = 2) == 1.48  

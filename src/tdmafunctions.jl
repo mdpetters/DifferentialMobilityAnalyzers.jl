@@ -1,42 +1,4 @@
 @doc raw"""
-    gfₖ(Λ, zˢ, gf, k)  
-
-Returns the effective growth factor for multi-charge particles. 
-- Λ  - DMA configuration 
-- zˢ - the dry particle diameter mobility [m2 s-1 V-1]
-- gf - the true growth factor
-- k  - the number of charges    
-    
-The effect is described by Gysel et al. (2009) and Shen et al. (2020). 
-Shen et al. (2020) write: "For electrical mobility diameter of 100 nm, the doubly and 
-triply charged particles are about 151 nm and 196 nm, respectively. When all these three 
-kind of particles have a true growth factor of 1.6, they will grow to the size of 160 nm, 
-242 nm and 314 nm. Since the number of charges they carry remain the same as before, 
-their peak sizes in the second DMA are around 160 nm, 154 nm and 150 nm. Therefore, the 
-growth factors they display in the HTDMA measurement is 1.6, 1.54 and 1.5, respectively."
-
-Example use
-```
-# Define a DMA
-t, p = 295.15, 1e5
-qsa, qsh = 1.66e-5, 8.33e-5
-r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369
-Λ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
-
-zˢ = dtoz(Λ, 100e-9) # mobility z-star for 100 nm particle 
-truegf = 1.6          # true growth factor of 1.6
-gfₖ(Λ, zˢ, truegf, 1)    # effective growth factor for 1 charge = 1.6
-gfₖ(Λ, zˢ, truegf, 2)    # effective growth factor for 2 charges = 1.544 
-gfₖ(Λ, zˢ, truegf, 3)    # effective growth factor for 3 charges = 1.507 
-gfₖ(Λ, zˢ, truegf, 4)    # effective growth factor for 4 charges = 1.481 
-```
-"""
-@memoize gfₖ(Λ, zˢ, gf, k) =
-    ztod(Λ, 1, dtoz(Λ, 1e-9 * ztod(Λ, k, zˢ) * gf) * k) ./ ztod(Λ, 1, zˢ)
-
-
-
-@doc raw"""
     TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
 
 Returns a function model that models the output of a tandem DMA for an 
@@ -95,19 +57,18 @@ function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
     δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax * Dd), dtoz(Λ₂, gmin * Dd), n)
     𝕟 = interpolateSizeDistributionOntoδ((𝕟1, δ₁))
 
-    @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
+    @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i/k, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
     @memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
     @memoize cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
-	@memoize Π(Λ, δ, k) = (@_ map(ztod(Λ₁, 1, _), dtoz(Λ, k, δ.Dp*1e-9))) ./ δ.Dp
-	@memoize DMA₁(𝕟, zˢ, gf) = @_ map(Π(Λ₁, δ₁, _) ⋅ (gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
-    @memoize DMA₂(𝕟, k) = O(k) * 𝕟
-    @memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
-    @memoize function TDMA(𝕟, zˢ, gf)
-        ℕ = DMA₁(𝕟, zˢ, gf)
-        map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:length(ℕ)) |> sum
-    end
-    @memoize model(𝕟, P, Dd, gf) =
-        sum(@_ map(P[_] * TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
+	@memoize DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
+	@memoize DMA₂(𝕟, k) = O(k) * 𝕟
+	@memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+	@memoize function TDMA(𝕟, zˢ, gf)
+		ℕ = DMA₁(𝕟, zˢ, gf)
+		map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:length(ℕ)) |> sum
+	end
+	@memoize model(𝕟, P, Dd, gf) =
+		sum(@_ map(P[_] * TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
 end
 
 @doc raw"""
