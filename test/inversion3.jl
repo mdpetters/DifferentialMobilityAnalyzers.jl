@@ -41,7 +41,7 @@ end
 @test round(Int, sum(𝕟ᵢₙᵥ.N)) == 896
 
 𝕟ᵢₙᵥ = rinv2(R, δ, λ₁ = λ₁, λ₂ = λ₂, order = 2, initial = false)
-@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 893
+@test round(Int, sum(𝕟ᵢₙᵥ.N)) == 894
 
 𝕟ᵢₙᵥ = rinv2(R, δ, λ₁ = λ₁, λ₂ = λ₂, order = 1, initial = false)
 @test round(Int, sum(𝕟ᵢₙᵥ.N)) == 895
