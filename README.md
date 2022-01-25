@@ -4,7 +4,7 @@
 
 | **Documentation**                                                               | **Build Status**                                                                                | **Citations** |
 |:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] | [![travis badge][travis_badge]][travis_url] [![codecov badge][codecov_badge]][codecov_url] | [![DOI](https://img.shields.io/badge/DOI-10.1080/02786826.2018.1530724-blue?label=DOI)](https://doi.org/10.1080/02786826.2018.1530724) [![DOI](https://img.shields.io/badge/DOI-10.5194/amt-14-7909-2021-blue?label=DOI)](https://doi.org/10.5194/amt-14-7909-2021)]  |
+| [![][docs-stable-img]][docs-stable-url] | [![travis badge][travis_badge]][travis_url] [![codecov badge][codecov_badge]][codecov_url] | [![DOI](https://img.shields.io/badge/DOI-10.1080/02786826.2018.1530724-blue?label=DOI)](https://doi.org/10.1080/02786826.2018.1530724) [![DOI](https://img.shields.io/badge/DOI-10.5194%2Famt--14--7909--2021-blue)](https://doi.org/10.5194/amt-14-7909-2021)  |
 
 # Installation
 
