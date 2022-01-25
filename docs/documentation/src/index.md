@@ -18,7 +18,7 @@ If you use this package in your research, please cite the relevant sources liste
 
 ## Citations
 
-This work was supported by the United States Department of Energy, Office of Science, Biological and Environment Research, Grant number DE-SC0018265. The tutorial was supported by the American Association of Aerosol Research. 
+This work was supported by the United States Department of Energy, Office of Science, Biological and Environment Research, Grant numbers DE-SC0018265 and DE-SC00021074. The tutorial was supported by the American Association of Aerosol Research. 
 
 Petters, M.D. (2018) _A language to simplify computation of differential mobility analyzer response functions_ Aerosol Science & Technology, 52 (12), 1437-1451, [https://doi.org/10.1080/02786826.2018.1530724](https://doi.org/10.1080/02786826.2018.1530724).
 
