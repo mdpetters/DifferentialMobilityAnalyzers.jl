@@ -34,3 +34,10 @@ RegularizationTools = "0.4, 0.5"
 SpecialFunctions = "0.10, 1.0"
 Underscores = "2.0, 3"
 julia = "1"
+
+[extras]
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+
+[targets]
+test = ["DataStructures", "DelimitedFiles"]
