@@ -43,12 +43,6 @@ vtoz(Λ::DMAconfig, v)
 ztov(Λ::DMAconfig, z)
 ```
 
-### gfₖ
-```@docs
-gfₖ(Λ, zˢ, gf, k)
-```
-
-
 ### Transfer Function
 ```@docs
 Ω(Λ::DMAconfig, Z, zs)

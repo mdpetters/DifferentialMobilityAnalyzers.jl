@@ -12,7 +12,7 @@ makedocs(
     ],
      "Manual" => Any[
        "Overview" => "man/overview.md",
-        "Size Distributions" => "man/sizedistribution.md",
+       "Size Distributions" => "man/sizedistribution.md",
        "Initializing DMAs" => "man/dmas.md",
        "Convolution Matrices" => "man/matrix.md",
        "Forward Models" => "man/forward.md",

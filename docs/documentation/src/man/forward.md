@@ -204,36 +204,29 @@ The transmission model is a combination of operating DMA₁ at [Constant Voltage
 
 ```julia
 # Tandem DMA equations
-T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
-cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
-DMA₁(𝕟, zˢ, gf) = @_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:3)
+O(k) = mapfoldl(zs -> (δ₂.Ω(Λ₂, δ₂.Z, zs / k, k) .* δ₂.Tl(Λ₂, δ₂.Z, k))', vcat, δ₂.Z)
+T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
 itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
-DMA₂(𝕟) = δ₂.𝐎 * 𝕟
+DMA₂(𝕟, k) = O(k) * 𝕟
 ```
 
-The function ```T(zˢ, k, Λ, δ)``` is already known. The function ```DMA₁(𝕟, zˢ, gf)``` takes a distribution 𝕟 and mobility zˢ and passes it through DMA Λ₁, δ₁. It returns an 
-array of mobility distributions and corresponds to Eq. (14) in Petters (2018), with one
-exception. Petters (2018) assumed that the term ```gfₖ(Λ₁, zˢ, gf, k)``` is a constant. That
-is, the apparent growth factor is the same for multicharge particles. In fact, the 
-apparent growth fact, as described Gysel et al. (2009) and Shen et al. (2020), the  
-apparent growth factor decreases for increasing particle charge. This is described
-by the [gfₖ](@ref) function.
-
-The resulting distributions are interpolated into the same grid as DMA2 using
+The function ```T(zˢ, k, Λ, δ)``` is already known. The function ```DMA₁(𝕟, zˢ, gf)``` takes a distribution 𝕟 and mobility zˢ and passes it through DMA Λ₁, δ₁ and applied growth factor gf. The resulting distributions are interpolated into the same grid as DMA2 using
 [interpolateSizeDistributionOntoδ](@ref). 
-The function ```DMA₂(𝕟, δ)``` takes an input size distribution 𝕟 and passes it through DMA₂. No neutralizer is used. Therefore the convolution [Matrix 𝐎](@ref) is applied.
+The function ```DMA₂(𝕟, δ)``` takes an input size distribution 𝕟 and passes it through DMA₂. No neutralizer is used. Therefore the convolution O(k) is applied. Note that O(k) corresponds to Eq. (15) in [Petters (2021)](https://amt.copernicus.org/articles/14/7909/2021/amt-14-7909-2021.pdf).  
 
 !!! note
     The dot product of scalar ⋅ SizeDistribution shifts the size distribution in diameter space: [Size Operators](@ref). Check out the [Tutorial](@ref) Session 1 and/or Notebook S3 in the [Notebooks](@ref) section for visualizations.
 
-Here is an abriged example how to compute the output distributions from DMA2
+Here is an abriged example how to compute the grown output distributions from DMA2
 
 ```julia
 Dd = 100e-9             # Dry diameter
 zˢ = dtoz(Λ₁, Dd);      # Mobility of 100 nm particle
 gf = 1.6                # Growth factor
-𝕄 = @_ map(itp(_) |> DMA₂, DMA₁(𝕟ᶜⁿ, zˢ, gf)) # 𝕄[k] distributions
-𝕞ᵗ = sum(𝕄)                                  # total response
+ℕ = DMA₁(𝕟ᶜⁿ, zˢ, gf)   # Transmission through DMA1
+𝕄 = map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:3) # Transmission through DMA2
+𝕞ᵗ = sum(𝕄)                               # total response
 ```
 
 𝕄[k] correspond to the +1, +2, +3 partial mobility response functions
@@ -264,17 +257,18 @@ Ax = [[1300.0, 60.0, 1.4], [5000.0, 220.0, 1.6]]
 𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
 
 # Tandem DMA equations
-T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
-cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
-DMA₁(𝕟, zˢ, gf) = @_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:3)
+O(k) = mapfoldl(zs -> (δ₂.Ω(Λ₂, δ₂.Z, zs / k, k) .* δ₂.Tl(Λ₂, δ₂.Z, k))', vcat, δ₂.Z)
+T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:3)
 itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
-DMA₂(𝕟) = δ₂.𝐎 * 𝕟
+DMA₂(𝕟, k) = O(k) * 𝕟
 
 Dd = 100e-9             # Dry diameter
 zˢ = dtoz(Λ₁, Dd);      # Mobility of 100 nm particle
 gf = 1.6                # Growth factor
-𝕄 = @_ map(itp(_) |> DMA₂, DMA₁(𝕟ᶜⁿ, zˢ, gf)) # 𝕄[k] distributions
-𝕞ᵗ = sum(𝕄)                                  # total response
+ℕ = DMA₁(𝕟ᶜⁿ, zˢ, gf)   # Transmission through DMA1
+𝕄 = map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:3) # Transmission through DMA2
+𝕞ᵗ = sum(𝕄)                               # total response
 #hide
 mdf(k) = DataFrame(#hide
     Dp = 𝕄[k].Dp./(Dd*1e9), #hide
@@ -305,40 +299,42 @@ p2 = plot(#hide
 ```
 
 The figure demonstrates the apparent shift toward smaller growth factors for multicharge 
-particles.
+particles. See [Petters (2021)](https://amt.copernicus.org/articles/14/7909/2021/amt-14-7909-2021.pdf) for more explanation. The complete example is reproduced as ```transmission3.jl``` in the ```examples/``` folder of the main repository.
 
 #### Multiple Compositions
 The above example can be extended to write a TDMA model that integrates over a pdf. This
 function can be obtained from [TDMA1Dpdf](@ref), which is part of the package.
 
 ```julia
-function TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
-    Λ₁ , Λ₂, 𝕟1 = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ), deepcopy(𝕟ᵢₙ)
+function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
+    Λ₁, Λ₂, 𝕟1 = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ), deepcopy(𝕟ᵢₙ)
     r = deepcopy(dma2rangeᵢₙ)
     Dd, gmin, gmax, n = r[1], r[2], r[3], r[4]
     nDMA, Dmin, Dmax = length(𝕟1.Dp), minimum(𝕟1.Dp), maximum(𝕟1.Dp)
 
-    δ₁ = setupDMA(Λ₁, dtoz(Λ₁, Dmax*1e-9), dtoz(Λ₁, Dmin*1e-9), nDMA)
-    δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax*Dd), dtoz(Λ₂, gmin*Dd), n)
+    δ₁ = setupDMA(Λ₁, dtoz(Λ₁, Dmax * 1e-9), dtoz(Λ₁, Dmin * 1e-9), nDMA)
+    δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax * Dd), dtoz(Λ₂, gmin * Dd), n)
     𝕟 = interpolateSizeDistributionOntoδ((𝕟1, δ₁))
-    
-    T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
-    cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
-    DMA₁(𝕟, zˢ, gf) = sum(@_ map(cr(zˢ, _) ⋅ (gfₖ(Λ₁, zˢ, gf, _) ⋅ (T₁(zˢ, _) * 𝕟)), 1:6))
-    DMA₂(𝕟) = δ₂.𝐎 * 𝕟
-    itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
-    TDMA(𝕟, zˢ, gf) = @> DMA₁(𝕟, zˢ, gf) itp DMA₂
-    model(𝕟, P, Dd, gf) = sum(@_ map(P[_]*TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
+
+    @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i/k, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
+    @memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
+	@memoize DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
+	@memoize DMA₂(𝕟, k) = O(k) * 𝕟
+	@memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+	@memoize function TDMA(𝕟, zˢ, gf)
+		ℕ = DMA₁(𝕟, zˢ, gf)
+		map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:length(ℕ)) |> sum
+	end
+	
+	@memoize model(𝕟, P, Dd, gf) =
+		sum(@_ map(P[_] * TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
 end
 ```
 
 Note that the basic principle is the same as the single composition above. However,
-```DMA₁(𝕟, zˢ, gf)``` sums directly over all charges. The function ```TDMA(𝕟, zˢ, gf)```
-returns the output from the TDMA and the function ```model(𝕟, P, Dd, gf)``` extends this over 
-a pdf, where gf is a list of growth fractors and P are corresponding probabilities. 
+```DMA₁(𝕟, zˢ, gf)``` sums directly over all charges, so the individual charge distributions are not considered. The function ```TDMA(𝕟, zˢ, gf)``` returns the output from the TDMA. The function ```model(𝕟, P, Dd, gf)``` extends this over a pdf, where gf is a list of growth fractors and P are corresponding probabilities. It one possible implementation of Eqs. (16) and (17) in [Petters (2021)](https://amt.copernicus.org/articles/14/7909/2021/amt-14-7909-2021.pdf)
 
-Below is an example with 4 population each having a unique growth factor and fractional contribution to the total distribution. If the fractions are known, the net response function of the TDMA is readily computed. 
-
+Below is an example with 4 population each having a unique growth factor and fractional contribution to the total distribution. If the fractions are known, the net response function of the TDMA is readily computed. The example is reproduced as ```transmission4.jl``` in the examples folder of the main repository.  
 
 ```@example
 using Distributions #hide

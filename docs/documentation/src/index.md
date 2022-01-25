@@ -13,7 +13,7 @@ If you use this package in your research, please cite the relevant sources liste
 - Implementation of physical equations describing DMAs
 - Computational solution of the discretized Fredholm integral equation
 - Generation of custom convolution matrices 
-- Fast size distribution inversion using Tikhonov regularization
+- Fast size distribution and tandem DMA inversion using Tikhonov regularization
 - Modeling of particle transmission through single and chained DMA setups
 
 ## Citations
@@ -22,4 +22,4 @@ This work was supported by the United States Department of Energy, Office of Sci
 
 Petters, M.D. (2018) _A language to simplify computation of differential mobility analyzer response functions_ Aerosol Science & Technology, 52 (12), 1437-1451, [https://doi.org/10.1080/02786826.2018.1530724](https://doi.org/10.1080/02786826.2018.1530724).
 
-Petters, M.D. (2019, April 27) _Virtual Machine containing Software for "A language to simplify computation of differential mobility analyzer response functions"_ (Version 2.0), [Software], Zenodo, [https://doi.org/10.5281/zenodo.2652893](https://doi.org/10.5281/zenodo.2652893).
+Petters, M. D.: Revisiting matrix-based inversion of scanning mobility particle sizer (SMPS) and humidified tandem differential mobility analyzer (HTDMA) data, Atmos. Meas. Tech., 14, 7909–7928, [https://doi.org/10.5194/amt-14-7909-2021](https://doi.org/10.5194/amt-14-7909-2021), 2021.

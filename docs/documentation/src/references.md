@@ -25,6 +25,8 @@ Petters, M. D., C. M. Carrico, S. M. Kreidenweis, A. J. Prenni, P. J. DeMott, J.
 
 Petters, M. D. (2018) A language to simplify computation of differential mobility analyzer response functions, Aerosol Science & Technology, 52:12, 1437-1451, DOI:10.1080/02786826.2018.1530724. 
 
+Petters, M. D.: Revisiting matrix-based inversion of scanning mobility particle sizer (SMPS) and humidified tandem differential mobility analyzer (HTDMA) data, Atmos. Meas. Tech., 14, 7909–7928, https://doi.org/10.5194/amt-14-7909-2021, 2021.
+
 Rader, D.J. and P.H. McMurry (1986) Application of the tandem differential mobility analyzer to studies of droplet growth or evaporation,Journal of Aerosol Science, 17(5), 771-787,DOI:10.1016/0021-8502(86)90031-5
 
 Reineking A. & J. Porstendörfer (1986) Measurements of Particle Loss Functions in a Differential Mobility Analyzer (TSI, Model 3071) for Different Flow Rates, Aerosol Science and Technology, 5:4, 483-486, DOI:10.1080/02786828608959112.

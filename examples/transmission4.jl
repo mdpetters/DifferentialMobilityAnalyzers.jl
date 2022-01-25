@@ -25,4 +25,5 @@ gf = [1.0, 1.2, 1.6, 2.1]    # Values of growth factor
 
 plot(x = 𝕘.Dp/(dma2range[1]*1e9), y = 𝕘.N, Geom.line,
     Guide.xticks(ticks = 0.8:0.2:3),
-    Coord.cartesian(xmin = 0.8, xmax = 3.0))
+    Coord.cartesian(xmin = 0.8, xmax = 3.0)
+)

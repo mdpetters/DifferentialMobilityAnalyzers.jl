@@ -216,3 +216,32 @@ p2 = plot(#hide
 set_default_plot_size(20cm, 8cm)#hide
 p = (hstack(p2, p1))#hide
 ```
+
+## Tandem DMA Inversion
+
+A complete example for tandem DMA inversion is provided in ```inversion3.jl``` in the examples folder, which reproduces Figure 3 in [Petters (2021)](https://amt.copernicus.org/articles/14/7909/2021/amt-14-7909-2021.pdf).
+
+Briefly, the code for inversion contains these key features:
+
+```julia
+Λ₁, Λ₂, δ₁, δ₂ = initializeDMAs(Dd, k)
+Ax = [[1300.0, 60.0, 1.4], [2000.0, 200.0, 1.6]]
+𝕟ᶜⁿ = DMALognormalDistribution(Ax, δ₁)
+gf, ge, 𝐀 = TDMAmatrix(𝕟ᶜⁿ, Dd, Λ₁, Λ₂, δ₂, k)
+model = TDMA1Dpdf(𝕟ᶜⁿ, Λ₁, Λ₂, (Dd, 0.8, 5.0, k));
+```
+
+The initializeDMAs sets up the grids for DMA 1 and 2, Ax are the parameters for the assumed size distribution, 𝕟ᶜⁿ is the instantiation of that size distribution. gf, ge, and 𝐀 are the growth factor bin midpoints, growth factor bin edges and the convolution matrix, and model is the forward model function.
+
+The code below is to invert the data. x₀ is the initial guess, lb,ub the lower and ope bounds, and xλ1 and xλ2 are the inverted solutions for the two main methods stated in the manuscript.
+
+```
+x₀ = N1./sum(N1)
+lb, ub = zeros(k), ones(k)
+xλ1 = invert(𝐀, N1, Lₖx₀B(2, x₀, lb, ub))
+e1 = @> sqrt.(sum((xλ1 .- f).^2.0)./k) round(digits = 3)
+xλ2 = invert(𝐀, N1, LₖDₓB(0, 0.001, lb, ub))
+e2 = @> sqrt.(sum((xλ2 .- f).^2.0)./k) round(digits = 3)
+```
+
+![f03.svg](f03.svg)
