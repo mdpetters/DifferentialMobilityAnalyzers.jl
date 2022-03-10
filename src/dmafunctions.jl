@@ -604,7 +604,7 @@ bins,z₁,z₂ = 60, vtoz(Λ,10000), vtoz(Λ,10)
     return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
 
-function setupDMAgridded(Λ, De)
+@memoize function setupDMAgridded(Λ, De)
     Tc = getTc(Λ)
     Ze = map(D -> dtoz(Λ, D * 1e-9), De)
     Z = sqrt.(Ze[2:end] .* Ze[1:end-1])
