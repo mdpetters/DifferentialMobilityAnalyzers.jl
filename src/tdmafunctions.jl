@@ -8,17 +8,17 @@ function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
     δ₂ = setupDMA(Λ₂, dtoz(Λ₂, gmax * Dd), dtoz(Λ₂, gmin * Dd), n)
     𝕟 = interpolateSizeDistributionOntoδ((𝕟1, δ₁))
 
-    @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i/k, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
+    @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i / k, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
     @memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
-	@memoize DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
-	@memoize DMA₂(𝕟, k) = O(k) * 𝕟
-	@memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
-	@memoize function TDMA(𝕟, zˢ, gf)
-		ℕ = DMA₁(𝕟, zˢ, gf)
-		map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:length(ℕ)) |> sum
-	end
-	@memoize model(𝕟, P, Dd, gf) =
-		sum(@_ map(P[_] * TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
+    @memoize DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
+    @memoize DMA₂(𝕟, k) = O(k) * 𝕟
+    @memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
+    @memoize function TDMA(𝕟, zˢ, gf)
+        ℕ = DMA₁(𝕟, zˢ, gf)
+        map(k -> (@> itp(ℕ[k]) DMA₂(k)), 1:length(ℕ)) |> sum
+    end
+    @memoize model(𝕟, P, Dd, gf) =
+        sum(@_ map(P[_] * TDMA(𝕟, dtoz(Λ₁, Dd), gf[_]), 1:length(P)))
 end
 
 @doc raw"""
