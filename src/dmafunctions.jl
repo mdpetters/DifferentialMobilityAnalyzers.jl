@@ -608,7 +608,7 @@ function setupDMAgridded(Λ, De)
     Tc = getTc(Λ)
     Ze = map(D -> dtoz(Λ, D * 1e-9), De)
     Z = sqrt.(Ze[2:end] .* Ze[1:end-1])
-    Dp = sqrt.(De[2:end] .* De[1:end-1])
+    Dp = ztod(Λ, 1, Z)
     ΔlnD = log.(De[1:end-1] ./ De[2:end])
     T = (zˢ, k, Λ) -> Ω(Λ, Z, zˢ / k, k) .* Tc(k, Dp) .* Tl(Λ, Z, k)
     𝐀 = (hcat(map(zˢ -> Σ(k -> T(zˢ, k, Λ), Λ.m), Z)...))'

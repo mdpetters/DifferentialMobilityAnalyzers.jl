@@ -39,6 +39,7 @@ export DMAconfig,                    # Data type to hold DMA config
     setupDMA,                 # Function to initialize DMA
     setupSMPS,                # Function to initialize SMPS
     setupSMPSdata,            # Function to initialize SMPS with data
+    setupSMPSgridded,         # Function to initialize SMPS with De
     setupRegularization,      # Function to initialize regularization
     clean,                    # Function to remove negative numbers
     Σ,                        # Function to sum functions
