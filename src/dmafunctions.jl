@@ -354,7 +354,7 @@ ztov(Λ::DMAconfig, z) =
     Λ.qsh ./ (2.0π .* Λ.l .* z) .* log(Λ.r2 / Λ.r1)
 
 f(Λ, i, z, di) = @. i .* ec .* cc($Ref(Λ), di) ./ (3.0π .* η($Ref(Λ)) .* z)
-converge(f, g) = maximum(abs.(1.0 .- f ./ g) .^ 2.0) < 1e-20
+converge(f, g) = maximum(abs.(1.0 .- f ./ g) .^ 2.0) < 1e-24
 g(Λ, i, z, di) = converge(f(Λ, i, z, di), di) ? di : g(Λ, i, z, f(Λ, i, z, di))
 
 @doc raw"""
