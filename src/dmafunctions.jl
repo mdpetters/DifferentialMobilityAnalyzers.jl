@@ -603,3 +603,22 @@ bins,z₁,z₂ = 60, vtoz(Λ,10000), vtoz(Λ,10)
     𝐒⁺ = inv(𝐒)
     return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
 end
+
+function setupDMAgridded(Λ, De)
+    Tc = getTc(Λ)
+    Ze = map(D -> dtoz(Λ, D * 1e-9), De)
+    Z = sqrt.(Ze[2:end] .* Ze[1:end-1])
+    Dp = sqrt.(De[2:end] .* De[1:end-1])
+    ΔlnD = log.(De[1:end-1] ./ De[2:end])
+    T = (zˢ, k, Λ) -> Ω(Λ, Z, zˢ / k, k) .* Tc(k, Dp) .* Tl(Λ, Z, k)
+    𝐀 = (hcat(map(zˢ -> Σ(k -> T(zˢ, k, Λ), Λ.m), Z)...))'
+    𝐎 = (hcat(map(i -> Σ(k -> Ω(Λ, Z, i / k) .* Tl(Λ, Dp), 1), Z)...))'
+    𝐈 = Matrix{Float64}(I, length(Z), length(Z))
+    n, m = size(𝐀)
+    𝐒 = zeros(n, m)
+    for i = 1:n
+        𝐒[i, i] = sum(𝐀[i, :])
+    end
+    𝐒⁺ = inv(𝐒)
+    return DifferentialMobilityAnalyzer(Ω, Tc, Tl, Z, Ze, Dp, De, ΔlnD, 𝐀, 𝐒, 𝐎, 𝐈)
+end
