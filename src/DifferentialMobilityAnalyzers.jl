@@ -39,7 +39,7 @@ export DMAconfig,                    # Data type to hold DMA config
     setupDMA,                 # Function to initialize DMA
     setupSMPS,                # Function to initialize SMPS
     setupSMPSdata,            # Function to initialize SMPS with data
-    setupSMPSgridded,         # Function to initialize SMPS with De
+    setupDMAgridded,          # Function to initialize SMPS with De
     setupRegularization,      # Function to initialize regularization
     clean,                    # Function to remove negative numbers
     Σ,                        # Function to sum functions
@@ -77,7 +77,7 @@ export DMAconfig,                    # Data type to hold DMA config
     benchmark,                # Single benchmark ren
     runbenchmarks,            # Create summary of benchmarks
     gfₖ,                      # Effective growth factor multi-charge particles
-    TDMA1Dpdf  ,              # 1D PDF model of TDMA transfer
+    TDMA1Dpdf,              # 1D PDF model of TDMA transfer
     TDMA1Ddomainfunction,     # 1D domain function to compute design matrix    
     initializeDefaultMatrices # Precompute inversion matrices
 
