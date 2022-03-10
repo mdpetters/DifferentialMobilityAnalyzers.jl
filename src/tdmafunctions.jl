@@ -1,52 +1,3 @@
-@doc raw"""
-    TDMA1Dpdf(𝕟ᵢₙ,  Λ₁ᵢₙ , Λ₂ᵢₙ, dma2rangeᵢₙ)
-
-Returns a function model that models the output of a tandem DMA for an 
-input pdf of growth factors. Tne function is specialized for a specific size distribution
-
-- 𝕟ᵢₙ is the size distribution with  Dp sorted in in ascending order and units of nm
-- Λ₁ᵢₙ , Λ₂ᵢₙ DMA 1 and 2 configuration of type of [DMAconfig](@ref)
-- dma2rangeᵢₙ a tuple (Dd, gmin, gmax, n) where
-    Dd is the dry diameter selected by DMA 1 in units of m
-    gmin is the lower range of growth factors scanned by DMA2
-    gmax is the upper range of growth factor scanned by DMA2
-    n is the number of bins to represent the DMA2 grid
-
-Example use
-```julia
-using Distributions
-using DifferentialMobilityAnalyzers
-using Gadfly
-
-t, p = 295.15, 1e5
-qsa, qsh = 1.66e-5, 8.33e-5
-r₁, r₂, l = 9.37e-3, 1.961e-2, 0.44369
-Λ₁ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
-Λ₂ = DMAconfig(t, p, qsa, qsh, r₁, r₂, l, 0.0, :-, 6, :cylindrical)
-bins, z₁, z₂ = 120, dtoz(Λ₁, 500e-9), dtoz(Λ₁, 30e-9) # bins, upper, lower mobility limit
-δ₁ = setupDMA(Λ₁, z₁, z₂, bins)                
-Ax = [[1300.0, 60.0, 1.4], [5000.0, 220.0, 1.6]] 
-𝕟 = DMALognormalDistribution(Ax, δ₁)
-
-# scan 100 nm Dd from 0.8Dd to 3.0Dd with 100 bins
-dma2range = (100e-9, 0.8, 3.0, 30)
-
-# Get the model function
-model = TDMA1Dpdf(𝕟, Λ₁, Λ₂, dma2range)
-
-# Growth factor grid along with the PDF is evaluated over
-Ax = [[1300.0, 60.0, 1.4], [5000.0, 220.0, 1.6]] 
-𝕟 = DMALognormalDistribution(Ax, δ₁)
-
-P = [0.5,0.15, 0.10, 0.25]   # Probability of growth factor (4 populations)
-gf = [1.0, 1.2, 1.6, 2.1]    # Values of growth factor
-𝕘 = mymodel(𝕟, P, dma2range[1], gf)
-
-plot(x = 𝕘.Dp/(dma2range[1]*1e9), y = 𝕘.N, Geom.line,
-    Guide.xticks(ticks = 0.8:0.2:3),
-    Coord.cartesian(xmin = 0.8, xmax = 3.0))
-```
-"""
 function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
     Λ₁, Λ₂, 𝕟1 = deepcopy(Λ₁ᵢₙ), deepcopy(Λ₂ᵢₙ), deepcopy(𝕟ᵢₙ)
     r = deepcopy(dma2rangeᵢₙ)
@@ -59,7 +10,6 @@ function TDMA1Dpdf(𝕟ᵢₙ, Λ₁ᵢₙ, Λ₂ᵢₙ, dma2rangeᵢₙ)
 
     @memoize O(k) = (hcat(map(i -> δ₂.Ω(Λ₂, δ₂.Z, i/k, k) .* δ₂.Tl(Λ₂, δ₂.Dp), δ₂.Z)...))'
     @memoize T₁(zˢ, k) = δ₁.Ω(Λ₁, δ₁.Z, zˢ / k, k) .* δ₁.Tc(k, δ₁.Dp) .* δ₁.Tl(Λ₁, δ₁.Dp)
-    @memoize cr(zˢ, k) = ztod(Λ₁, 1, zˢ) / ztod(Λ₁, k, zˢ)
 	@memoize DMA₁(𝕟, zˢ, gf) = @_ map((gf ⋅ (T₁(zˢ, _) * 𝕟)), 1:6)
 	@memoize DMA₂(𝕟, k) = O(k) * 𝕟
 	@memoize itp(𝕟) = interpolateSizeDistributionOntoδ((𝕟, δ₂))
