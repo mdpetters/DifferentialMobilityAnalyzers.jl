@@ -79,7 +79,13 @@ export DMAconfig,                    # Data type to hold DMA config
     gfₖ,                      # Effective growth factor multi-charge particles
     TDMA1Dpdf,              # 1D PDF model of TDMA transfer
     TDMA1Ddomainfunction,     # 1D domain function to compute design matrix    
-    initializeDefaultMatrices # Precompute inversion matrices
+    initializeDefaultMatrices, # Precompute inversion matrices
+    Air,
+    N2
+
+abstract type CarrierGas end
+struct Air <: CarrierGas end
+struct N2 <: CarrierGas end
 
 @doc raw"""
     DMAconfig
@@ -126,7 +132,11 @@ struct DMAconfig
     polarity::Symbol          # Power supply polarity [:+] or [:-]
     m::Int8                   # Number of charges in charge correction [-]
     DMAtype::Symbol           # Designate :radial, :cylindrical
+    gas::CarrierGas           # CarrierGas, either Air() or N2()
 end
+
+DMAconfig(t, p, qsa, qsh, r1, r2, l, leff, polarity, m, DMAtype) = 
+    DMAconfig(t, p, qsa, qsh, r1, r2, l, leff, polarity, m, DMAtype, Air())
 
 @doc raw"""
     DifferentialMobilityAnalyzer

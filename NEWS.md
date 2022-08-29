@@ -12,6 +12,7 @@
 ---
 
 # v2.5.6
+- Add support for multiple gases. Currently Air() and N2() are implemented. The gas can be passed as argument to DMAconfig. Calling DMAconfig without specifying the gas defaults to Air(). Additional gas parameterizations can be added by adding dispatch to the mean free path and viscosity functions. 
 - Merge CompatHelper: bump compat for CSV to 0.9
 - Update Project/Manifest 
 - remove PI function and gfk function 

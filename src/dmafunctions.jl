@@ -48,11 +48,11 @@ Tc = getTc(Λ)
 
 
 @doc raw"""
-    λ(Λ:DMAconfig)
+    λ(Λ:DMAconfig, ::CarrierGas)
 
 λ is the mean free path of air in [m]. It  depends on temperature [K] and Pressure [Pa]. 
-Temperature and pressure are taken from the DMA configuration. Currently only dry air 
-is supported.
+Temperature and pressure are taken from the DMA configuration. Currently dry air 
+and N2 are supported.
 
 ``\lambda = 6.6 \times 10^{-8}\frac{101315}{p}\frac{t}{293.15}`` 
 
@@ -62,17 +62,18 @@ Example Usage
 t,p = 295.15, 1e5                        
 qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
-Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
-mfp = λ(Λ)
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical,N2()) 
+mfp = λ(Λ, N2())
 ```
 """
-λ(Λ::DMAconfig) = 6.6e-8 * (101315.0 ./ Λ.p) * (Λ.t / 293.15)
+λ(Λ::DMAconfig, ::Air) = 6.6e-8 * (101315.0 ./ Λ.p) * (Λ.t / 293.15)
+λ(Λ::DMAconfig, ::N2) = 5.9e-8 * (101315.0 ./ Λ.p) * (Λ.t / 293.15)
 
 @doc raw"""
-    η(Λ::DMAconfig)
+    η(Λ::DMAconfig, ::CarrierGas)
 
 η is the viscosity of air in [Pa s] and depends on temperature [K]. Temperature 
-is taken from the DMA configuration. Currently only dry air is supported.
+is taken from the DMA configuration. Currently dry air and N2 is supported.
 
 ``\eta = 1.83245\times10^{-5} \exp \left(1.5 \ln \left[\frac{T}{296.1}\right]\right)\left 
 (\frac{406.55}{T+110.4} \right)`` 
@@ -83,11 +84,12 @@ Example Usage
 t,p = 295.15, 1e5                        
 qsa,qsh = 1.66e-5, 8.3e-5                     
 r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
-Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
-viscosity = η(Λ)
+Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical,Air()) 
+viscosity = η(Λ, Air())
 ```
 """
-η(Λ::DMAconfig) = 1.83245e-5 * exp(1.5 * log(Λ.t / 296.1)) * (406.55) / (Λ.t + 110.4)
+η(Λ::DMAconfig, ::Air) = 1.83245e-5 * exp(1.5 * log(Λ.t / 296.1)) * (406.55) / (Λ.t + 110.4)
+η(Λ::DMAconfig, ::N2) = 1.663e-5 * (Λ.t / 273.0)^1.5 * (380.0) / (Λ.t + 107.0) 
 
 @doc raw"""
     cc(Λ::DMAconfig, d)
@@ -111,12 +113,12 @@ Example Usage
 Dp = exp10.(range(log10(1e-9), stop=log10(1000e-9), length=100))
 t,p = 295.15, 1e5                        
 qsa,qsh = 1.66e-5, 8.3e-5                    
-r₁,r₂,l = 9.37e-3,1.961e-2,0.44369               
+r₁,r₂,l = 9.37e-3,1.961e-2,0.4436, Λ.gas9               
 Λ = DMAconfig(t,p,qsa,qsh,r₁,r₂,l,0.0,:-,6,:cylindrical) 
 correction = cc(Λ, Dp)
 ```
 """
-cc(Λ::DMAconfig, d) = 1.0 .+ λ(Λ) ./ d .* (2.34 .+ 1.05 .* exp.(-0.39 .* d ./ λ(Λ)))
+cc(Λ::DMAconfig, d) = 1.0 .+ λ(Λ, Λ.gas) ./ d .* (2.34 .+ 1.05 .* exp.(-0.39 .* d ./ λ(Λ, Λ.gas)))
 
 @doc raw"""
     dab(Λ::DMAconfig, d)
@@ -143,7 +145,7 @@ r₁,r₂,l = 9.37e-3,1.961e-2,0.44369
 diffusion_coefficient = dab(Λ,Dp)
 ```
 """
-dab(Λ::DMAconfig, d) = kb * Λ.t * cc(Λ, d) ./ (3.0π * η(Λ) * d)
+dab(Λ::DMAconfig, d) = kb * Λ.t * cc(Λ, d) ./ (3.0π * η(Λ, Λ.gas) * d)
 
 u = (Λ, D) -> @. D * Λ.leff / Λ.qsa
 Peff =
@@ -303,7 +305,7 @@ mobility = dtoz(Λ,dp*1e-9) # [m2 V-1 s-1]
 """
 dtoz(Λ::DMAconfig, d) = dtoz(Λ, 1, d)
 
-dtoz(Λ::DMAconfig, k, d) = k .* ec .* cc(Λ, d) ./ (3.0π .* η(Λ) .* d)
+dtoz(Λ::DMAconfig, k, d) = k .* ec .* cc(Λ, d) ./ (3.0π .* η(Λ, Λ.gas) .* d)
 
 @doc raw"""
     vtoz(Λ::DMAconfig, v)
@@ -353,7 +355,7 @@ ztov(Λ::DMAconfig, z) =
     (Λ.DMAtype == :radial) ? Λ.qsh .* Λ.l / (π .* (Λ.r2^2.0 - Λ.r1^2) * z) :
     Λ.qsh ./ (2.0π .* Λ.l .* z) .* log(Λ.r2 / Λ.r1)
 
-f(Λ, i, z, di) = @. i .* ec .* cc($Ref(Λ), di) ./ (3.0π .* η($Ref(Λ)) .* z)
+f(Λ, i, z, di) = @. i .* ec .* cc($Ref(Λ), di) ./ (3.0π .* η($Ref(Λ), $Ref(Λ.gas)) .* z)
 converge(f, g) = maximum(abs.(1.0 .- f ./ g) .^ 2.0) < 1e-24
 g(Λ, i, z, di) = converge(f(Λ, i, z, di), di) ? di : g(Λ, i, z, f(Λ, i, z, di))
 
